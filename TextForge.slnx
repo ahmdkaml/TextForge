@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TextForge.Core/TextForge.Core.csproj" />
+    <Project Path="src/TextForge.Desktop/TextForge.Desktop.csproj" />
+  </Folder>
+</Solution>
