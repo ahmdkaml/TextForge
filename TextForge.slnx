@@ -3,4 +3,7 @@
     <Project Path="src/TextForge.Core/TextForge.Core.csproj" />
     <Project Path="src/TextForge.Desktop/TextForge.Desktop.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TextForge.Tests/TextForge.Tests.csproj" />
+  </Folder>
 </Solution>
