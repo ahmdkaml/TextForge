@@ -1,3 +1,3 @@
 $ErrorActionPreference = "Stop"
 
-dotnet test --logger "console;verbosity=detailed"
+dotnet test --no-build --logger "console;verbosity=detailed"

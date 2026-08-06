@@ -1,3 +1,3 @@
 $ErrorActionPreference = "Stop"
 
-dotnet build
+dotnet build --no-restore
