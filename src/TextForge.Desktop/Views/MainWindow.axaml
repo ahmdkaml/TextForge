@@ -15,16 +15,54 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <StackPanel Margin="20" Spacing="10">
-        <TextBox
-            Name="InputText"
-            AcceptsReturn="True"
-            Height="300"/>
+    <Grid
+    Margin="20"
+    RowDefinitions="*,Auto"
+    ColumnDefinitions="*,*"
+    ColumnSpacing="20"
+    RowSpacing="10">
 
-        <Button
+    <!-- Input -->
+    <TextBox
+        Grid.Row="0"
+        Grid.Column="0"
+        Name="InputText"
+        AcceptsReturn="True"/>
+
+    <!-- Preview -->
+    <Border
+        Grid.Row="0"
+        Grid.Column="1"
+        Background="White"
+        Padding="30"
+        BorderBrush="Gray"
+        BorderThickness="1">
+
+        <StackPanel Spacing="10">
+            <TextBlock
+                Text="TextForge"
+                FontSize="24"
+                FontWeight="Bold"/>
+
+            <Border
+                Height="1"
+                Background="Gray"/>
+
+            <TextBlock
+                Name="PreviewText"
+                TextWrapping="Wrap"/>
+        </StackPanel>
+
+    </Border>
+
+    <!-- Existing button -->
+    <Button
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
             Name="ConvertButton"
             Content="Convert to PDF"
             Click="ConvertButton_Click"/>
-    </StackPanel>
+
+    </Grid>
 
 </Window>

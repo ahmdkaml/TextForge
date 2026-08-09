@@ -2,6 +2,7 @@ using TextForge.Core;
 
 namespace TextForge.Tests;
 
+using TextForge.Core.Documents;
 using UglyToad.PdfPig;
 
 public class PdfServiceTests
@@ -15,7 +16,9 @@ public class PdfServiceTests
             $"{Guid.NewGuid()}.pdf");
 
         // Act
-        PdfService.CreatePdf("Hello World", path);
+        DocumentContent document = new DocumentContent("Hello World");
+        TextTemplate template = new TextTemplate();
+        PdfService.CreatePdf(document, template, path);
 
         // Assert
         Assert.True(File.Exists(path));
@@ -32,15 +35,18 @@ public class PdfServiceTests
             Path.GetTempPath(),
             $"{Guid.NewGuid()}.pdf");
 
-        PdfService.CreatePdf(text, path);
+        DocumentContent document = new DocumentContent(text);
+        TextTemplate template = new TextTemplate();
+        PdfService.CreatePdf(document, template, path);
 
-        using var document = PdfDocument.Open(path);
+        using var pdfDocument = PdfDocument.Open(path);
 
-        var page = document.GetPage(1);
+        var page = pdfDocument.GetPage(1);
 
         Assert.Equal(text, page.Text);
+        Assert.Equal(template.Title, page.Text); // Check if the title is present in the PDF
         // Cleanup
         File.Delete(path);
     }
-    
+
 }
