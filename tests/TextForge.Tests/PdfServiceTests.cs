@@ -43,8 +43,8 @@ public class PdfServiceTests
 
         var page = pdfDocument.GetPage(1);
 
-        Assert.Equal(text, page.Text);
-        Assert.Equal(template.Title, page.Text); // Check if the title is present in the PDF
+        Assert.Contains(text, page.Text);
+        Assert.Contains(template.Title, page.Text);
         // Cleanup
         File.Delete(path);
     }
