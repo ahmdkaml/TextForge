@@ -1,8 +1,10 @@
 using Avalonia.Controls;
 using TextForge.Core;
-namespace TextForge.Desktop.Views;
-using TextForge.Core.Preview;
 using TextForge.Core.Documents;
+using TextForge.Core.Preview;
+
+namespace TextForge.Desktop.Views;
+
 public partial class MainWindow : Window
 {
     public MainWindow()
@@ -14,19 +16,22 @@ public partial class MainWindow : Window
         object? sender,
         Avalonia.Interactivity.RoutedEventArgs e)
     {
+        // 1. Gather UI input
         var textBox = this.FindControl<TextBox>("InputText");
-
-        var document = new DocumentContent(textBox!.Text ?? "");
+        var document = new DocumentContent(textBox?.Text ?? string.Empty);
         var template = new TextTemplate();
 
-        var preview = new PreviewDocument(
-            template.Title,
-            document.Text);
+        // 2. Delegate generation to Core domain engine
+        var preview = PreviewRenderer.Render(document, template);
 
+        // 3. Update Presentation
         var previewText = this.FindControl<TextBlock>("PreviewText");
+        if (previewText is not null)
+        {
+            previewText.Text = preview.Text;
+        }
 
-        previewText!.Text = preview.Text;
-
+        // 4. Delegate side-effect output to Core
         PdfService.CreatePdf(document, template, "output.pdf");
     }
 }

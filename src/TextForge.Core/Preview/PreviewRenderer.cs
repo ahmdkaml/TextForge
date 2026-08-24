@@ -1,5 +1,15 @@
+using TextForge.Core.Documents;
+
 namespace TextForge.Core.Preview;
 
-public record PreviewDocument(
-    string Title,
-    string Text);
+public static class PreviewRenderer
+{
+    public static PreviewDocument Render(
+        DocumentContent document,
+        TextTemplate template)
+    {
+        return new PreviewDocument(
+            template.Title,
+            document.Text);
+    }
+}
