@@ -18,7 +18,6 @@ public partial class MainWindow : Window
         var document = new DocumentContent(textBox?.Text ?? string.Empty);
         var template = new TextTemplate();
 
-        // Direct, immediate render
         var preview = PreviewRenderer.Render(document, template);
 
         var previewText = this.FindControl<TextBlock>("PreviewText");
@@ -36,6 +35,10 @@ public partial class MainWindow : Window
         var document = new DocumentContent(textBox?.Text ?? string.Empty);
         var template = new TextTemplate();
 
-        PdfService.CreatePdf(document, template, "output.pdf");
+        // 1. Generate canonical preview model
+        var preview = PreviewRenderer.Render(document, template);
+
+        // 2. Generate PDF directly from that model
+        PdfService.CreatePdf(preview, "output.pdf");
     }
 }

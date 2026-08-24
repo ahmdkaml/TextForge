@@ -1,13 +1,13 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using TextForge.Core.Documents;
+using TextForge.Core.Preview;
 
 namespace TextForge.Core;
 
 public static class PdfService
 {
-    public static void CreatePdf(DocumentContent document, TextTemplate template, string path)
+    public static void CreatePdf(PreviewDocument preview, string path)
     {
         QuestPDF.Settings.License = LicenseType.Community;
 
@@ -15,10 +15,10 @@ public static class PdfService
         {
             container.Page(page =>
             {
+                page.Margin(30);
                 page.Content().Column(column =>
                 {
-                    column.Item().Text(template.Title);
-                    column.Item().Text(document.Text);
+                    column.Item().Text(preview.Text);
                 });
             });
         })

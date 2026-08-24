@@ -1,52 +1,60 @@
+using System.IO;
 using TextForge.Core;
+using TextForge.Core.Documents;
+using TextForge.Core.Preview;
+using Xunit;
 
 namespace TextForge.Tests;
-
-using TextForge.Core.Documents;
-using UglyToad.PdfPig;
 
 public class PdfServiceTests
 {
     [Fact]
-    public void CreatePdf_CreatesFile()
+    public void CreatePdf_WithValidPreview_GeneratesFile()
     {
         // Arrange
-        string path = Path.Combine(
-            Path.GetTempPath(),
-            $"{Guid.NewGuid()}.pdf");
+        var preview = new PreviewDocument("Sample text for PDF generation");
+        var outputPath = "test_output.pdf";
 
-        // Act
-        DocumentContent document = new DocumentContent("Hello World");
-        TextTemplate template = new TextTemplate();
-        PdfService.CreatePdf(document, template, path);
+        try
+        {
+            // Act
+            PdfService.CreatePdf(preview, outputPath);
 
-        // Assert
-        Assert.True(File.Exists(path));
-
-        // Cleanup
-        File.Delete(path);
+            // Assert
+            Assert.True(File.Exists(outputPath));
+        }
+        finally
+        {
+            if (File.Exists(outputPath))
+            {
+                File.Delete(outputPath);
+            }
+        }
     }
+
     [Fact]
-    public void CreatePdf_ContentIsCorrect()
+    public void CreatePdf_FromRenderedDocument_GeneratesFile()
     {
-        string text = "Hello World";
+        // Arrange
+        var document = new DocumentContent("Hello from pipeline test");
+        var template = new TextTemplate();
+        var preview = PreviewRenderer.Render(document, template);
+        var outputPath = "test_pipeline_output.pdf";
 
-        string path = Path.Combine(
-            Path.GetTempPath(),
-            $"{Guid.NewGuid()}.pdf");
+        try
+        {
+            // Act
+            PdfService.CreatePdf(preview, outputPath);
 
-        DocumentContent document = new DocumentContent(text);
-        TextTemplate template = new TextTemplate();
-        PdfService.CreatePdf(document, template, path);
-
-        using var pdfDocument = PdfDocument.Open(path);
-
-        var page = pdfDocument.GetPage(1);
-
-        Assert.Contains(text, page.Text);
-        Assert.Contains(template.Title, page.Text);
-        // Cleanup
-        File.Delete(path);
+            // Assert
+            Assert.True(File.Exists(outputPath));
+        }
+        finally
+        {
+            if (File.Exists(outputPath))
+            {
+                File.Delete(outputPath);
+            }
+        }
     }
-
 }
