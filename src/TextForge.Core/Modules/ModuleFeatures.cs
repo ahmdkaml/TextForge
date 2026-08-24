@@ -16,7 +16,7 @@ public record ModuleFeatures
     public bool Underline { get; init; } = false;
     public bool Strikethrough { get; init; } = false;
     public string? HighlightMarker { get; init; } = null;
-    public double LineSpacing { get; init; } = 1.0;
+    public double? LineSpacing { get; init; } = null;
 
     public static ModuleFeatures Default => new();
 
@@ -36,7 +36,7 @@ public record ModuleFeatures
             Underline = Underline || fallback.Underline,
             Strikethrough = Strikethrough || fallback.Strikethrough,
             HighlightMarker = HighlightMarker ?? fallback.HighlightMarker,
-            LineSpacing = LineSpacing != 1.0 ? LineSpacing : fallback.LineSpacing
+            LineSpacing = LineSpacing ?? fallback.LineSpacing
         };
     }
 }

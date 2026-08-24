@@ -18,7 +18,7 @@ public class ModuleTests
         Assert.False(features.Underline);
         Assert.False(features.Strikethrough);
         Assert.Null(features.HighlightMarker);
-        Assert.Equal(1.0, features.LineSpacing);
+        Assert.Null(features.LineSpacing);
     }
 
     [Fact]
