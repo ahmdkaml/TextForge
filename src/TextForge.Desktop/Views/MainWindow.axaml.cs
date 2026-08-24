@@ -12,26 +12,30 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    private void ConvertButton_Click(
-        object? sender,
-        Avalonia.Interactivity.RoutedEventArgs e)
+    private void InputText_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        // 1. Gather UI input
-        var textBox = this.FindControl<TextBox>("InputText");
+        var textBox = sender as TextBox;
         var document = new DocumentContent(textBox?.Text ?? string.Empty);
         var template = new TextTemplate();
 
-        // 2. Delegate generation to Core domain engine
+        // Direct, immediate render
         var preview = PreviewRenderer.Render(document, template);
 
-        // 3. Update Presentation
         var previewText = this.FindControl<TextBlock>("PreviewText");
         if (previewText is not null)
         {
             previewText.Text = preview.Text;
         }
+    }
 
-        // 4. Delegate side-effect output to Core
+    private void ConvertButton_Click(
+        object? sender,
+        Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var textBox = this.FindControl<TextBox>("InputText");
+        var document = new DocumentContent(textBox?.Text ?? string.Empty);
+        var template = new TextTemplate();
+
         PdfService.CreatePdf(document, template, "output.pdf");
     }
 }
