@@ -19,4 +19,24 @@ public record ModuleFeatures
     public double LineSpacing { get; init; } = 1.0;
 
     public static ModuleFeatures Default => new();
+
+    public ModuleFeatures MergeWith(ModuleFeatures? fallback)
+    {
+        if (fallback is null)
+        {
+            return this;
+        }
+
+        return this with
+        {
+            Color = Color ?? fallback.Color,
+            Font = Font ?? fallback.Font,
+            FontWeight = FontWeight != ModuleFontWeight.Normal ? FontWeight : fallback.FontWeight,
+            Italic = Italic || fallback.Italic,
+            Underline = Underline || fallback.Underline,
+            Strikethrough = Strikethrough || fallback.Strikethrough,
+            HighlightMarker = HighlightMarker ?? fallback.HighlightMarker,
+            LineSpacing = LineSpacing != 1.0 ? LineSpacing : fallback.LineSpacing
+        };
+    }
 }

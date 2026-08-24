@@ -6,6 +6,7 @@ namespace TextForge.Core.Modules;
 public class Module
 {
     public Guid Id { get; init; } = Guid.NewGuid();
+    public string? StyleKey { get; init; }
     public ModuleType Type { get; init; } = ModuleType.Text;
     public string Content { get; set; } = string.Empty;
     public ModuleFeatures Features { get; set; } = ModuleFeatures.Default;
@@ -13,10 +14,15 @@ public class Module
 
     public Module() { }
 
-    public Module(string content, ModuleType type = ModuleType.Text, ModuleFeatures? features = null)
+    public Module(
+        string content,
+        ModuleType type = ModuleType.Text,
+        string? styleKey = null,
+        ModuleFeatures? features = null)
     {
         Content = content;
         Type = type;
+        StyleKey = styleKey;
         Features = features ?? ModuleFeatures.Default;
     }
 }
