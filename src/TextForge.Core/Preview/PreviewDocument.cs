@@ -1,5 +1,3 @@
 namespace TextForge.Core.Preview;
 
-public record PreviewDocument(
-    string Title,
-    string Text);
+public record PreviewDocument(string Text);

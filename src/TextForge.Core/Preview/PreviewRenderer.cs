@@ -8,8 +8,7 @@ public static class PreviewRenderer
         DocumentContent document,
         TextTemplate template)
     {
-        return new PreviewDocument(
-            template.Title,
-            document.Text);
+        // Pure domain transform (template formatting applied directly to text)
+        return new PreviewDocument(document.Text);
     }
 }

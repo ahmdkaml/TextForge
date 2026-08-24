@@ -7,19 +7,7 @@ namespace TextForge.Core.Tests.Preview;
 public class PreviewRendererTests
 {
     [Fact]
-    public void Render_WithValidInputs_ReturnsPreviewDocumentWithMatchingValues()
-    {
-        var document = new DocumentContent("Hello, world!");
-        var template = new TextTemplate();
-
-        var result = PreviewRenderer.Render(document, template);
-
-        Assert.NotNull(result);
-        Assert.Equal(template.Title, result.Title);
-        Assert.Equal("Hello, world!", result.Text);
-    }
-    [Fact]
-    public void Render_WithValidInputs_MapsTitleAndContentToPreviewDocument()
+    public void Render_WithValidInputs_ReturnsPreviewDocumentWithMatchingText()
     {
         // Arrange
         var document = new DocumentContent("Hello live preview!");
@@ -30,7 +18,6 @@ public class PreviewRendererTests
 
         // Assert
         Assert.NotNull(preview);
-        Assert.Equal(template.Title, preview.Title);
         Assert.Equal("Hello live preview!", preview.Text);
     }
 
