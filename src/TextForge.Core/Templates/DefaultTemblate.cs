@@ -7,16 +7,14 @@ public class DefaultTemplate
 {
     public string Name { get; init; } = "Default";
 
-    // Global document-level baseline styling
     public ModuleFeatures DocumentDefaults { get; init; } = new()
     {
         Font = "Segoe UI",
-        Color = "#1F2937", // Neutral dark slate
+        Color = "#1F2937",
         FontWeight = ModuleFontWeight.Normal,
         LineSpacing = 1.2
     };
 
-    // Default representations keyed by standard ModuleType
     public Dictionary<ModuleType, ModuleFeatures> TypeDefaults { get; init; } = new()
     {
         [ModuleType.Text] = new ModuleFeatures
@@ -43,7 +41,6 @@ public class DefaultTemplate
         }
     };
 
-    // Specialized archetypes (Heading, Callout, etc.)
     public Dictionary<string, ModuleFeatures> NamedStyles { get; init; } = new()
     {
         ["Title"] = new ModuleFeatures
@@ -56,6 +53,10 @@ public class DefaultTemplate
             FontWeight = ModuleFontWeight.Bold,
             LineSpacing = 1.3
         },
+        ["Body"] = new ModuleFeatures
+        {
+            LineSpacing = 1.0
+        },
         ["Callout"] = new ModuleFeatures
         {
             HighlightMarker = "#FEF08A",
@@ -65,27 +66,26 @@ public class DefaultTemplate
     };
 
     /// <summary>
-    /// Resolves the effective feature set by cascading:
-    /// Module Explicit Features -> Named Style (if any) -> ModuleType Default -> Document Baseline
+    /// Correct cascade order (most specific overrides least specific):
+    /// Module Explicit -> Named Style -> ModuleType Default -> Document Baseline
     /// </summary>
     public ModuleFeatures ResolveFeatures(Module module)
     {
-        // 1. Start with the baseline document defaults
         var resolved = DocumentDefaults;
 
-        // 2. Layer the default styling for this specific module type
+        // 1. ModuleType defaults override document baseline
         if (TypeDefaults.TryGetValue(module.Type, out var typeStyle))
         {
             resolved = typeStyle.MergeWith(resolved);
         }
 
-        // 3. Layer the named style if a StyleKey is specified
+        // 2. Named style overrides module type defaults
         if (module.StyleKey is not null && NamedStyles.TryGetValue(module.StyleKey, out var namedStyle))
         {
             resolved = namedStyle.MergeWith(resolved);
         }
 
-        // 4. Layer the module's own explicit local overrides
+        // 3. Module local features override named style
         return module.Features.MergeWith(resolved);
     }
 }
