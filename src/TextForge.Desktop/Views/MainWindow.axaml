@@ -10,53 +10,43 @@
         Title="TextForge.Desktop">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainViewModel />
     </Design.DataContext>
 
     <Grid
-    Margin="20"
-    RowDefinitions="*,Auto"
-    ColumnDefinitions="*,*"
-    ColumnSpacing="20"
-    RowSpacing="10">
+        Margin="20"
+        RowDefinitions="*,Auto"
+        ColumnDefinitions="*,*"
+        ColumnSpacing="20"
+        RowSpacing="10">
 
-    <!-- Input -->
-    <TextBox
-        Grid.Row="0"
-        Grid.Column="0"
-        Name="InputText"
-        AcceptsReturn="True"/>
+        <!-- Input -->
+        <TextBox
+            Grid.Row="0"
+            Grid.Column="0"
+            Name="InputText"
+            AcceptsReturn="True"
+            TextChanged="InputText_TextChanged"/>
 
-    <!-- Preview -->
-    <Border
-        Grid.Row="0"
-        Grid.Column="1"
-        Background="White"
-        Padding="30"
-        BorderBrush="Gray"
-        BorderThickness="1">
+        <!-- Preview (Header removed, clean container) -->
+        <Border
+            Grid.Row="0"
+            Grid.Column="1"
+            Background="White"
+            Padding="20"
+            BorderBrush="Gray"
+            BorderThickness="1">
 
-        <StackPanel Spacing="10">
-            <TextBlock
-                Text="TextForge"
-                FontSize="24"
-                FontWeight="Bold"/>
+            <ScrollViewer>
+                <TextBlock
+                    Name="PreviewText"
+                    TextWrapping="Wrap"/>
+            </ScrollViewer>
 
-            <Border
-                Height="1"
-                Background="Gray"/>
+        </Border>
 
-            <TextBlock
-                Name="PreviewText"
-                TextWrapping="Wrap"/>
-        </StackPanel>
-
-    </Border>
-
-    <!-- Existing button -->
-    <Button
+        <!-- Existing button -->
+        <Button
             Grid.Row="1"
             Grid.ColumnSpan="2"
             Name="ConvertButton"
