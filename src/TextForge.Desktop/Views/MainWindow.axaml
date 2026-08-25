@@ -6,8 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="TextForge.Desktop.Views.MainWindow"
         x:DataType="vm:MainViewModel"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="TextForge.Desktop">
+        Icon="/Assets/icons/app-icon.ico"
+        Title="TextForge">
 
     <Design.DataContext>
         <vm:MainViewModel />
