@@ -186,13 +186,14 @@
             <!-- Splitter 2 -->
             <GridSplitter Grid.Column="4" Width="4" ResizeDirection="Columns"/>
 
-            <!-- 4. Expanded Live Preview Area (Stretches all the way to right border) -->
-            <Border Grid.Column="5" Padding="16">
+            <!-- 4. Expanded Live Preview Area (Stretches all the way to right border with preserved container padding) -->
+            <Border Grid.Column="5" Padding="20">
                 <DockPanel>
                     <TextBlock DockPanel.Dock="Top" Text="Document Preview" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <Border BorderThickness="1" BorderBrush="#E5E7EB" CornerRadius="4">
+                    <Border Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="4" Padding="20">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <ContentControl Name="PreviewHost"
+                                            Margin="0,0,0,12"
                                             HorizontalContentAlignment="Stretch"
                                             VerticalContentAlignment="Top"/>
                         </ScrollViewer>

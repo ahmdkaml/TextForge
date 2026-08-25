@@ -22,4 +22,9 @@ public static class PdfService
         var bytes = Adapter.Render(tree);
         File.WriteAllBytes(outputPath, bytes);
     }
+    public static async Task CreatePdfAsync(Document document, DefaultTemplate template, string outputPath)
+    {
+        // Offload CPU/IO-bound QuestPDF generation to the ThreadPool
+        await Task.Run(() => CreatePdf(document, template, outputPath));
+    }
 }
