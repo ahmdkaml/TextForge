@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TextForge.Core.Engine;
 using TextForge.Core.Modules;
 
 namespace TextForge.Core.Templates;
@@ -13,6 +14,12 @@ public class DefaultTemplate
         Color = "#1F2937",
         FontWeight = ModuleFontWeight.Normal,
         LineSpacing = 1.2
+    };
+
+    public LayoutProperties DocumentLayoutDefaults { get; init; } = new()
+    {
+        MarginBottom = 8,
+        Spacing = 6
     };
 
     public Dictionary<ModuleType, ModuleFeatures> TypeDefaults { get; init; } = new()
@@ -41,6 +48,29 @@ public class DefaultTemplate
         }
     };
 
+    public Dictionary<ModuleType, LayoutProperties> TypeLayoutDefaults { get; init; } = new()
+    {
+        [ModuleType.Section] = new LayoutProperties
+        {
+            MarginTop = 16,
+            MarginBottom = 8
+        },
+        [ModuleType.Text] = new LayoutProperties
+        {
+            MarginBottom = 6
+        },
+        [ModuleType.Container] = new LayoutProperties
+        {
+            MarginBottom = 12,
+            Spacing = 8
+        },
+        [ModuleType.List] = new LayoutProperties
+        {
+            MarginLeft = 16,
+            MarginBottom = 4
+        }
+    };
+
     public Dictionary<string, ModuleFeatures> NamedStyles { get; init; } = new()
     {
         ["Title"] = new ModuleFeatures
@@ -65,27 +95,60 @@ public class DefaultTemplate
         }
     };
 
-    /// <summary>
-    /// Correct cascade order (most specific overrides least specific):
-    /// Module Explicit -> Named Style -> ModuleType Default -> Document Baseline
-    /// </summary>
+    public Dictionary<string, LayoutProperties> NamedLayoutStyles { get; init; } = new()
+    {
+        ["Title"] = new LayoutProperties
+        {
+            MarginTop = 0,
+            MarginBottom = 16
+        },
+        ["Heading"] = new LayoutProperties
+        {
+            MarginTop = 18,
+            MarginBottom = 8
+        },
+        ["Callout"] = new LayoutProperties
+        {
+            PaddingLeft = 12,
+            PaddingRight = 12,
+            PaddingTop = 8,
+            PaddingBottom = 8,
+            MarginTop = 8,
+            MarginBottom = 8
+        }
+    };
+
     public ModuleFeatures ResolveFeatures(Module module)
     {
         var resolved = DocumentDefaults;
 
-        // 1. ModuleType defaults override document baseline
         if (TypeDefaults.TryGetValue(module.Type, out var typeStyle))
         {
             resolved = typeStyle.MergeWith(resolved);
         }
 
-        // 2. Named style overrides module type defaults
         if (module.StyleKey is not null && NamedStyles.TryGetValue(module.StyleKey, out var namedStyle))
         {
             resolved = namedStyle.MergeWith(resolved);
         }
 
-        // 3. Module local features override named style
         return module.Features.MergeWith(resolved);
+    }
+
+    public LayoutProperties ResolveLayout(Module module)
+    {
+        var resolved = DocumentLayoutDefaults;
+
+        if (TypeLayoutDefaults.TryGetValue(module.Type, out var typeLayout))
+        {
+            resolved = typeLayout.MergeWith(resolved);
+        }
+
+        if (module.StyleKey is not null && NamedLayoutStyles.TryGetValue(module.StyleKey, out var namedLayout))
+        {
+            resolved = namedLayout.MergeWith(resolved);
+        }
+
+        return resolved;
     }
 }
