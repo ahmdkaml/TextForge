@@ -45,10 +45,7 @@ public partial class MainWindow : Window
         object? sender,
         Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var tree = _engine.Evaluate(_currentDocument, _template);
-        // Temporary fallback until Phase 4 QuestPdfAdapter
-        var previewDoc = TextForge.Core.Preview.PreviewRenderer.Render(_currentDocument, _template);
-        PdfService.CreatePdf(previewDoc, "output.pdf");
+        PdfService.CreatePdf(_currentDocument, _template, "output.pdf");
     }
 
     private void RenderCurrentPreview()
