@@ -3,58 +3,110 @@
         xmlns:vm="using:TextForge.Desktop.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
         x:Class="TextForge.Desktop.Views.MainWindow"
         x:DataType="vm:MainViewModel"
-        Icon="/Assets/icons/app-icon.ico"
-        Title="TextForge">
+        Icon="/Assets/branding/icon.png"
+        Title="TextForge"
+        Width="1280" Height="800"
+        MinWidth="960" MinHeight="600">
 
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <Grid
-        Margin="20"
-        RowDefinitions="*,Auto"
-        ColumnDefinitions="*,*"
-        ColumnSpacing="20"
-        RowSpacing="10">
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- TOP COMMAND BAR -->
+        <Border Grid.Row="0" Height="44" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
+                <!-- Branding & Document Title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+                    <Image Source="/Assets/branding/icon.png" Width="20" Height="20"/>
+                    <TextBlock Text="TextForge" FontWeight="Bold" VerticalAlignment="Center"/>
+                    <TextBlock Text="/ Untitled Document" VerticalAlignment="Center"/>
+                </StackPanel>
 
-        <!-- Input -->
-        <TextBox
-            Grid.Row="0"
-            Grid.Column="0"
-            Name="InputText"
-            AcceptsReturn="True"
-            TextChanged="InputText_TextChanged"/>
+                <!-- Center Breadcrumb / Status -->
+                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        <!-- Preview Host -->
-        <Border
-            Grid.Row="0"
-            Grid.Column="1"
-            Background="White"
-            Padding="20"
-            BorderBrush="Gray"
-            BorderThickness="1"
-            CornerRadius="4">
-
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ContentControl
-                    Name="PreviewHost"
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Top"/>
-            </ScrollViewer>
-
+                <!-- Actions -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Name="AddModuleButton" Content="Add Module"/>
+                    <Button Name="ConvertButton" Content="Export PDF" Click="ConvertButton_Click"/>
+                </StackPanel>
+            </Grid>
         </Border>
 
-        <!-- Convert Button -->
-        <Button
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            Name="ConvertButton"
-            Content="Convert to PDF"
-            Click="ConvertButton_Click"/>
+        <!-- MAIN THREE-ZONE WORKSPACE (Preview Prioritized) -->
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,220,4,3*,4,5*,240">
+            <!-- 1. Activity Bar (Global Nav) -->
+            <Border Grid.Column="0" Width="44" BorderThickness="0,0,1,0">
+                <StackPanel Spacing="8" Margin="4,8" HorizontalAlignment="Center">
+                    <Button Width="32" Height="32" Content="📄" HorizontalContentAlignment="Center"/>
+                    <Button Width="32" Height="32" Content="🧩" HorizontalContentAlignment="Center"/>
+                    <Button Width="32" Height="32" Content="⚙️" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </Border>
 
+            <!-- 2. Left Sidebar: Document / Module Tree -->
+            <Border Grid.Column="1" Padding="10">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Document Outline" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <ListBox Background="Transparent" BorderThickness="0">
+                        <!-- Module tree list items bind here -->
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- Splitter 1 -->
+            <GridSplitter Grid.Column="2" ResizeDirection="Columns"/>
+
+            <!-- 3. Module Editor Area (Proportional 3*) -->
+            <Border Grid.Column="3" Padding="12">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Module Editor" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <TextBox Name="InputText"
+                             AcceptsReturn="True"
+                             TextChanged="InputText_TextChanged"/>
+                </DockPanel>
+            </Border>
+
+            <!-- Splitter 2 -->
+            <GridSplitter Grid.Column="4" ResizeDirection="Columns"/>
+
+            <!-- 4. Expanded Live Preview Area (Proportional 5*) -->
+            <Border Grid.Column="5" Padding="16">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Document Preview" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <Border BorderThickness="1" CornerRadius="4">
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                            <ContentControl Name="PreviewHost"
+                                            HorizontalContentAlignment="Stretch"
+                                            VerticalContentAlignment="Top"/>
+                        </ScrollViewer>
+                    </Border>
+                </DockPanel>
+            </Border>
+
+            <!-- 5. Right Panel: Module Properties & Styling -->
+            <Border Grid.Column="6" BorderThickness="1,0,0,0" Padding="10">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Properties" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Layout &amp; Spacing"/>
+                        <TextBox PlaceholderText="Margin"/>
+                        <TextBox PlaceholderText="Padding"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+        </Grid>
+
+        <!-- STATUS BAR -->
+        <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
+                <TextBlock Grid.Column="0" Text="Status: Synced" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
     </Grid>
-
 </Window>
