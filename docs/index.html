@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TextForge — Modular Document Engine</title>
+  <link rel="icon" type="image/x-icon" href="../assets/icons/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --badge-bg: rgba(59, 130, 246, 0.1);
+      --badge-border: rgba(59, 130, 246, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navigation */
+    header {
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 50;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 1.25rem;
+    }
+
+    .brand-logo {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 90px 0 70px;
+      text-align: center;
+    }
+
+    .hero-icon {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 24px;
+      filter: drop-shadow(0 4px 16px rgba(59, 130, 246, 0.35));
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      border-radius: 9999px;
+      color: #60a5fa;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #60a5fa, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      max-width: 680px;
+      margin: 0 auto 36px;
+      font-size: 1.2rem;
+      color: var(--text-muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--card-bg);
+    }
+
+    /* Architecture Visual */
+    .pipeline-section {
+      padding: 40px 0 80px;
+    }
+
+    .pipeline-container {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 36px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .pipeline-step {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .pipeline-step h4 {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+      color: #93c5fd;
+    }
+
+    .pipeline-step p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Grid Sections */
+    .section-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-title h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 100px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .card:hover {
+      border-color: #374151;
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 48px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .pipeline-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      <nav>
+        <a href="#" class="brand">
+          <img src="../assets/branding/icon-dark.svg" alt="TextForge Icon" class="brand-logo" />
+          <span>TextForge</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#pipeline">Architecture</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#vision">Vision</a></li>
+        </ul>
+        <a href="https://github.com" class="btn" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero container">
+      <img src="../assets/branding/icon-square.svg" alt="TextForge" class="hero-icon" />
+      <br/>
+      <div class="badge">Next-Gen Document Engineering</div>
+      <h1>Build structured documents.<br><span>Render anywhere with confidence.</span></h1>
+      <p>
+        TextForge cleanly separates core document composition and cascading template styles from target rendering, delivering live desktop previews and production PDF exports.
+      </p>
+      <div class="hero-actions">
+        <a href="#features" class="btn">Explore Architecture</a>
+        <a href="https://github.com" class="btn btn-secondary" target="_blank" rel="noopener">View Repository</a>
+      </div>
+    </section>
+
+    <!-- Pipeline Overview -->
+    <section id="pipeline" class="container pipeline-section">
+      <div class="section-title">
+        <h2>The Unified Evaluation Pipeline</h2>
+        <p>Write once into a format-neutral tree, then compile cleanly to any target output.</p>
+      </div>
+
+      <div class="pipeline-container">
+        <div class="pipeline-step">
+          <h4>1. Document &amp; Modules</h4>
+          <p>Hierarchical modules, submodules, and semantic style keys.</p>
+        </div>
+        <div class="pipeline-step">
+          <h4>2. Template Cascade</h4>
+          <p>Multi-layered style and layout resolution rules.</p>
+        </div>
+        <div class="pipeline-step">
+          <h4>3. Canonical Engine</h4>
+          <p>Format-agnostic RenderTree with resolved visual coordinates.</p>
+        </div>
+        <div class="pipeline-step">
+          <h4>4. Target Adapters</h4>
+          <p>Instant Desktop Live Preview and QuestPDF generation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Key Features -->
+    <section id="features" class="container">
+      <div class="section-title">
+        <h2>Engine Highlights</h2>
+        <p>Built for testability, deterministic layout, and multi-target scaling.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="card">
+          <span class="card-icon">🧱</span>
+          <h3>Modular Architecture</h3>
+          <p>Compose rich documents from discrete, nestable modules—from text sections and callouts to complex custom blocks.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon">🎨</span>
+          <h3>Cascading Templates</h3>
+          <p>Precise style inheritance: Document Baselines &rarr; Module Type Defaults &rarr; Named Styles &rarr; Explicit Local Overrides.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon">👁️</span>
+          <h3>Deterministic Live Preview</h3>
+          <p>Experience zero visual drift between your desktop Avalonia preview pane and exported production PDFs.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon">📐</span>
+          <h3>Format-Neutral Layout</h3>
+          <p>Margins, padding, alignment, and line heights are mathematically calculated in the core engine before drawing.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon">🚀</span>
+          <h3>High-Performance PDF Export</h3>
+          <p>Powered by QuestPDF for lightning-fast, pixel-precise document generation without headless browser overhead.</p>
+        </div>
+
+        <div class="card">
+          <span class="card-icon">🔌</span>
+          <h3>Pluggable Target Adapters</h3>
+          <p>Easily expand to Web DOM, mobile canvases, or Markdown exporters by implementing the lightweight <code>IRenderTarget&lt;T&gt;</code> contract.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section id="vision" class="container" style="margin-bottom: 100px;">
+      <div class="card" style="text-align: center; padding: 48px 24px;">
+        <h2 style="font-size: 2rem; margin-bottom: 16px;">The Future of TextForge</h2>
+        <p style="max-width: 600px; margin: 0 auto 24px; color: var(--text-muted);">
+          We are expanding TextForge with interactive block-builder UIs, custom template definition schemas, formula rendering, and web-based collaborative editing.
+        </p>
+        <a href="https://github.com" class="btn" target="_blank" rel="noopener">Join on GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2026 TextForge. Built with .NET, Avalonia, and QuestPDF.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
