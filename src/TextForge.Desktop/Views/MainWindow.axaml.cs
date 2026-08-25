@@ -56,4 +56,71 @@ public partial class MainWindow : Window
         // Render whole visual tree via DocumentEngine and AvaloniaPreviewAdapter
         host.Content = _engine.Render(_currentDocument, _template, _previewAdapter);
     }
+    private void CloseOutline_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var toggle = this.FindControl<Avalonia.Controls.Primitives.ToggleButton>("OutlineToggle");
+        if (toggle is not null)
+        {
+            toggle.IsChecked = false;
+        }
+    }
+    private string _activeTab = string.Empty;
+
+    private void NavButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        if (sender is not Button btn) return;
+
+        var selectedTab = btn.Name switch
+        {
+            "NavOutlineBtn" => "Outline",
+            "NavPaletteBtn" => "Palette",
+            _ => string.Empty
+        };
+
+        if (_activeTab == selectedTab)
+        {
+            // Collapse if clicking the currently open tab
+            CloseDrawer();
+        }
+        else
+        {
+            OpenDrawer(selectedTab);
+        }
+    }
+
+    private void OpenDrawer(string tab)
+    {
+        _activeTab = tab;
+
+        var drawer = this.FindControl<Border>("LeftDrawer");
+        var splitter = this.FindControl<GridSplitter>("DrawerSplitter");
+        var outlineView = this.FindControl<DockPanel>("OutlineView");
+        var paletteView = this.FindControl<DockPanel>("PaletteView");
+
+        if (drawer is not null) drawer.IsVisible = true;
+        if (splitter is not null) splitter.IsVisible = true;
+
+        if (outlineView is not null) outlineView.IsVisible = tab == "Outline";
+        if (paletteView is not null) paletteView.IsVisible = tab == "Palette";
+    }
+
+    private void CloseDrawer_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        CloseDrawer();
+    }
+
+    private void CloseDrawer()
+    {
+        _activeTab = string.Empty;
+
+        var drawer = this.FindControl<Border>("LeftDrawer");
+        var splitter = this.FindControl<GridSplitter>("DrawerSplitter");
+        var outlineView = this.FindControl<DockPanel>("OutlineView");
+        var paletteView = this.FindControl<DockPanel>("PaletteView");
+
+        if (drawer is not null) drawer.IsVisible = false;
+        if (splitter is not null) splitter.IsVisible = false;
+        if (outlineView is not null) outlineView.IsVisible = false;
+        if (paletteView is not null) paletteView.IsVisible = false;
+    }
 }
