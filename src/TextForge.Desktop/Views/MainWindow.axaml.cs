@@ -1,3 +1,4 @@
+using System;
 using Avalonia.Controls;
 using TextForge.Core;
 using TextForge.Core.Documents;
@@ -41,11 +42,29 @@ public partial class MainWindow : Window
         RenderCurrentPreview();
     }
 
-    private void ConvertButton_Click(
-        object? sender,
-        Avalonia.Interactivity.RoutedEventArgs e)
+    private async void ConvertButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        PdfService.CreatePdf(_currentDocument, _template, "output.pdf");
+        var convertButton = sender as Button;
+        var statusText = this.FindControl<TextBlock>("StatusText"); // no status report now kept for later
+
+        try
+        {
+            if (convertButton is not null) convertButton.IsEnabled = false;
+            if (statusText is not null) statusText.Text = "Status: Exporting PDF...";
+
+            // Run export asynchronously off the UI thread
+            await PdfService.CreatePdfAsync(_currentDocument, _template, "output.pdf");
+
+            if (statusText is not null) statusText.Text = "Status: PDF Exported successfully!";
+        }
+        catch (Exception ex)
+        {
+            if (statusText is not null) statusText.Text = $"Status: Export failed ({ex.Message})";
+        }
+        finally
+        {
+            if (convertButton is not null) convertButton.IsEnabled = true;
+        }
     }
 
     private void RenderCurrentPreview()
