@@ -3,6 +3,7 @@
     xmlns:vm="using:TextForge.Desktop.ViewModels"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mod="using:TextForge.Core.Modules"
     mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
     x:Class="TextForge.Desktop.Views.MainWindow"
     x:DataType="vm:MainViewModel"
@@ -218,11 +219,77 @@
                         </WrapPanel>
                     </Border>
 
-                    <!-- Text Area -->
-                    <TextBox Grid.Row="2"
-                        Name="InputText"
-                        AcceptsReturn="True"
-                        TextChanged="InputText_TextChanged" />
+                    <!-- Module Accordion List -->
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto"
+                        HorizontalScrollBarVisibility="Disabled"
+                        TextBox.TextChanged="ModuleContent_TextChanged">
+                        <ItemsControl Name="ModuleAccordionList">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="mod:Module">
+                                    <Expander Margin="0,0,0,8" IsExpanded="false"
+                                        HorizontalAlignment="Stretch">
+                                        <Expander.Header>
+                                            <Grid ColumnDefinitions="Auto,*"
+                                                VerticalAlignment="Center">
+                                                <Border Grid.Column="0" Background="#E5E7EB"
+                                                    CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                                    <TextBlock Text="{Binding Name}" FontSize="11"
+                                                        FontWeight="SemiBold" Foreground="#374151" />
+                                                </Border>
+                                                <TextBlock Grid.Column="1" Text="{Binding Content}"
+                                                    TextTrimming="CharacterEllipsis"
+                                                    VerticalAlignment="Center" FontSize="12"
+                                                    Foreground="#4B5563" />
+                                            </Grid>
+                                        </Expander.Header>
+
+                                        <StackPanel Spacing="8" Margin="4,8,4,4">
+                                            <TextBox Text="{Binding Content, Mode=TwoWay}"
+                                                AcceptsReturn="True"
+                                                TextWrapping="Wrap"
+                                                MinHeight="60" />
+
+                                            <!-- Submodules (if present) -->
+                                            <ItemsControl ItemsSource="{Binding SubModules}"
+                                                Margin="16,4,0,0">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="mod:Module">
+                                                        <Expander Margin="0,0,0,6" IsExpanded="False">
+                                                            <Expander.Header>
+                                                                <Grid ColumnDefinitions="Auto,*"
+                                                                    VerticalAlignment="Center">
+                                                                    <Border Grid.Column="0"
+                                                                        Background="#F3F4F6"
+                                                                        CornerRadius="3"
+                                                                        Padding="4,1"
+                                                                        Margin="0,0,6,0">
+                                                                        <TextBlock
+                                                                            Text="{Binding Name}"
+                                                                            FontSize="10"
+                                                                            Foreground="#6B7280" />
+                                                                    </Border>
+                                                                    <TextBlock Grid.Column="1"
+                                                                        Text="{Binding Content}"
+                                                                        FontSize="11"
+                                                                        TextTrimming="CharacterEllipsis" />
+                                                                </Grid>
+                                                            </Expander.Header>
+                                                            <TextBox
+                                                                Text="{Binding Content, Mode=TwoWay}"
+                                                                AcceptsReturn="True"
+                                                                TextWrapping="Wrap"
+                                                                MinHeight="40"
+                                                                Margin="4" />
+                                                        </Expander>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Expander>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
             </Border>
 
