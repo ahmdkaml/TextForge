@@ -1,16 +1,17 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:TextForge.Desktop.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:components="using:TextForge.Desktop.Views.Components"
-        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
-        x:Class="TextForge.Desktop.Views.MainWindow"
-        x:DataType="vm:MainViewModel"
-        Icon="/Assets/branding/icon.png"
-        Title="TextForge"
-        Width="1280" Height="800"
-        MinWidth="960" MinHeight="600">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:TextForge.Desktop.ViewModels"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mod="using:TextForge.Core.Modules"
+    xmlns:components="using:TextForge.Desktop.Views.Components"
+    mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
+    x:Class="TextForge.Desktop.Views.MainWindow"
+    x:DataType="vm:MainViewModel"
+    Icon="/Assets/branding/icon.png"
+    Title="TextForge"
+    Width="1280" Height="800"
+    MinWidth="960" MinHeight="600">
 
     <Design.DataContext>
         <vm:MainViewModel />
@@ -21,20 +22,25 @@
         <!-- ========================================== -->
         <!-- 1. TOP COMMAND BAR                         -->
         <!-- ========================================== -->
-        <Border Grid.Row="0" Height="44" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB" Background="White">
+        <Border Grid.Row="0" Height="44" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB"
+            Background="White">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
                 <!-- Branding & Document Title -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
+                    Spacing="8">
                     <Image Source="/Assets/branding/icon.png" Width="20" Height="20" />
                     <TextBlock Text="TextForge" FontWeight="Bold" VerticalAlignment="Center" />
-                    <TextBlock Name="DocumentTitleText" Text="/ Untitled Document" VerticalAlignment="Center" Foreground="#6B7280" />
+                    <TextBlock Name="DocumentTitleText" Text="/ Untitled Document"
+                        VerticalAlignment="Center" Foreground="#6B7280" />
                 </StackPanel>
 
                 <!-- Center Status -->
-                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#6B7280" />
+                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Foreground="#6B7280" />
 
                 <!-- Actions -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
+                    VerticalAlignment="Center">
                     <Button Name="AddModuleButton" Content="Add Module" />
                     <Button Name="ConvertButton" Content="Export PDF" Click="ConvertButton_Click" />
                 </StackPanel>
@@ -43,99 +49,92 @@
 
         <!-- ========================================== -->
         <!-- 2. MAIN WORKSPACE                          -->
-        <!-- Columns: Activity Bar | Left Drawer | Splitter | Editor & Properties (4*) | Splitter | Live Preview (6*) -->
+        <!-- Columns: Activity Bar | Left Drawer | Splitter | Editor & Properties (4*) | Splitter |
+        Live Preview (6*) -->
         <!-- ========================================== -->
         <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,4*,4,6*">
 
             <!-- 1. Activity Bar (Global Nav) -->
-            <Border Grid.Column="0" Width="44" BorderThickness="0,0,1,0" BorderBrush="#E5E7EB" Background="#FAFAFA">
+            <Border Grid.Column="0" Width="44" BorderThickness="0,0,1,0" BorderBrush="#E5E7EB"
+                Background="#FAFAFA">
                 <StackPanel Spacing="8" Margin="4,8" HorizontalAlignment="Center">
                     <Button Name="NavOutlineBtn" Width="32" Height="32" Content="📄"
-                            ToolTip.Tip="Document Outline"
-                            HorizontalContentAlignment="Center" Click="NavButton_Click" />
+                        ToolTip.Tip="Document Outline"
+                        HorizontalContentAlignment="Center" Click="NavButton_Click" />
                     <Button Name="NavPaletteBtn" Width="32" Height="32" Content="🧩"
-                            ToolTip.Tip="Module Library"
-                            HorizontalContentAlignment="Center" Click="NavButton_Click" />
+                        ToolTip.Tip="Module Library"
+                        HorizontalContentAlignment="Center" Click="NavButton_Click" />
                     <Button Name="NavSettingsBtn" Width="32" Height="32" Content="⚙️"
-                            ToolTip.Tip="Settings"
-                            HorizontalContentAlignment="Center" />
+                        ToolTip.Tip="Settings"
+                        HorizontalContentAlignment="Center" />
                 </StackPanel>
             </Border>
 
             <!-- 2. Expandable Left Drawer -->
             <Border Name="LeftDrawer" Grid.Column="1"
-                    Width="240"
-                    IsVisible="False"
-                    BorderThickness="0,0,1,0"
-                    BorderBrush="#E5E7EB"
-                    Padding="10">
+                Width="240"
+                IsVisible="False"
+                BorderThickness="0,0,1,0"
+                BorderBrush="#E5E7EB"
+                Padding="10">
                 <Grid>
                     <!-- Outline View -->
                     <DockPanel Name="OutlineView" IsVisible="False">
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                            <TextBlock Grid.Column="0" Text="Document Outline" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Document Outline" FontWeight="SemiBold"
+                                VerticalAlignment="Center" />
                             <Button Grid.Column="1" Content="✕" Width="24" Height="24"
-                                    Padding="0" HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Click="CloseDrawer_Click" />
+                                Padding="0" HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Click="CloseDrawer_Click" />
                         </Grid>
-                        <ListBox Name="ModuleOutlineList" Background="Transparent" BorderThickness="0" />
+                        <ListBox Name="ModuleOutlineList" Background="Transparent"
+                            BorderThickness="0" />
                     </DockPanel>
 
                     <!-- Module Library / Palette View -->
+                    <!-- Module Library / Palette View -->
                     <DockPanel Name="PaletteView" IsVisible="False">
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                            <TextBlock Grid.Column="0" Text="Module Library" FontWeight="SemiBold" VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Module Library" FontWeight="SemiBold"
+                                VerticalAlignment="Center" />
                             <Button Grid.Column="1" Content="✕" Width="24" Height="24"
-                                    Padding="0" HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Click="CloseDrawer_Click" />
+                                Padding="0" HorizontalContentAlignment="Center"
+                                VerticalContentAlignment="Center"
+                                Click="CloseDrawer_Click" />
                         </Grid>
 
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Spacing="8">
-                                <TextBlock Text="Drag and drop modules into the editor:"
-                                           FontSize="11" Foreground="#6B7280" TextWrapping="Wrap" />
+                                <TextBlock Text="Available modules from Core registry:"
+                                    FontSize="11" Foreground="#6B7280" TextWrapping="Wrap" />
 
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="🏷️" VerticalAlignment="Center" />
-                                        <StackPanel>
-                                            <TextBlock Text="Section Heading" FontWeight="SemiBold" FontSize="12" />
-                                            <TextBlock Text="Title or category separator" FontSize="10" Foreground="#6B7280" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Border>
-
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="📝" VerticalAlignment="Center" />
-                                        <StackPanel>
-                                            <TextBlock Text="Paragraph Text" FontWeight="SemiBold" FontSize="12" />
-                                            <TextBlock Text="Standard body copy block" FontSize="10" Foreground="#6B7280" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Border>
-
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="💡" VerticalAlignment="Center" />
-                                        <StackPanel>
-                                            <TextBlock Text="Callout Box" FontWeight="SemiBold" FontSize="12" />
-                                            <TextBlock Text="Highlighted tip or note" FontSize="10" Foreground="#6B7280" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Border>
-
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
-                                    <StackPanel Orientation="Horizontal" Spacing="8">
-                                        <TextBlock Text="📋" VerticalAlignment="Center" />
-                                        <StackPanel>
-                                            <TextBlock Text="List Container" FontWeight="SemiBold" FontSize="12" />
-                                            <TextBlock Text="Ordered or bulleted list" FontSize="10" Foreground="#6B7280" />
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Border>
+                                <!-- Dynamically populated module definitions -->
+                                <ItemsControl Name="AvailableModulesList">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="mod:ModuleDefinition">
+                                            <Border Background="#F3F4F6"
+                                                BorderBrush="#E5E7EB"
+                                                BorderThickness="1"
+                                                CornerRadius="6"
+                                                Padding="8"
+                                                Margin="0,0,0,6">
+                                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                                    <TextBlock Text="{Binding Icon}" FontSize="16"
+                                                        VerticalAlignment="Center" />
+                                                    <StackPanel VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding DisplayName}"
+                                                            FontWeight="SemiBold" FontSize="12"
+                                                            Foreground="#1F2937" />
+                                                        <TextBlock Text="{Binding Description}"
+                                                            FontSize="10" Foreground="#6B7280"
+                                                            TextTrimming="CharacterEllipsis" />
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </StackPanel>
                         </ScrollViewer>
                     </DockPanel>
@@ -143,13 +142,15 @@
             </Border>
 
             <!-- Splitter 1 -->
-            <GridSplitter Name="DrawerSplitter" Grid.Column="2" Width="4" ResizeDirection="Columns" IsVisible="False" />
+            <GridSplitter Name="DrawerSplitter" Grid.Column="2" Width="4" ResizeDirection="Columns"
+                IsVisible="False" />
 
             <!-- 3. Module Editor & Horizontal Properties Toolbar (4*) -->
             <Border Grid.Column="3" Padding="12" TextBox.TextChanged="ModuleContent_TextChanged">
                 <Grid RowDefinitions="Auto,Auto,*">
                     <!-- Section Title -->
-                    <TextBlock Grid.Row="0" Text="Module Editor" FontWeight="SemiBold" Margin="0,0,0,8" />
+                    <TextBlock Grid.Row="0" Text="Module Editor" FontWeight="SemiBold"
+                        Margin="0,0,0,8" />
 
                     <!-- Properties Toolbar Component -->
                     <components:PropertiesToolbarView Grid.Row="1" Name="PropertiesToolbar" />
@@ -170,10 +171,13 @@
         <!-- ========================================== -->
         <!-- 3. STATUS BAR                              -->
         <!-- ========================================== -->
-        <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0" BorderBrush="#E5E7EB" Background="#FAFAFA">
+        <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0" BorderBrush="#E5E7EB"
+            Background="#FAFAFA">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
-                <TextBlock Grid.Column="0" Name="StatusText" Text="Status: Synced" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Name="StatusText" Text="Status: Synced" FontSize="11"
+                    Foreground="#6B7280" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" FontSize="11"
+                    Foreground="#6B7280" VerticalAlignment="Center" />
             </Grid>
         </Border>
 
