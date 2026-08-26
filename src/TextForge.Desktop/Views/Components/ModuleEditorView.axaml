@@ -22,7 +22,8 @@
                               HorizontalAlignment="Stretch"
                               Background="Transparent">
                         <Expander.Header>
-                            <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                                <!-- Type Tag -->
                                 <Border Grid.Column="0"
                                         Background="#E5E7EB"
                                         CornerRadius="4"
@@ -33,12 +34,30 @@
                                                FontWeight="SemiBold"
                                                Foreground="#374151" />
                                 </Border>
+
+                                <!-- Module Content Preview -->
                                 <TextBlock Grid.Column="1"
                                            Text="{Binding Content}"
                                            TextTrimming="CharacterEllipsis"
                                            VerticalAlignment="Center"
                                            FontSize="12"
                                            Foreground="#1F2937" />
+
+                                <!-- Delete Action Button -->
+                                <Button Grid.Column="2"
+                                        Content="✕"
+                                        FontSize="11"
+                                        Width="22"
+                                        Height="22"
+                                        Padding="0"
+                                        Margin="4,0,0,0"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Background="Transparent"
+                                        Foreground="#9CA3AF"
+                                        ToolTip.Tip="Delete Module"
+                                        Tag="{Binding}"
+                                        Click="DeleteModuleButton_Click" />
                             </Grid>
                         </Expander.Header>
 
@@ -55,7 +74,7 @@
                                     <DataTemplate x:DataType="mod:Module">
                                         <Expander Margin="0,0,0,6" IsExpanded="False">
                                             <Expander.Header>
-                                                <Grid ColumnDefinitions="Auto,*" VerticalAlignment="Center">
+                                                <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
                                                     <Border Grid.Column="0"
                                                             Background="#F3F4F6"
                                                             CornerRadius="3"
@@ -69,6 +88,20 @@
                                                                Text="{Binding Content}"
                                                                FontSize="11"
                                                                TextTrimming="CharacterEllipsis" />
+                                                    <Button Grid.Column="2"
+                                                            Content="✕"
+                                                            FontSize="10"
+                                                            Width="20"
+                                                            Height="20"
+                                                            Padding="0"
+                                                            Margin="4,0,0,0"
+                                                            HorizontalContentAlignment="Center"
+                                                            VerticalContentAlignment="Center"
+                                                            Background="Transparent"
+                                                            Foreground="#9CA3AF"
+                                                            ToolTip.Tip="Delete Submodule"
+                                                            Tag="{Binding}"
+                                                            Click="DeleteModuleButton_Click" />
                                                 </Grid>
                                             </Expander.Header>
                                             <TextBox Text="{Binding Content, Mode=TwoWay}"
