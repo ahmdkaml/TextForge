@@ -10,5 +10,11 @@ public record ModuleDefinition(
     string DisplayName,
     string Description,
     string Icon,
-    Func<Module> Factory
-);
+    Func<string?, Module> Factory
+)
+{
+    /// <summary>
+    /// Instantiates a new module instance with optional initial content.
+    /// </summary>
+    public Module Create(string? content = null) => Factory(content);
+}
