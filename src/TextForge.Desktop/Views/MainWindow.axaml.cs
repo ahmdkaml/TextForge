@@ -24,8 +24,11 @@ public partial class MainWindow : Window
 
         _currentDocument.Changed += RenderCurrentPreview;
 
-        var accordionList = this.FindControl<ItemsControl>("ModuleAccordionList");
-        if (accordionList is not null) accordionList.ItemsSource = _currentDocument.Modules;
+        var moduleListBox = this.FindControl<ListBox>("ModuleListBox");
+        if (moduleListBox is not null)
+        {
+            moduleListBox.ItemsSource = _currentDocument.Modules;
+        }
 
         RenderCurrentPreview();
     }
@@ -151,5 +154,59 @@ public partial class MainWindow : Window
     private void ModuleContent_TextChanged(object? sender, TextChangedEventArgs e)
     {
         _currentDocument.NotifyChanged();
+    }
+
+    private void ModuleExpander_Expanding(object? sender, Avalonia.Interactivity.CancelRoutedEventArgs e)
+    {
+        if (sender is Expander expander && expander.Tag is Module module)
+        {
+            _currentDocument.SelectModule(module);
+            SyncPropertiesToolbar(module);
+        }
+    }
+
+
+   private void ModuleCard_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+    {
+        if (sender is Border border && border.Tag is Module module)
+        {
+            _currentDocument.SelectModule(module);
+            SyncPropertiesToolbar(module);
+
+            // Refresh items to re-evaluate the IsSelected class binding
+            var accordionList = this.FindControl<ItemsControl>("ModuleAccordionList");
+            if (accordionList is not null)
+            {
+                accordionList.ItemsSource = null;
+                accordionList.ItemsSource = _currentDocument.Modules;
+            }
+
+            e.Handled = true;
+        }
+    }
+
+    private void ModuleListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListBox listBox && listBox.SelectedItem is Module selectedModule)
+        {
+            _currentDocument.SelectModule(selectedModule);
+            SyncPropertiesToolbar(selectedModule);
+        }
+    }
+
+    private void SyncPropertiesToolbar(Module module)
+    {
+        var styleSelector = this.FindControl<ComboBox>("StyleSelector");
+        if (styleSelector is not null && !string.IsNullOrEmpty(module.StyleKey))
+        {
+            foreach (var item in styleSelector.Items)
+            {
+                if (item is ComboBoxItem cbi && cbi.Content?.ToString()?.Equals(module.StyleKey, StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    styleSelector.SelectedItem = cbi;
+                    break;
+                }
+            }
+        }
     }
 }
