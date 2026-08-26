@@ -7,6 +7,7 @@ using TextForge.Core.Engine;
 using TextForge.Core.Modules;
 using TextForge.Core.Templates;
 using TextForge.Desktop.Rendering;
+using TextForge.Desktop.Views.Components;
 
 namespace TextForge.Desktop.Views;
 
@@ -14,7 +15,7 @@ namespace TextForge.Desktop.Views;
 /// Main application shell and primary presentation coordinator for TextForge.
 /// <para>
 /// <b>Purpose:</b> Acts as the presentation layer connecting the in-memory domain model (<see cref="Document"/>),
-/// the layout rendering engine (<see cref="IDocumentEngine"/>), and the user-facing Avalonia UI controls.
+/// the layout rendering engine (<see cref="IDocumentEngine"/>), and user-facing child view components.
 /// It observes document changes, updates the visual preview canvas, and routes user edits back to Core.
 /// </para>
 /// </summary>
@@ -49,7 +50,7 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// Initializes UI components, loads the default showcase document into memory,
-    /// subscribes to domain mutation events, and triggers the initial preview render.
+    /// subscribes to domain mutation events, binds child component controls, and triggers the initial preview render.
     /// </summary>
     public MainWindow()
     {
@@ -60,14 +61,23 @@ public partial class MainWindow : Window
         // Subscribe preview re-rendering to document changes so any domain mutation refreshes the UI
         _currentDocument.Changed += RenderCurrentPreview;
 
-        // Populate the editor ListBox with root modules from the active document
-        var moduleListBox = this.FindControl<ListBox>("ModuleListBox");
+        BindModuleList();
+        RenderCurrentPreview();
+    }
+
+    /// <summary>
+    /// Locates the <see cref="ListBox"/> control inside the child <see cref="ModuleEditorView"/>
+    /// and binds it to the current document's module collection while hooking selection changes.
+    /// </summary>
+    private void BindModuleList()
+    {
+        var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
+        var moduleListBox = moduleEditor?.FindControl<ListBox>("ModuleListBox");
         if (moduleListBox is not null)
         {
             moduleListBox.ItemsSource = _currentDocument.Modules;
+            moduleListBox.SelectionChanged += ModuleListBox_SelectionChanged;
         }
-
-        RenderCurrentPreview();
     }
 
     #endregion
@@ -76,11 +86,12 @@ public partial class MainWindow : Window
 
     /// <summary>
     /// Compiles the current <see cref="_currentDocument"/> into an Avalonia visual tree via <see cref="_engine"/>
-    /// and mounts it into the preview viewport container.
+    /// and mounts it into the preview viewport container hosted within <see cref="PreviewHostView"/>.
     /// </summary>
     private void RenderCurrentPreview()
     {
-        var host = this.FindControl<ContentControl>("PreviewHost");
+        var previewView = this.FindControl<PreviewHostView>("PreviewView");
+        var host = previewView?.FindControl<ContentControl>("PreviewHost");
         if (host is null) return;
 
         host.Content = _engine.Render(_currentDocument, _template, _previewAdapter);
@@ -117,13 +128,14 @@ public partial class MainWindow : Window
     }
 
     /// <summary>
-    /// Synchronizes the style selection dropdown in the horizontal toolbar with the <see cref="Module.StyleKey"/>
-    /// of the currently selected module.
+    /// Synchronizes the style selection dropdown in <see cref="PropertiesToolbarView"/> with the
+    /// <see cref="Module.StyleKey"/> of the currently selected module.
     /// </summary>
     /// <param name="module">The selected module whose properties are being reflected.</param>
     private void SyncPropertiesToolbar(Module module)
     {
-        var styleSelector = this.FindControl<ComboBox>("StyleSelector");
+        var toolbar = this.FindControl<PropertiesToolbarView>("PropertiesToolbar");
+        var styleSelector = toolbar?.FindControl<ComboBox>("StyleSelector");
         if (styleSelector is null || string.IsNullOrEmpty(module.StyleKey)) return;
 
         foreach (var item in styleSelector.Items)
@@ -186,6 +198,8 @@ public partial class MainWindow : Window
     /// <summary>
     /// Event handler for the close button located inside drawer headers.
     /// </summary>
+    /// <param name="sender">The button control triggering the closure.</param>
+    /// <param name="e">Routed event arguments.</param>
     private void CloseDrawer_Click(object? sender, RoutedEventArgs e)
     {
         CloseDrawer();

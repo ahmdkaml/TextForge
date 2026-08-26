@@ -1,154 +1,138 @@
 <Window xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:TextForge.Desktop.ViewModels"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mod="using:TextForge.Core.Modules"
-    mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
-    x:Class="TextForge.Desktop.Views.MainWindow"
-    x:DataType="vm:MainViewModel"
-    Icon="/Assets/branding/icon.png"
-    Title="TextForge"
-    Width="1280" Height="800"
-    MinWidth="960" MinHeight="600">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TextForge.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:components="using:TextForge.Desktop.Views.Components"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
+        x:Class="TextForge.Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Icon="/Assets/branding/icon.png"
+        Title="TextForge"
+        Width="1280" Height="800"
+        MinWidth="960" MinHeight="600">
 
     <Design.DataContext>
         <vm:MainViewModel />
     </Design.DataContext>
 
     <Grid RowDefinitions="Auto,*,Auto">
-        <!-- TOP COMMAND BAR -->
-        <Border Grid.Row="0" Height="44" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB"
-            Background="White">
+
+        <!-- ========================================== -->
+        <!-- 1. TOP COMMAND BAR                         -->
+        <!-- ========================================== -->
+        <Border Grid.Row="0" Height="44" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB" Background="White">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
                 <!-- Branding & Document Title -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
-                    Spacing="8">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
                     <Image Source="/Assets/branding/icon.png" Width="20" Height="20" />
                     <TextBlock Text="TextForge" FontWeight="Bold" VerticalAlignment="Center" />
-                    <TextBlock Name="DocumentTitleText" Text="/ Untitled Document"
-                        VerticalAlignment="Center" Foreground="#6B7280" />
+                    <TextBlock Name="DocumentTitleText" Text="/ Untitled Document" VerticalAlignment="Center" Foreground="#6B7280" />
                 </StackPanel>
 
                 <!-- Center Status -->
-                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center"
-                    VerticalAlignment="Center" Foreground="#6B7280" />
+                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#6B7280" />
 
                 <!-- Actions -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
-                    VerticalAlignment="Center">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                     <Button Name="AddModuleButton" Content="Add Module" />
                     <Button Name="ConvertButton" Content="Export PDF" Click="ConvertButton_Click" />
                 </StackPanel>
             </Grid>
         </Border>
 
-        <!-- MAIN WORKSPACE -->
-        <!-- Columns: Activity Bar | Left Drawer | Splitter | Editor & Properties (4*) | Splitter |
-        Live Preview (6*) -->
+        <!-- ========================================== -->
+        <!-- 2. MAIN WORKSPACE                          -->
+        <!-- Columns: Activity Bar | Left Drawer | Splitter | Editor & Properties (4*) | Splitter | Live Preview (6*) -->
+        <!-- ========================================== -->
         <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,4*,4,6*">
+
             <!-- 1. Activity Bar (Global Nav) -->
-            <Border Grid.Column="0" Width="44" BorderThickness="0,0,1,0" BorderBrush="#E5E7EB"
-                Background="#FAFAFA">
+            <Border Grid.Column="0" Width="44" BorderThickness="0,0,1,0" BorderBrush="#E5E7EB" Background="#FAFAFA">
                 <StackPanel Spacing="8" Margin="4,8" HorizontalAlignment="Center">
                     <Button Name="NavOutlineBtn" Width="32" Height="32" Content="📄"
-                        ToolTip.Tip="Document Outline"
-                        HorizontalContentAlignment="Center" Click="NavButton_Click" />
+                            ToolTip.Tip="Document Outline"
+                            HorizontalContentAlignment="Center" Click="NavButton_Click" />
                     <Button Name="NavPaletteBtn" Width="32" Height="32" Content="🧩"
-                        ToolTip.Tip="Module Library"
-                        HorizontalContentAlignment="Center" Click="NavButton_Click" />
+                            ToolTip.Tip="Module Library"
+                            HorizontalContentAlignment="Center" Click="NavButton_Click" />
                     <Button Name="NavSettingsBtn" Width="32" Height="32" Content="⚙️"
-                        ToolTip.Tip="Settings"
-                        HorizontalContentAlignment="Center" />
+                            ToolTip.Tip="Settings"
+                            HorizontalContentAlignment="Center" />
                 </StackPanel>
             </Border>
 
             <!-- 2. Expandable Left Drawer -->
             <Border Name="LeftDrawer" Grid.Column="1"
-                Width="240"
-                IsVisible="False"
-                BorderThickness="0,0,1,0"
-                BorderBrush="#E5E7EB"
-                Padding="10">
+                    Width="240"
+                    IsVisible="False"
+                    BorderThickness="0,0,1,0"
+                    BorderBrush="#E5E7EB"
+                    Padding="10">
                 <Grid>
                     <!-- Outline View -->
                     <DockPanel Name="OutlineView" IsVisible="False">
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                            <TextBlock Grid.Column="0" Text="Document Outline" FontWeight="SemiBold"
-                                VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Document Outline" FontWeight="SemiBold" VerticalAlignment="Center" />
                             <Button Grid.Column="1" Content="✕" Width="24" Height="24"
-                                Padding="0" HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Click="CloseDrawer_Click" />
+                                    Padding="0" HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Click="CloseDrawer_Click" />
                         </Grid>
-                        <ListBox Name="ModuleOutlineList" Background="Transparent"
-                            BorderThickness="0" />
+                        <ListBox Name="ModuleOutlineList" Background="Transparent" BorderThickness="0" />
                     </DockPanel>
 
                     <!-- Module Library / Palette View -->
                     <DockPanel Name="PaletteView" IsVisible="False">
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                            <TextBlock Grid.Column="0" Text="Module Library" FontWeight="SemiBold"
-                                VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Module Library" FontWeight="SemiBold" VerticalAlignment="Center" />
                             <Button Grid.Column="1" Content="✕" Width="24" Height="24"
-                                Padding="0" HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Click="CloseDrawer_Click" />
+                                    Padding="0" HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Click="CloseDrawer_Click" />
                         </Grid>
 
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Drag and drop modules into the editor:"
-                                    FontSize="11" Foreground="#6B7280" TextWrapping="Wrap" />
+                                           FontSize="11" Foreground="#6B7280" TextWrapping="Wrap" />
 
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB"
-                                    BorderThickness="1" CornerRadius="6" Padding="8">
+                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="🏷️" VerticalAlignment="Center" />
                                         <StackPanel>
-                                            <TextBlock Text="Section Heading" FontWeight="SemiBold"
-                                                FontSize="12" />
-                                            <TextBlock Text="Title or category separator"
-                                                FontSize="10" Foreground="#6B7280" />
+                                            <TextBlock Text="Section Heading" FontWeight="SemiBold" FontSize="12" />
+                                            <TextBlock Text="Title or category separator" FontSize="10" Foreground="#6B7280" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
 
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB"
-                                    BorderThickness="1" CornerRadius="6" Padding="8">
+                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="📝" VerticalAlignment="Center" />
                                         <StackPanel>
-                                            <TextBlock Text="Paragraph Text" FontWeight="SemiBold"
-                                                FontSize="12" />
-                                            <TextBlock Text="Standard body copy block" FontSize="10"
-                                                Foreground="#6B7280" />
+                                            <TextBlock Text="Paragraph Text" FontWeight="SemiBold" FontSize="12" />
+                                            <TextBlock Text="Standard body copy block" FontSize="10" Foreground="#6B7280" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
 
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB"
-                                    BorderThickness="1" CornerRadius="6" Padding="8">
+                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="💡" VerticalAlignment="Center" />
                                         <StackPanel>
-                                            <TextBlock Text="Callout Box" FontWeight="SemiBold"
-                                                FontSize="12" />
-                                            <TextBlock Text="Highlighted tip or note" FontSize="10"
-                                                Foreground="#6B7280" />
+                                            <TextBlock Text="Callout Box" FontWeight="SemiBold" FontSize="12" />
+                                            <TextBlock Text="Highlighted tip or note" FontSize="10" Foreground="#6B7280" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
 
-                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB"
-                                    BorderThickness="1" CornerRadius="6" Padding="8">
+                                <Border Background="#F3F4F6" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="8">
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <TextBlock Text="📋" VerticalAlignment="Center" />
                                         <StackPanel>
-                                            <TextBlock Text="List Container" FontWeight="SemiBold"
-                                                FontSize="12" />
-                                            <TextBlock Text="Ordered or bulleted list" FontSize="10"
-                                                Foreground="#6B7280" />
+                                            <TextBlock Text="List Container" FontWeight="SemiBold" FontSize="12" />
+                                            <TextBlock Text="Ordered or bulleted list" FontSize="10" Foreground="#6B7280" />
                                         </StackPanel>
                                     </StackPanel>
                                 </Border>
@@ -159,209 +143,39 @@
             </Border>
 
             <!-- Splitter 1 -->
-            <GridSplitter Name="DrawerSplitter" Grid.Column="2" Width="4" ResizeDirection="Columns"
-                IsVisible="False" />
+            <GridSplitter Name="DrawerSplitter" Grid.Column="2" Width="4" ResizeDirection="Columns" IsVisible="False" />
 
-            <!-- 3. Module Editor & Horizontal Properties Toolbar -->
-            <Border Grid.Column="3" Padding="12">
+            <!-- 3. Module Editor & Horizontal Properties Toolbar (4*) -->
+            <Border Grid.Column="3" Padding="12" TextBox.TextChanged="ModuleContent_TextChanged">
                 <Grid RowDefinitions="Auto,Auto,*">
                     <!-- Section Title -->
-                    <TextBlock Grid.Row="0" Text="Module Editor" FontWeight="SemiBold"
-                        Margin="0,0,0,8" />
+                    <TextBlock Grid.Row="0" Text="Module Editor" FontWeight="SemiBold" Margin="0,0,0,8" />
 
-                    <!-- HORIZONTAL PROPERTIES BAR -->
-                    <Border Grid.Row="1" Background="#F9FAFB" BorderBrush="#E5E7EB"
-                        BorderThickness="1" CornerRadius="6" Padding="8" Margin="0,0,0,10">
-                        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <!-- Type & Style -->
-                            <StackPanel Orientation="Horizontal" Spacing="6"
-                                VerticalAlignment="Center" Margin="0,0,16,0">
-                                <TextBlock Text="Style:" FontSize="12" Foreground="#4B5563"
-                                    VerticalAlignment="Center" />
-                                <ComboBox Name="StyleSelector" Width="100" SelectedIndex="0">
-                                    <ComboBoxItem Content="Body" />
-                                    <ComboBoxItem Content="Title" />
-                                    <ComboBoxItem Content="Heading" />
-                                    <ComboBoxItem Content="Callout" />
-                                </ComboBox>
-                            </StackPanel>
+                    <!-- Properties Toolbar Component -->
+                    <components:PropertiesToolbarView Grid.Row="1" Name="PropertiesToolbar" />
 
-                            <!-- Layout Spacing -->
-                            <StackPanel Orientation="Horizontal" Spacing="6"
-                                VerticalAlignment="Center" Margin="0,0,16,0">
-                                <TextBlock Text="Margin:" FontSize="12" Foreground="#4B5563"
-                                    VerticalAlignment="Center" />
-                                <TextBox Name="MarginInput" Width="55" Height="28"
-                                    PlaceholderText="0" Padding="4,2" />
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal" Spacing="6"
-                                VerticalAlignment="Center" Margin="0,0,16,0">
-                                <TextBlock Text="Padding:" FontSize="12" Foreground="#4B5563"
-                                    VerticalAlignment="Center" />
-                                <TextBox Name="PaddingInput" Width="55" Height="28"
-                                    PlaceholderText="0" Padding="4,2" />
-                            </StackPanel>
-
-                            <!-- Alignment -->
-                            <StackPanel Orientation="Horizontal" Spacing="4"
-                                VerticalAlignment="Center">
-                                <Button Content="⬅" Width="28" Height="28" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center" ToolTip.Tip="Align Left" />
-                                <Button Content="⬛" Width="28" Height="28" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center" ToolTip.Tip="Align Center" />
-                                <Button Content="➡" Width="28" Height="28" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center" ToolTip.Tip="Align Right" />
-                            </StackPanel>
-                        </WrapPanel>
-                    </Border>
-
-                    <!-- Module Editor List -->
-                    <ScrollViewer Grid.Row="2"
-                        VerticalScrollBarVisibility="Auto"
-                        HorizontalScrollBarVisibility="Disabled"
-                        TextBox.TextChanged="ModuleContent_TextChanged">
-                        <ListBox Name="ModuleListBox"
-                            Background="Transparent"
-                            SelectionMode="Single"
-                            SelectionChanged="ModuleListBox_SelectionChanged">
-                            <ListBox.Styles>
-                                <Style Selector="ListBoxItem">
-                                    <Setter Property="Padding" Value="4,4,4,8" />
-                                    <Setter Property="Margin" Value="0,0,0,4" />
-                                    <Setter Property="CornerRadius" Value="6" />
-                                </Style>
-                            </ListBox.Styles>
-
-                            <ListBox.ItemTemplate>
-                                <DataTemplate x:DataType="mod:Module">
-                                    <Expander IsExpanded="False"
-                                        HorizontalAlignment="Stretch"
-                                        Background="Transparent">
-                                        <Expander.Header>
-                                            <Grid ColumnDefinitions="Auto,*"
-                                                VerticalAlignment="Center">
-                                                <Border Grid.Column="0"
-                                                    Background="#E5E7EB"
-                                                    CornerRadius="4"
-                                                    Padding="6,2"
-                                                    Margin="0,0,8,0">
-                                                    <TextBlock Text="{Binding Name}"
-                                                        FontSize="11"
-                                                        FontWeight="SemiBold"
-                                                        Foreground="#374151" />
-                                                </Border>
-                                                <TextBlock Grid.Column="1"
-                                                    Text="{Binding Content}"
-                                                    TextTrimming="CharacterEllipsis"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    Foreground="#1F2937" />
-                                            </Grid>
-                                        </Expander.Header>
-
-                                        <StackPanel Spacing="8" Margin="4,8,4,4">
-                                            <TextBox Text="{Binding Content, Mode=TwoWay}"
-                                                AcceptsReturn="True"
-                                                TextWrapping="Wrap"
-                                                MinHeight="60" />
-
-                                            <!-- Nested Submodules -->
-                                            <ItemsControl ItemsSource="{Binding SubModules}"
-                                                Margin="16,4,0,0">
-                                                <ItemsControl.ItemTemplate>
-                                                    <DataTemplate x:DataType="mod:Module">
-                                                        <Expander Margin="0,0,0,6"
-                                                            IsExpanded="False">
-                                                            <Expander.Header>
-                                                                <Grid ColumnDefinitions="Auto,*"
-                                                                    VerticalAlignment="Center">
-                                                                    <Border Grid.Column="0"
-                                                                        Background="#F3F4F6"
-                                                                        CornerRadius="3"
-                                                                        Padding="4,1"
-                                                                        Margin="0,0,6,0">
-                                                                        <TextBlock
-                                                                            Text="{Binding Name}"
-                                                                            FontSize="10"
-                                                                            Foreground="#4B5563" />
-                                                                    </Border>
-                                                                    <TextBlock Grid.Column="1"
-                                                                        Text="{Binding Content}"
-                                                                        FontSize="11"
-                                                                        TextTrimming="CharacterEllipsis" />
-                                                                </Grid>
-                                                            </Expander.Header>
-                                                            <TextBox
-                                                                Text="{Binding Content, Mode=TwoWay}"
-                                                                AcceptsReturn="True"
-                                                                TextWrapping="Wrap"
-                                                                MinHeight="40"
-                                                                Margin="4" />
-                                                        </Expander>
-                                                    </DataTemplate>
-                                                </ItemsControl.ItemTemplate>
-                                            </ItemsControl>
-                                        </StackPanel>
-                                    </Expander>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </ScrollViewer>
+                    <!-- Module Editor Component -->
+                    <components:ModuleEditorView Grid.Row="2" Name="ModuleEditor" />
                 </Grid>
             </Border>
 
             <!-- Splitter 2 -->
             <GridSplitter Grid.Column="4" Width="4" ResizeDirection="Columns" />
 
-            <!-- 4. Expanded Live Preview Area (Stretches all the way to right border with preserved
-            container padding) -->
-            <!-- 4. Expanded Live Preview Area -->
-            <Border Grid.Column="5" Padding="20" Background="#E5E7EB">
-                <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" Text="Document Preview" FontWeight="SemiBold"
-                        Margin="0,0,0,8" />
+            <!-- 4. Expanded Live Preview Area (6*) -->
+            <components:PreviewHostView Grid.Column="5" Name="PreviewView" />
 
-                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                        VerticalScrollBarVisibility="Auto">
-                        <!-- Viewbox handles proportional scaling without distortion -->
-                        <Viewbox Stretch="Uniform" HorizontalAlignment="Center"
-                            VerticalAlignment="Center">
-
-                            <!-- Fixed A4 Document Page Canvas (595 x 842 pt) with drop shadow /
-                            sheet border -->
-                            <Border Width="595"
-                                MinHeight="842"
-                                Background="White"
-                                BorderBrush="#D1D5DB"
-                                BorderThickness="1"
-                                CornerRadius="2"
-                                Padding="36"
-                                Margin="16"
-                                BoxShadow="0 4 12 0 #20000000">
-
-                                <ContentControl Name="PreviewHost"
-                                    HorizontalContentAlignment="Stretch"
-                                    VerticalContentAlignment="Top" />
-                            </Border>
-                        </Viewbox>
-                    </ScrollViewer>
-                </DockPanel>
-            </Border>
         </Grid>
 
-        <!-- STATUS BAR -->
-        <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0" BorderBrush="#E5E7EB"
-            Background="#FAFAFA">
+        <!-- ========================================== -->
+        <!-- 3. STATUS BAR                              -->
+        <!-- ========================================== -->
+        <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0" BorderBrush="#E5E7EB" Background="#FAFAFA">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
-                <TextBlock Grid.Column="0" Text="Status: Synced" FontSize="11" Foreground="#6B7280"
-                    VerticalAlignment="Center" />
-                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" FontSize="11"
-                    Foreground="#6B7280" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Name="StatusText" Text="Status: Synced" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" FontSize="11" Foreground="#6B7280" VerticalAlignment="Center" />
             </Grid>
         </Border>
+
     </Grid>
 </Window>

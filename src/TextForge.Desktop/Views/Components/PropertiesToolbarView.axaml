@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TextForge.Desktop.Views.Components.PropertiesToolbarView">
+    <!-- HORIZONTAL PROPERTIES BAR -->
+    <Border Background="#F9FAFB"
+            BorderBrush="#E5E7EB"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="8"
+            Margin="0,0,0,10">
+        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+            <!-- Type & Style -->
+            <StackPanel Orientation="Horizontal" Spacing="6"
+                        VerticalAlignment="Center" Margin="0,0,16,0">
+                <TextBlock Text="Style:" FontSize="12" Foreground="#4B5563"
+                           VerticalAlignment="Center" />
+                <ComboBox Name="StyleSelector" Width="100" SelectedIndex="0">
+                    <ComboBoxItem Content="Body" />
+                    <ComboBoxItem Content="Title" />
+                    <ComboBoxItem Content="Heading" />
+                    <ComboBoxItem Content="Callout" />
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Layout Spacing: Margin -->
+            <StackPanel Orientation="Horizontal" Spacing="6"
+                        VerticalAlignment="Center" Margin="0,0,16,0">
+                <TextBlock Text="Margin:" FontSize="12" Foreground="#4B5563"
+                           VerticalAlignment="Center" />
+                <TextBox Name="MarginInput" Width="55" Height="28"
+                         PlaceholderText="0" Padding="4,2" />
+            </StackPanel>
+
+            <!-- Layout Spacing: Padding -->
+            <StackPanel Orientation="Horizontal" Spacing="6"
+                        VerticalAlignment="Center" Margin="0,0,16,0">
+                <TextBlock Text="Padding:" FontSize="12" Foreground="#4B5563"
+                           VerticalAlignment="Center" />
+                <TextBox Name="PaddingInput" Width="55" Height="28"
+                         PlaceholderText="0" Padding="4,2" />
+            </StackPanel>
+
+            <!-- Alignment -->
+            <StackPanel Orientation="Horizontal" Spacing="4"
+                        VerticalAlignment="Center">
+                <Button Content="⬅" Width="28" Height="28" Padding="0"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" ToolTip.Tip="Align Left" />
+                <Button Content="⬛" Width="28" Height="28" Padding="0"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" ToolTip.Tip="Align Center" />
+                <Button Content="➡" Width="28" Height="28" Padding="0"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center" ToolTip.Tip="Align Right" />
+            </StackPanel>
+        </WrapPanel>
+    </Border>
+</UserControl>
