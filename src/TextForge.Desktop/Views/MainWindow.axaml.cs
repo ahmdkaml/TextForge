@@ -282,4 +282,45 @@ public partial class MainWindow : Window
     }
 
     #endregion
+
+    #region Editor & Selection Interactions
+
+    /// <summary>
+    /// Appends a new module instance to the document when its archetype card is clicked in the palette.
+    /// </summary>
+    private void PaletteItem_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button button && button.Tag is ModuleDefinition definition)
+        {
+            // 1. Create a fresh instance using Core's ModuleRegistry definition
+            var newModule = definition.Create();
+
+            // 2. Append to domain model (which invokes Changed -> triggers RenderCurrentPreview)
+            _currentDocument.AddModule(newModule);
+
+            // 3. Refresh the ModuleEditor ListBox ItemsSource to show the new module
+            RefreshModuleEditorList();
+
+            // 4. Select the newly added module
+            _currentDocument.SelectModule(newModule);
+            SyncPropertiesToolbar(newModule);
+        }
+    }
+
+    /// <summary>
+    /// Re-syncs the module editor ListBox items source when items are appended or modified.
+    /// </summary>
+    private void RefreshModuleEditorList()
+    {
+        var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
+        var moduleListBox = moduleEditor?.FindControl<ListBox>("ModuleListBox");
+        if (moduleListBox is not null)
+        {
+            moduleListBox.ItemsSource = null;
+            moduleListBox.ItemsSource = _currentDocument.Modules;
+            moduleListBox.SelectedItem = _currentDocument.SelectedModule;
+        }
+    }
+
+    #endregion
 }
