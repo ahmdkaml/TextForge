@@ -137,4 +137,73 @@ public class Document
     }
 
     #endregion
+
+    #region Reordering Operations
+
+    /// <summary>
+    /// Moves a module one position earlier within its current sibling list (root level or nested level).
+    /// </summary>
+    /// <param name="module">The module to move up.</param>
+    /// <returns>True if the module was moved; false if it was already at the top or not found.</returns>
+    public bool MoveModuleUp(Module module)
+    {
+        ArgumentNullException.ThrowIfNull(module);
+
+        if (TryMoveRelative(Modules, module, -1))
+        {
+            NotifyChanged();
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Moves a module one position later within its current sibling list (root level or nested level).
+    /// </summary>
+    /// <param name="module">The module to move down.</param>
+    /// <returns>True if the module was moved; false if it was already at the bottom or not found.</returns>
+    public bool MoveModuleDown(Module module)
+    {
+        ArgumentNullException.ThrowIfNull(module);
+
+        if (TryMoveRelative(Modules, module, 1))
+        {
+            NotifyChanged();
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryMoveRelative(IList<Module> list, Module target, int offset)
+    {
+        var index = list.IndexOf(target);
+        if (index >= 0)
+        {
+            var newIndex = index + offset;
+            if (newIndex >= 0 && newIndex < list.Count)
+            {
+                list.RemoveAt(index);
+                list.Insert(newIndex, target);
+                return true;
+            }
+
+            // Target is in this list but cannot move beyond bounds
+            return false;
+        }
+
+        // Recursively search nested submodule sibling lists
+        foreach (var item in list)
+        {
+            if (item.SubModules.Count > 0 && TryMoveRelative(item.SubModules, target, offset))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    #endregion
 }
