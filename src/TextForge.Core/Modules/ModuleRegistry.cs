@@ -1,60 +1,76 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TextForge.Core.Modules;
 
 /// <summary>
 /// Central registry providing all available module archetypes supported by TextForge.
+/// Serves as the single authoritative source of module definitions and instantiation.
 /// </summary>
 public static class ModuleRegistry
 {
-    private static readonly List<ModuleDefinition> _definitions =
-    [
-        new(
+    private static readonly Dictionary<string, ModuleDefinition> _definitions = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["title"] = new(
             "title",
             "Document Title",
             "Top-level header for document titles",
             "🏷️",
-            () => Module.CreateTitle("Untitled Document")
+            (content) => Module.CreateTitle(content ?? "Untitled Document")
         ),
-        new(
+        ["heading"] = new(
             "heading",
             "Section Heading",
             "Category or section separator",
             "📌",
-            () => Module.CreateHeading("Section Heading")
+            (content) => Module.CreateHeading(content ?? "Section Heading")
         ),
-        new(
+        ["paragraph"] = new(
             "paragraph",
             "Paragraph Text",
             "Standard body copy block",
             "📝",
-            () => Module.CreateParagraph("Enter paragraph text...")
+            (content) => Module.CreateParagraph(content ?? "Enter paragraph text...")
         ),
-        new(
+        ["bullet"] = new(
             "bullet",
             "Bullet Item",
             "Single bullet point entry",
             "•",
-            () => Module.CreateBulletItem("Bullet point item")
+            (content) => Module.CreateBulletItem(content ?? "Bullet point item")
         ),
-        new(
+        ["callout"] = new(
             "callout",
             "Callout Box",
             "Highlighted note, tip, or callout container",
             "💡",
-            () => Module.CreateCallout("Important note or callout message.")
+            (content) => Module.CreateCallout(content ?? "Important note or callout message.")
         ),
-        new(
+        ["alert"] = new(
             "alert",
             "Alert Banner",
             "Highlighted alert banner with emphasis",
             "⚠️",
-            () => Module.CreateAlert("Warning or critical notice.")
+            (content) => Module.CreateAlert(content ?? "Warning or critical notice.")
         )
-    ];
+    };
 
     /// <summary>
     /// Gets all registered module definitions available for insertion.
     /// </summary>
-    public static IReadOnlyList<ModuleDefinition> GetAvailableModules() => _definitions.AsReadOnly();
+    public static IReadOnlyList<ModuleDefinition> GetAvailableModules() => _definitions.Values.ToList().AsReadOnly();
+
+    /// <summary>
+    /// Creates a module instance for the given registered archetype key with optional initial content.
+    /// </summary>
+    public static Module CreateModule(string key, string? content = null)
+    {
+        if (!_definitions.TryGetValue(key, out var definition))
+        {
+            throw new KeyNotFoundException($"No module definition registered for key: '{key}'.");
+        }
+
+        return definition.Create(content);
+    }
 }
