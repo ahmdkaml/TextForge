@@ -219,27 +219,47 @@
                         </WrapPanel>
                     </Border>
 
-                    <!-- Module Accordion List -->
-                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto"
+                    <!-- Module Editor List -->
+                    <ScrollViewer Grid.Row="2"
+                        VerticalScrollBarVisibility="Auto"
                         HorizontalScrollBarVisibility="Disabled"
                         TextBox.TextChanged="ModuleContent_TextChanged">
-                        <ItemsControl Name="ModuleAccordionList">
-                            <ItemsControl.ItemTemplate>
+                        <ListBox Name="ModuleListBox"
+                            Background="Transparent"
+                            SelectionMode="Single"
+                            SelectionChanged="ModuleListBox_SelectionChanged">
+                            <ListBox.Styles>
+                                <Style Selector="ListBoxItem">
+                                    <Setter Property="Padding" Value="4,4,4,8" />
+                                    <Setter Property="Margin" Value="0,0,0,4" />
+                                    <Setter Property="CornerRadius" Value="6" />
+                                </Style>
+                            </ListBox.Styles>
+
+                            <ListBox.ItemTemplate>
                                 <DataTemplate x:DataType="mod:Module">
-                                    <Expander Margin="0,0,0,8" IsExpanded="false"
-                                        HorizontalAlignment="Stretch">
+                                    <Expander IsExpanded="False"
+                                        HorizontalAlignment="Stretch"
+                                        Background="Transparent">
                                         <Expander.Header>
                                             <Grid ColumnDefinitions="Auto,*"
                                                 VerticalAlignment="Center">
-                                                <Border Grid.Column="0" Background="#E5E7EB"
-                                                    CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
-                                                    <TextBlock Text="{Binding Name}" FontSize="11"
-                                                        FontWeight="SemiBold" Foreground="#374151" />
+                                                <Border Grid.Column="0"
+                                                    Background="#E5E7EB"
+                                                    CornerRadius="4"
+                                                    Padding="6,2"
+                                                    Margin="0,0,8,0">
+                                                    <TextBlock Text="{Binding Name}"
+                                                        FontSize="11"
+                                                        FontWeight="SemiBold"
+                                                        Foreground="#374151" />
                                                 </Border>
-                                                <TextBlock Grid.Column="1" Text="{Binding Content}"
+                                                <TextBlock Grid.Column="1"
+                                                    Text="{Binding Content}"
                                                     TextTrimming="CharacterEllipsis"
-                                                    VerticalAlignment="Center" FontSize="12"
-                                                    Foreground="#4B5563" />
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    Foreground="#1F2937" />
                                             </Grid>
                                         </Expander.Header>
 
@@ -249,12 +269,13 @@
                                                 TextWrapping="Wrap"
                                                 MinHeight="60" />
 
-                                            <!-- Submodules (if present) -->
+                                            <!-- Nested Submodules -->
                                             <ItemsControl ItemsSource="{Binding SubModules}"
                                                 Margin="16,4,0,0">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate x:DataType="mod:Module">
-                                                        <Expander Margin="0,0,0,6" IsExpanded="False">
+                                                        <Expander Margin="0,0,0,6"
+                                                            IsExpanded="False">
                                                             <Expander.Header>
                                                                 <Grid ColumnDefinitions="Auto,*"
                                                                     VerticalAlignment="Center">
@@ -266,7 +287,7 @@
                                                                         <TextBlock
                                                                             Text="{Binding Name}"
                                                                             FontSize="10"
-                                                                            Foreground="#6B7280" />
+                                                                            Foreground="#4B5563" />
                                                                     </Border>
                                                                     <TextBlock Grid.Column="1"
                                                                         Text="{Binding Content}"
@@ -287,8 +308,8 @@
                                         </StackPanel>
                                     </Expander>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </ScrollViewer>
                 </Grid>
             </Border>

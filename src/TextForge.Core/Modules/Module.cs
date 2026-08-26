@@ -12,6 +12,7 @@ public class Module
     public string Content { get; set; } = string.Empty;
     public ModuleFeatures Features { get; set; } = ModuleFeatures.Default;
     public List<Module> SubModules { get; init; } = [];
+    public bool IsSelected { get; set; }
 
     public Module() { }
 

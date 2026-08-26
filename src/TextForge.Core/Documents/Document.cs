@@ -18,6 +18,37 @@ public class Document
         Changed?.Invoke();
     }
 
+    public Module? SelectedModule { get; private set; }
+
+    public void SelectModule(Module? module)
+    {
+        if (SelectedModule == module) return;
+
+        // Clear selection flag across all existing modules recursively
+        SetSelectionRecursive(Modules, false);
+
+        SelectedModule = module;
+
+        if (SelectedModule is not null)
+        {
+            SelectedModule.IsSelected = true;
+        }
+
+        NotifyChanged();
+    }
+
+    private static void SetSelectionRecursive(IEnumerable<Module> modules, bool isSelected)
+    {
+        foreach (var mod in modules)
+        {
+            mod.IsSelected = isSelected;
+            if (mod.SubModules.Count > 0)
+            {
+                SetSelectionRecursive(mod.SubModules, isSelected);
+            }
+        }
+    }
+
     public Document() { }
 
     public Document(string title, string templateName = "Default")
