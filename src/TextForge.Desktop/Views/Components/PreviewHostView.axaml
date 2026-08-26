@@ -1,0 +1,36 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="TextForge.Desktop.Views.Components.PreviewHostView">
+    <!-- Live Preview Viewport (Uniform A4 Canvas) -->
+    <Border Padding="20" Background="#E5E7EB">
+        <DockPanel>
+            <TextBlock DockPanel.Dock="Top"
+                       Text="Document Preview"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8" />
+
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto">
+                <!-- Viewbox handles proportional scaling without distortion -->
+                <Viewbox Stretch="Uniform"
+                         HorizontalAlignment="Center"
+                         VerticalAlignment="Center">
+                    <!-- Fixed A4 Document Page Canvas (595 x 842 pt) with drop shadow -->
+                    <Border Width="595"
+                            MinHeight="842"
+                            Background="White"
+                            BorderBrush="#D1D5DB"
+                            BorderThickness="1"
+                            CornerRadius="2"
+                            Padding="36"
+                            Margin="16"
+                            BoxShadow="0 4 12 0 #20000000">
+                        <ContentControl Name="PreviewHost"
+                                        HorizontalContentAlignment="Stretch"
+                                        VerticalContentAlignment="Top" />
+                    </Border>
+                </Viewbox>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>
