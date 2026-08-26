@@ -94,5 +94,47 @@ public class Document
         }
     }
 
+    /// <summary>
+    /// Removes a module from the root document hierarchy or nested submodules.
+    /// Clears selection if the removed module was selected, and broadcasts a change event.
+    /// </summary>
+    /// <param name="module">The module instance to remove.</param>
+    /// <returns>True if the module was found and removed; otherwise false.</returns>
+    public bool RemoveModule(Module module)
+    {
+        ArgumentNullException.ThrowIfNull(module);
+
+        var removed = RemoveRecursive(Modules, module);
+        if (removed)
+        {
+            if (SelectedModule == module)
+            {
+                SelectedModule = null;
+            }
+
+            NotifyChanged();
+        }
+
+        return removed;
+    }
+
+    private static bool RemoveRecursive(IList<Module> list, Module target)
+    {
+        if (list.Remove(target))
+        {
+            return true;
+        }
+
+        foreach (var item in list)
+        {
+            if (item.SubModules.Count > 0 && RemoveRecursive(item.SubModules, target))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     #endregion
 }

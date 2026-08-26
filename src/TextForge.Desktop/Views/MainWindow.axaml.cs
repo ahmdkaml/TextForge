@@ -85,12 +85,25 @@ public partial class MainWindow : Window
     private void BindModuleList()
     {
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
-        var moduleListBox = moduleEditor?.FindControl<ListBox>("ModuleListBox");
-        if (moduleListBox is not null)
+        if (moduleEditor is not null)
         {
-            moduleListBox.ItemsSource = _currentDocument.Modules;
-            moduleListBox.SelectionChanged += ModuleListBox_SelectionChanged;
+            moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
+
+            var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
+            if (moduleListBox is not null)
+            {
+                moduleListBox.ItemsSource = _currentDocument.Modules;
+                moduleListBox.SelectionChanged += ModuleListBox_SelectionChanged;
+            }
         }
+    }
+    private void ModuleEditor_ModuleDeleteRequested(object? sender, Module module)
+    {
+        // 1. Remove from domain model (triggers Changed -> updates preview)
+        _currentDocument.RemoveModule(module);
+
+        // 2. Refresh the editor ListBox to update UI items
+        RefreshModuleEditorList();
     }
 
     #endregion
