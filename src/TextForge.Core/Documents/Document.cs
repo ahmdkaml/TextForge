@@ -4,6 +4,9 @@ using TextForge.Core.Modules;
 
 namespace TextForge.Core.Documents;
 
+/// <summary>
+/// Root domain entity representing a document structure and its metadata.
+/// </summary>
 public class Document
 {
     public Guid Id { get; init; } = Guid.NewGuid();
@@ -11,22 +14,64 @@ public class Document
     public string TemplateName { get; set; } = "Default";
     public List<Module> Modules { get; init; } = [];
 
+    /// <summary>
+    /// Currently selected module in the active editing session, if any.
+    /// </summary>
+    public Module? SelectedModule { get; private set; }
+
+    /// <summary>
+    /// Raised whenever content, features, hierarchy, or selection within the document changes.
+    /// Used by preview adapters and editors to trigger live re-renders.
+    /// </summary>
     public event Action? Changed;
 
+    public Document() { }
+
+    public Document(string title, string templateName = "Default")
+    {
+        Metadata = new DocumentMetadata { Title = title };
+        TemplateName = templateName;
+    }
+
+    public Document(DocumentMetadata metadata, IEnumerable<Module>? modules = null, string templateName = "Default")
+    {
+        Metadata = metadata;
+        TemplateName = templateName;
+        if (modules is not null)
+        {
+            Modules.AddRange(modules);
+        }
+    }
+
+    #region Mutation & Event Dispatch
+
+    /// <summary>
+    /// Broadcasts a change notification to all registered UI and preview listeners.
+    /// </summary>
     public void NotifyChanged()
     {
         Changed?.Invoke();
     }
 
-    public Module? SelectedModule { get; private set; }
+    /// <summary>
+    /// Appends a module to the root sequential list and returns the document for chaining.
+    /// </summary>
+    public Document AddModule(Module module)
+    {
+        ArgumentNullException.ThrowIfNull(module);
+        Modules.Add(module);
+        NotifyChanged();
+        return this;
+    }
 
+    /// <summary>
+    /// Updates the active module selection, updating all node flags across the tree.
+    /// </summary>
     public void SelectModule(Module? module)
     {
         if (SelectedModule == module) return;
 
-        // Clear selection flag across all existing modules recursively
         SetSelectionRecursive(Modules, false);
-
         SelectedModule = module;
 
         if (SelectedModule is not null)
@@ -49,31 +94,5 @@ public class Document
         }
     }
 
-    public Document() { }
-
-    public Document(string title, string templateName = "Default")
-    {
-        Metadata = new DocumentMetadata { Title = title };
-        TemplateName = templateName;
-    }
-
-    public Document(DocumentMetadata metadata, IEnumerable<Module>? modules = null, string templateName = "Default")
-    {
-        Metadata = metadata;
-        TemplateName = templateName;
-        if (modules is not null)
-        {
-            Modules.AddRange(modules);
-        }
-    }
-
-    /// <summary>
-    /// Helper to append a module while maintaining deterministic sequential ordering.
-    /// </summary>
-    public Document AddModule(Module module)
-    {
-        ArgumentNullException.ThrowIfNull(module);
-        Modules.Add(module);
-        return this;
-    }
+    #endregion
 }
