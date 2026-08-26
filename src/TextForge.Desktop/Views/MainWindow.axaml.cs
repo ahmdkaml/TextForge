@@ -62,7 +62,20 @@ public partial class MainWindow : Window
         _currentDocument.Changed += RenderCurrentPreview;
 
         BindModuleList();
+        BindAvailableModules();
         RenderCurrentPreview();
+    }
+
+    /// <summary>
+    /// Populates the module palette drawer with all available module archetypes registered in Core.
+    /// </summary>
+    private void BindAvailableModules()
+    {
+        var availableModulesList = this.FindControl<ItemsControl>("AvailableModulesList");
+        if (availableModulesList is not null)
+        {
+            availableModulesList.ItemsSource = ModuleRegistry.GetAvailableModules();
+        }
     }
 
     /// <summary>
