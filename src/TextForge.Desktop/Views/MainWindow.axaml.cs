@@ -87,6 +87,8 @@ public partial class MainWindow : Window
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
         if (moduleEditor is not null)
         {
+            moduleEditor.ModuleMoveUpRequested += ModuleEditor_ModuleMoveUpRequested;
+            moduleEditor.ModuleMoveDownRequested += ModuleEditor_ModuleMoveDownRequested;
             moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
 
             var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
@@ -97,6 +99,23 @@ public partial class MainWindow : Window
             }
         }
     }
+
+    private void ModuleEditor_ModuleMoveUpRequested(object? sender, Module module)
+    {
+        if (_currentDocument.MoveModuleUp(module))
+        {
+            RefreshModuleEditorList();
+        }
+    }
+
+    private void ModuleEditor_ModuleMoveDownRequested(object? sender, Module module)
+    {
+        if (_currentDocument.MoveModuleDown(module))
+        {
+            RefreshModuleEditorList();
+        }
+    }
+    
     private void ModuleEditor_ModuleDeleteRequested(object? sender, Module module)
     {
         // 1. Remove from domain model (triggers Changed -> updates preview)
