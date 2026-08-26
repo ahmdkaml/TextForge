@@ -21,6 +21,12 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         _currentDocument = ShowcaseDocumentFactory.Create();
+
+        _currentDocument.Changed += RenderCurrentPreview;
+
+        var accordionList = this.FindControl<ItemsControl>("ModuleAccordionList");
+        if (accordionList is not null) accordionList.ItemsSource = _currentDocument.Modules;
+
         RenderCurrentPreview();
     }
 
@@ -141,5 +147,9 @@ public partial class MainWindow : Window
         if (splitter is not null) splitter.IsVisible = false;
         if (outlineView is not null) outlineView.IsVisible = false;
         if (paletteView is not null) paletteView.IsVisible = false;
+    }
+    private void ModuleContent_TextChanged(object? sender, TextChangedEventArgs e)
+    {
+        _currentDocument.NotifyChanged();
     }
 }

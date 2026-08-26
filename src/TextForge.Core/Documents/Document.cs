@@ -11,6 +11,13 @@ public class Document
     public string TemplateName { get; set; } = "Default";
     public List<Module> Modules { get; init; } = [];
 
+    public event Action? Changed;
+
+    public void NotifyChanged()
+    {
+        Changed?.Invoke();
+    }
+
     public Document() { }
 
     public Document(string title, string templateName = "Default")
