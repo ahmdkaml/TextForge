@@ -27,7 +27,7 @@
             </Setter>
         </Style>
 
-        <!-- Active Selected Card State (Unified for root & nested) -->
+        <!-- Active Selected Card State (Unified across all depths) -->
         <Style Selector="Border.module-card.selected">
             <Setter Property="Background" Value="#EFF6FF" />
             <Setter Property="BorderBrush" Value="#2563EB" />
@@ -35,117 +35,79 @@
         </Style>
     </UserControl.Styles>
 
+    <UserControl.Resources>
+        <!-- Self-Referencing Recursive Template for Modules & Submodules at any depth -->
+        <DataTemplate x:Key="RecursiveModuleTemplate" x:DataType="mod:Module">
+            <Border Classes="module-card"
+                    Tag="{Binding}"
+                    Margin="0,1"
+                    Padding="2">
+                <Expander IsExpanded="False"
+                          HorizontalAlignment="Stretch"
+                          Background="Transparent">
+                    <Expander.Header>
+                        <Grid ColumnDefinitions="Auto,*,Auto"
+                              VerticalAlignment="Center"
+                              Background="Transparent">
+                            <!-- Archetype Tag -->
+                            <Border Grid.Column="0"
+                                    Background="#E5E7EB"
+                                    CornerRadius="4"
+                                    Padding="6,2"
+                                    Margin="0,0,8,0">
+                                <TextBlock Text="{Binding Name}"
+                                           FontSize="11"
+                                           FontWeight="SemiBold"
+                                           Foreground="#374151" />
+                            </Border>
+
+                            <!-- Content Preview -->
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding Content}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center"
+                                       FontSize="12"
+                                       Foreground="#1F2937" />
+
+                            <!-- Action Buttons -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
+                                <Button Content="▲" FontSize="10" Width="22" Height="22" Padding="0"
+                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Up"
+                                        Tag="{Binding}" Click="MoveUpButton_Click" />
+                                <Button Content="▼" FontSize="10" Width="22" Height="22" Padding="0"
+                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Down"
+                                        Tag="{Binding}" Click="MoveDownButton_Click" />
+                                <Button Content="✕" FontSize="11" Width="22" Height="22" Padding="0"
+                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                        Background="Transparent" Foreground="#EF4444" ToolTip.Tip="Delete Module"
+                                        Tag="{Binding}" Click="DeleteModuleButton_Click" />
+                            </StackPanel>
+                        </Grid>
+                    </Expander.Header>
+
+                    <StackPanel Spacing="6" Margin="4,6,4,4">
+                        <TextBox Text="{Binding Content, Mode=TwoWay}"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 MinHeight="45" />
+
+                        <!-- Recursive ItemsControl: uses the exact same template for child submodules -->
+                        <ItemsControl ItemsSource="{Binding SubModules}"
+                                      ItemTemplate="{StaticResource RecursiveModuleTemplate}"
+                                      Margin="14,2,0,0" />
+                    </StackPanel>
+                </Expander>
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
         <ListBox Name="ModuleListBox"
                  Background="Transparent"
-                 SelectionMode="Single">
-            <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="mod:Module">
-                    <!-- Root Module Card -->
-                    <Border Classes="module-card"
-                            Tag="{Binding}"
-                            Margin="0,1"
-                            Padding="2">
-                        <Expander IsExpanded="False"
-                                  HorizontalAlignment="Stretch"
-                                  Background="Transparent">
-                            <Expander.Header>
-                                <Grid ColumnDefinitions="Auto,*,Auto"
-                                      VerticalAlignment="Center"
-                                      Background="Transparent">
-                                    <!-- Archetype Tag -->
-                                    <Border Grid.Column="0"
-                                            Background="#E5E7EB"
-                                            CornerRadius="4"
-                                            Padding="6,2"
-                                            Margin="0,0,8,0">
-                                        <TextBlock Text="{Binding Name}"
-                                                   FontSize="11"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="#374151" />
-                                    </Border>
-
-                                    <!-- Content Preview -->
-                                    <TextBlock Grid.Column="1"
-                                               Text="{Binding Content}"
-                                               TextTrimming="CharacterEllipsis"
-                                               VerticalAlignment="Center"
-                                               FontSize="12"
-                                               Foreground="#1F2937" />
-
-                                    <!-- Action Buttons -->
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
-                                        <Button Content="▲" FontSize="10" Width="22" Height="22" Padding="0"
-                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Up"
-                                                Tag="{Binding}" Click="MoveUpButton_Click" />
-                                        <Button Content="▼" FontSize="10" Width="22" Height="22" Padding="0"
-                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Down"
-                                                Tag="{Binding}" Click="MoveDownButton_Click" />
-                                        <Button Content="✕" FontSize="11" Width="22" Height="22" Padding="0"
-                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                Background="Transparent" Foreground="#EF4444" ToolTip.Tip="Delete Module"
-                                                Tag="{Binding}" Click="DeleteModuleButton_Click" />
-                                    </StackPanel>
-                                </Grid>
-                            </Expander.Header>
-
-                            <StackPanel Spacing="6" Margin="4,6,4,4">
-                                <TextBox Text="{Binding Content, Mode=TwoWay}"
-                                         AcceptsReturn="True"
-                                         TextWrapping="Wrap"
-                                         MinHeight="55" />
-
-                                <!-- Nested Submodules (Recursive) -->
-                                <ItemsControl ItemsSource="{Binding SubModules}" Margin="14,2,0,0">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="mod:Module">
-                                            <Border Classes="module-card"
-                                                    Tag="{Binding}"
-                                                    Margin="0,2,0,2"
-                                                    Padding="2">
-                                                <Expander IsExpanded="False" Background="Transparent">
-                                                    <Expander.Header>
-                                                        <Grid ColumnDefinitions="Auto,*,Auto"
-                                                              VerticalAlignment="Center"
-                                                              Background="Transparent">
-                                                            <Border Grid.Column="0" Background="#E5E7EB" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
-                                                                <TextBlock Text="{Binding Name}" FontSize="10" FontWeight="Medium" Foreground="#4B5563" />
-                                                            </Border>
-                                                            <TextBlock Grid.Column="1" Text="{Binding Content}" FontSize="11" TextTrimming="CharacterEllipsis" />
-                                                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
-                                                                <Button Content="▲" FontSize="9" Width="20" Height="20" Padding="0"
-                                                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Up"
-                                                                        Tag="{Binding}" Click="MoveUpButton_Click" />
-                                                                <Button Content="▼" FontSize="9" Width="20" Height="20" Padding="0"
-                                                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Down"
-                                                                        Tag="{Binding}" Click="MoveDownButton_Click" />
-                                                                <Button Content="✕" FontSize="10" Width="20" Height="20" Padding="0"
-                                                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                                                        Background="Transparent" Foreground="#EF4444" ToolTip.Tip="Delete Submodule"
-                                                                        Tag="{Binding}" Click="DeleteModuleButton_Click" />
-                                                            </StackPanel>
-                                                        </Grid>
-                                                    </Expander.Header>
-                                                    <TextBox Text="{Binding Content, Mode=TwoWay}"
-                                                             AcceptsReturn="True"
-                                                             TextWrapping="Wrap"
-                                                             MinHeight="40"
-                                                             Margin="2,4" />
-                                                </Expander>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Expander>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                 SelectionMode="Single"
+                 ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
     </ScrollViewer>
 </UserControl>
