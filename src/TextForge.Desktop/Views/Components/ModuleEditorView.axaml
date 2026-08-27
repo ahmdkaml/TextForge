@@ -2,167 +2,148 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mod="using:TextForge.Core.Modules"
              x:Class="TextForge.Desktop.Views.Components.ModuleEditorView">
-    <!-- Module Editor List -->
+
+    <UserControl.Styles>
+        <Style Selector="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <!-- Base Module Card Styling -->
+        <Style Selector="Border.module-card">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#E5E7EB" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.1" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- Active Selected Card State (Unified for root & nested) -->
+        <Style Selector="Border.module-card.selected">
+            <Setter Property="Background" Value="#EFF6FF" />
+            <Setter Property="BorderBrush" Value="#2563EB" />
+            <Setter Property="BorderThickness" Value="1.5" />
+        </Style>
+    </UserControl.Styles>
+
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   HorizontalScrollBarVisibility="Disabled">
         <ListBox Name="ModuleListBox"
                  Background="Transparent"
                  SelectionMode="Single">
-            <ListBox.Styles>
-                <Style Selector="ListBoxItem">
-                    <Setter Property="Padding" Value="4,4,4,8" />
-                    <Setter Property="Margin" Value="0,0,0,4" />
-                    <Setter Property="CornerRadius" Value="6" />
-                </Style>
-            </ListBox.Styles>
-
             <ListBox.ItemTemplate>
                 <DataTemplate x:DataType="mod:Module">
-                    <Expander IsExpanded="False"
-                              HorizontalAlignment="Stretch"
-                              Background="Transparent">
-                        <Expander.Header>
-                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
-                                <!-- Archetype Tag -->
-                                <Border Grid.Column="0"
-                                        Background="#E5E7EB"
-                                        CornerRadius="4"
-                                        Padding="6,2"
-                                        Margin="0,0,8,0">
-                                    <TextBlock Text="{Binding Name}"
-                                               FontSize="11"
-                                               FontWeight="SemiBold"
-                                               Foreground="#374151" />
-                                </Border>
+                    <!-- Root Module Card -->
+                    <Border Classes="module-card"
+                            Tag="{Binding}"
+                            Margin="0,1"
+                            Padding="2">
+                        <Expander IsExpanded="False"
+                                  HorizontalAlignment="Stretch"
+                                  Background="Transparent">
+                            <Expander.Header>
+                                <Grid ColumnDefinitions="Auto,*,Auto"
+                                      VerticalAlignment="Center"
+                                      Background="Transparent">
+                                    <!-- Archetype Tag -->
+                                    <Border Grid.Column="0"
+                                            Background="#E5E7EB"
+                                            CornerRadius="4"
+                                            Padding="6,2"
+                                            Margin="0,0,8,0">
+                                        <TextBlock Text="{Binding Name}"
+                                                   FontSize="11"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="#374151" />
+                                    </Border>
 
-                                <!-- Module Content Snippet -->
-                                <TextBlock Grid.Column="1"
-                                           Text="{Binding Content}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center"
-                                           FontSize="12"
-                                           Foreground="#1F2937" />
+                                    <!-- Content Preview -->
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding Content}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center"
+                                               FontSize="12"
+                                               Foreground="#1F2937" />
 
-                                <!-- Action Buttons (Reorder & Delete) -->
-                                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
-                                    <Button Content="▲"
-                                            FontSize="10"
-                                            Width="22"
-                                            Height="22"
-                                            Padding="0"
-                                            HorizontalContentAlignment="Center"
-                                            VerticalContentAlignment="Center"
-                                            Background="Transparent"
-                                            Foreground="#6B7280"
-                                            ToolTip.Tip="Move Up"
-                                            Tag="{Binding}"
-                                            Click="MoveUpButton_Click" />
-                                    <Button Content="▼"
-                                            FontSize="10"
-                                            Width="22"
-                                            Height="22"
-                                            Padding="0"
-                                            HorizontalContentAlignment="Center"
-                                            VerticalContentAlignment="Center"
-                                            Background="Transparent"
-                                            Foreground="#6B7280"
-                                            ToolTip.Tip="Move Down"
-                                            Tag="{Binding}"
-                                            Click="MoveDownButton_Click" />
-                                    <Button Content="✕"
-                                            FontSize="11"
-                                            Width="22"
-                                            Height="22"
-                                            Padding="0"
-                                            HorizontalContentAlignment="Center"
-                                            VerticalContentAlignment="Center"
-                                            Background="Transparent"
-                                            Foreground="#EF4444"
-                                            ToolTip.Tip="Delete Module"
-                                            Tag="{Binding}"
-                                            Click="DeleteModuleButton_Click" />
-                                </StackPanel>
-                            </Grid>
-                        </Expander.Header>
+                                    <!-- Action Buttons -->
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
+                                        <Button Content="▲" FontSize="10" Width="22" Height="22" Padding="0"
+                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Up"
+                                                Tag="{Binding}" Click="MoveUpButton_Click" />
+                                        <Button Content="▼" FontSize="10" Width="22" Height="22" Padding="0"
+                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Down"
+                                                Tag="{Binding}" Click="MoveDownButton_Click" />
+                                        <Button Content="✕" FontSize="11" Width="22" Height="22" Padding="0"
+                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                Background="Transparent" Foreground="#EF4444" ToolTip.Tip="Delete Module"
+                                                Tag="{Binding}" Click="DeleteModuleButton_Click" />
+                                    </StackPanel>
+                                </Grid>
+                            </Expander.Header>
 
-                        <StackPanel Spacing="8" Margin="4,8,4,4">
-                            <TextBox Text="{Binding Content, Mode=TwoWay}"
-                                     AcceptsReturn="True"
-                                     TextWrapping="Wrap"
-                                     MinHeight="60" />
+                            <StackPanel Spacing="6" Margin="4,6,4,4">
+                                <TextBox Text="{Binding Content, Mode=TwoWay}"
+                                         AcceptsReturn="True"
+                                         TextWrapping="Wrap"
+                                         MinHeight="55" />
 
-                            <!-- Nested Submodules -->
-                            <ItemsControl ItemsSource="{Binding SubModules}"
-                                          Margin="16,4,0,0">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="mod:Module">
-                                        <Expander Margin="0,0,0,6" IsExpanded="False">
-                                            <Expander.Header>
-                                                <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
-                                                    <Border Grid.Column="0"
-                                                            Background="#F3F4F6"
-                                                            CornerRadius="3"
-                                                            Padding="4,1"
-                                                            Margin="0,0,6,0">
-                                                        <TextBlock Text="{Binding Name}"
-                                                                   FontSize="10"
-                                                                   Foreground="#4B5563" />
-                                                    </Border>
-                                                    <TextBlock Grid.Column="1"
-                                                               Text="{Binding Content}"
-                                                               FontSize="11"
-                                                               TextTrimming="CharacterEllipsis" />
-                                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
-                                                        <Button Content="▲"
-                                                                FontSize="9"
-                                                                Width="20"
-                                                                Height="20"
-                                                                Padding="0"
-                                                                HorizontalContentAlignment="Center"
-                                                                VerticalContentAlignment="Center"
-                                                                Background="Transparent"
-                                                                Foreground="#6B7280"
-                                                                ToolTip.Tip="Move Up"
-                                                                Tag="{Binding}"
-                                                                Click="MoveUpButton_Click" />
-                                                        <Button Content="▼"
-                                                                FontSize="9"
-                                                                Width="20"
-                                                                Height="20"
-                                                                Padding="0"
-                                                                HorizontalContentAlignment="Center"
-                                                                VerticalContentAlignment="Center"
-                                                                Background="Transparent"
-                                                                Foreground="#6B7280"
-                                                                ToolTip.Tip="Move Down"
-                                                                Tag="{Binding}"
-                                                                Click="MoveDownButton_Click" />
-                                                        <Button Content="✕"
-                                                                FontSize="10"
-                                                                Width="20"
-                                                                Height="20"
-                                                                Padding="0"
-                                                                HorizontalContentAlignment="Center"
-                                                                VerticalContentAlignment="Center"
-                                                                Background="Transparent"
-                                                                Foreground="#EF4444"
-                                                                ToolTip.Tip="Delete Submodule"
-                                                                Tag="{Binding}"
-                                                                Click="DeleteModuleButton_Click" />
-                                                    </StackPanel>
-                                                </Grid>
-                                            </Expander.Header>
-                                            <TextBox Text="{Binding Content, Mode=TwoWay}"
-                                                     AcceptsReturn="True"
-                                                     TextWrapping="Wrap"
-                                                     MinHeight="40"
-                                                     Margin="4" />
-                                        </Expander>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Expander>
+                                <!-- Nested Submodules (Recursive) -->
+                                <ItemsControl ItemsSource="{Binding SubModules}" Margin="14,2,0,0">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="mod:Module">
+                                            <Border Classes="module-card"
+                                                    Tag="{Binding}"
+                                                    Margin="0,2,0,2"
+                                                    Padding="2">
+                                                <Expander IsExpanded="False" Background="Transparent">
+                                                    <Expander.Header>
+                                                        <Grid ColumnDefinitions="Auto,*,Auto"
+                                                              VerticalAlignment="Center"
+                                                              Background="Transparent">
+                                                            <Border Grid.Column="0" Background="#E5E7EB" CornerRadius="3" Padding="4,1" Margin="0,0,6,0">
+                                                                <TextBlock Text="{Binding Name}" FontSize="10" FontWeight="Medium" Foreground="#4B5563" />
+                                                            </Border>
+                                                            <TextBlock Grid.Column="1" Text="{Binding Content}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                                                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
+                                                                <Button Content="▲" FontSize="9" Width="20" Height="20" Padding="0"
+                                                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Up"
+                                                                        Tag="{Binding}" Click="MoveUpButton_Click" />
+                                                                <Button Content="▼" FontSize="9" Width="20" Height="20" Padding="0"
+                                                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Down"
+                                                                        Tag="{Binding}" Click="MoveDownButton_Click" />
+                                                                <Button Content="✕" FontSize="10" Width="20" Height="20" Padding="0"
+                                                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                                        Background="Transparent" Foreground="#EF4444" ToolTip.Tip="Delete Submodule"
+                                                                        Tag="{Binding}" Click="DeleteModuleButton_Click" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Expander.Header>
+                                                    <TextBox Text="{Binding Content, Mode=TwoWay}"
+                                                             AcceptsReturn="True"
+                                                             TextWrapping="Wrap"
+                                                             MinHeight="40"
+                                                             Margin="2,4" />
+                                                </Expander>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Expander>
+                    </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

@@ -1,6 +1,9 @@
 using System;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using TextForge.Core;
 using TextForge.Core.Documents;
 using TextForge.Core.Engine;
@@ -8,6 +11,8 @@ using TextForge.Core.Modules;
 using TextForge.Core.Templates;
 using TextForge.Desktop.Rendering;
 using TextForge.Desktop.Views.Components;
+using Avalonia.Controls.Primitives;
+using System.Linq;
 
 namespace TextForge.Desktop.Views;
 
@@ -85,21 +90,87 @@ public partial class MainWindow : Window
     private void BindModuleList()
     {
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
-        if (moduleEditor is not null)
-        {
-            moduleEditor.ModuleMoveUpRequested += ModuleEditor_ModuleMoveUpRequested;
-            moduleEditor.ModuleMoveDownRequested += ModuleEditor_ModuleMoveDownRequested;
-            moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
+        if (moduleEditor is null) return;
 
-            var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
-            if (moduleListBox is not null)
-            {
-                moduleListBox.ItemsSource = _currentDocument.Modules;
-                moduleListBox.SelectionChanged += ModuleListBox_SelectionChanged;
-            }
+        moduleEditor.ModuleMoveUpRequested += ModuleEditor_ModuleMoveUpRequested;
+        moduleEditor.ModuleMoveDownRequested += ModuleEditor_ModuleMoveDownRequested;
+        moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
+
+        var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
+        if (moduleListBox is not null)
+        {
+            moduleListBox.ItemsSource = _currentDocument.Modules;
+            moduleListBox.SelectionChanged += ModuleListBox_SelectionChanged;
+
+            // Use Bubble ONLY with handledEventsToo: true
+            moduleListBox.AddHandler(
+                InputElement.PointerPressedEvent,
+                OnModuleListBoxPointerPressed,
+                RoutingStrategies.Bubble,
+                handledEventsToo: true);
         }
     }
 
+    private void OnModuleListBoxPointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is not ListBox listBox || e.Source is not Visual sourceVisual) return;
+
+        // Ignore action buttons (Move Up, Move Down, Delete)
+        var button = sourceVisual.FindAncestorOfType<Button>();
+        if (button is not null && button is not ToggleButton)
+        {
+            return;
+        }
+
+        // Find the immediate innermost module card border
+        var cardBorder = (sourceVisual as Border)?.Classes.Contains("module-card") == true
+            ? (Border)sourceVisual
+            : sourceVisual.GetVisualAncestors()
+                          .OfType<Border>()
+                          .FirstOrDefault(b => b.Classes.Contains("module-card"));
+
+        if (cardBorder?.DataContext is Module clickedModule)
+        {
+            _currentDocument.SelectModule(clickedModule);
+            SyncPropertiesToolbar(clickedModule);
+            ApplyModuleSelectionHighlight(clickedModule);
+        }
+    }
+
+    private void ModuleListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        if (sender is ListBox listBox && listBox.SelectedItem is Module selectedModule)
+        {
+            _currentDocument.SelectModule(selectedModule);
+            SyncPropertiesToolbar(selectedModule);
+            ApplyModuleSelectionHighlight(selectedModule);
+        }
+    }
+
+    private void ApplyModuleSelectionHighlight(Module? selectedModule)
+    {
+        var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
+        if (moduleEditor is null) return;
+
+        var allCardBorders = moduleEditor.GetVisualDescendants()
+                                         .OfType<Border>()
+                                         .Where(b => b.Classes.Contains("module-card"));
+
+        foreach (var border in allCardBorders)
+        {
+            if (border.Tag is Module module && module == selectedModule)
+            {
+                if (!border.Classes.Contains("selected"))
+                {
+                    border.Classes.Add("selected");
+                }
+            }
+            else
+            {
+                border.Classes.Remove("selected");
+            }
+        }
+    }
     private void ModuleEditor_ModuleMoveUpRequested(object? sender, Module module)
     {
         if (_currentDocument.MoveModuleUp(module))
@@ -115,7 +186,7 @@ public partial class MainWindow : Window
             RefreshModuleEditorList();
         }
     }
-    
+
     private void ModuleEditor_ModuleDeleteRequested(object? sender, Module module)
     {
         // 1. Remove from domain model (triggers Changed -> updates preview)
@@ -163,14 +234,14 @@ public partial class MainWindow : Window
     /// </summary>
     /// <param name="sender">The <see cref="ListBox"/> control raising the selection event.</param>
     /// <param name="e">Selection event data containing newly selected items.</param>
-    private void ModuleListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (sender is ListBox listBox && listBox.SelectedItem is Module selectedModule)
-        {
-            _currentDocument.SelectModule(selectedModule);
-            SyncPropertiesToolbar(selectedModule);
-        }
-    }
+    // private void ModuleListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
+    // {
+    //     if (sender is ListBox listBox && listBox.SelectedItem is Module selectedModule)
+    //     {
+    //         _currentDocument.SelectModule(selectedModule);
+    //         SyncPropertiesToolbar(selectedModule);
+    //     }
+    // }
 
     /// <summary>
     /// Synchronizes the style selection dropdown in <see cref="PropertiesToolbarView"/> with the
