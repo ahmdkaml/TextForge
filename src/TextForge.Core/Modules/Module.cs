@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace TextForge.Core.Modules;
 
@@ -25,6 +26,7 @@ public class Module
 
     public string Content { get; set; } = string.Empty;
 
+
     /// <summary>
     /// Direct visual overrides that take precedence over the template style.
     /// </summary>
@@ -33,7 +35,8 @@ public class Module
     /// <summary>
     /// Nested child modules (e.g., list items under a section heading).
     /// </summary>
-    public List<Module> SubModules { get; init; } = [];
+    public ObservableCollection<Module> SubModules { get; set; } = [];
+
 
     /// <summary>
     /// Ephemeral UI selection state. Retained in-memory during active sessions.

@@ -398,8 +398,8 @@ public partial class MainWindow : Window
             // 1. Create a fresh instance using Core's ModuleRegistry definition
             var newModule = definition.Create();
 
-            // 2. Append to domain model (which invokes Changed -> triggers RenderCurrentPreview)
-            _currentDocument.AddModule(newModule);
+            // 2. Append to domain model (latches to SelectedModule if active, otherwise appends to root)
+            _currentDocument.AddModule(newModule, parent: _currentDocument.SelectedModule);
 
             // 3. Refresh the ModuleEditor ListBox ItemsSource to show the new module
             RefreshModuleEditorList();

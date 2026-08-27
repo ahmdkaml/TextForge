@@ -54,16 +54,31 @@ public class Document
     }
 
     /// <summary>
-    /// Appends a module to the root sequential list and returns the document for chaining.
+    /// Adds a module to the document hierarchy.
+    /// If parent is provided, appends to parent.SubModules; otherwise appends to root Modules.
     /// </summary>
-    public Document AddModule(Module module)
+    /// <param name="newModule">The module to insert.</param>
+    /// <param name="parent">The target parent module, or null to append to the document root.</param>
+    /// <returns>The current Document instance for fluent chaining.</returns>
+    public Document AddModule(Module newModule, Module? parent = null)
     {
-        ArgumentNullException.ThrowIfNull(module);
-        Modules.Add(module);
+        ArgumentNullException.ThrowIfNull(newModule);
+
+        if (parent is not null)
+        {
+            parent.SubModules.Add(newModule);
+        }
+        else
+        {
+            Modules.Add(newModule);
+        }
+
+        // Keep the newly added module active for selection/toolbar
+        SelectModule(newModule);
         NotifyChanged();
         return this;
     }
-
+    
     /// <summary>
     /// Updates the active module selection, updating all node flags across the tree.
     /// </summary>
