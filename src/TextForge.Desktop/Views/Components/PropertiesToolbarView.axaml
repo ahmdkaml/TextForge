@@ -1,6 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cp="using:Avalonia.Controls"
+             xmlns:fonts="using:TextForge.Core.Fonts"
              x:Class="TextForge.Desktop.Views.Components.PropertiesToolbarView">
     <Border Background="#F9FAFB"
             BorderBrush="#E5E7EB"
@@ -8,37 +9,56 @@
             CornerRadius="6"
             Padding="8,6"
             Margin="0,0,0,10">
-        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-            <TextBlock Text="Color:" FontSize="12" Foreground="#4B5563" VerticalAlignment="Center" Margin="0,0,4,0" />
+        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
 
-            <!-- 5 Default Template Swatches -->
-            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#2563EB" BorderThickness="0" ToolTip.Tip="Primary Blue (#2563EB)" Tag="#2563EB" />
-            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#1E40AF" BorderThickness="0" ToolTip.Tip="Deep Navy (#1E40AF)" Tag="#1E40AF" />
-            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#0D9488" BorderThickness="0" ToolTip.Tip="Teal Accent (#0D9488)" Tag="#0D9488" />
-            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#4B5563" BorderThickness="0" ToolTip.Tip="Slate Gray (#4B5563)" Tag="#4B5563" />
-            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#DC2626" BorderThickness="0" ToolTip.Tip="Alert Red (#DC2626)" Tag="#DC2626" />
+            <!-- Global Font Dropdown (UI Only) -->
+            <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="Font:" FontSize="12" Foreground="#4B5563" VerticalAlignment="Center" />
+                <ComboBox Name="FontSelector"
+                          ItemsSource="{x:Static fonts:FontRegistry.AvailableFonts}"
+                          SelectedIndex="0"
+                          Width="130"
+                          Height="28"
+                          FontSize="12" />
+            </StackPanel>
 
-            <!-- Divider -->
+            <!-- Section Divider -->
             <Border Width="1" Height="16" Background="#E5E7EB" Margin="4,0" />
 
-            <!-- Pop-up Color Picker Button -->
-            <Button Width="24"
-                    Height="24"
-                    CornerRadius="4"
-                    Padding="0"
-                    Background="#FFFFFF"
-                    BorderBrush="#D1D5DB"
-                    BorderThickness="1"
-                    ToolTip.Tip="Choose Custom Color">
-                <TextBlock Text="🎨" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                <Button.Flyout>
-                    <Flyout Placement="BottomEdgeAlignedLeft">
-                        <cp:ColorPicker Name="CustomColorPicker"
-                                        Color="#2563EB"
-                                        IsAlphaEnabled="False" />
-                    </Flyout>
-                </Button.Flyout>
-            </Button>
+            <!-- Template Color Palette & Custom Picker -->
+            <StackPanel Orientation="Horizontal" Spacing="5" VerticalAlignment="Center">
+                <TextBlock Text="Color:" FontSize="12" Foreground="#4B5563" VerticalAlignment="Center" Margin="0,0,2,0" />
+
+                <!-- 5 Default Template Swatches -->
+                <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#2563EB" BorderThickness="0" ToolTip.Tip="Primary Blue (#2563EB)" Tag="#2563EB" />
+                <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#1E40AF" BorderThickness="0" ToolTip.Tip="Deep Navy (#1E40AF)" Tag="#1E40AF" />
+                <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#0D9488" BorderThickness="0" ToolTip.Tip="Teal Accent (#0D9488)" Tag="#0D9488" />
+                <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#4B5563" BorderThickness="0" ToolTip.Tip="Slate Gray (#4B5563)" Tag="#4B5563" />
+                <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#DC2626" BorderThickness="0" ToolTip.Tip="Alert Red (#DC2626)" Tag="#DC2626" />
+
+                <!-- Color Divider -->
+                <Border Width="1" Height="14" Background="#E5E7EB" Margin="3,0" />
+
+                <!-- Pop-up Color Picker Trigger -->
+                <Button Width="24"
+                        Height="24"
+                        CornerRadius="4"
+                        Padding="0"
+                        Background="#FFFFFF"
+                        BorderBrush="#D1D5DB"
+                        BorderThickness="1"
+                        ToolTip.Tip="Choose Custom Color">
+                    <TextBlock Text="🎨" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedLeft">
+                            <cp:ColorPicker Name="CustomColorPicker"
+                                            Color="#2563EB"
+                                            IsAlphaEnabled="False" />
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+            </StackPanel>
+
         </StackPanel>
     </Border>
 </UserControl>
