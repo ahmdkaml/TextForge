@@ -90,13 +90,13 @@
                                     Background="Transparent" Foreground="#EF4444"
                                     ToolTip.Tip="Delete Module"
                                     Tag="{Binding}" Click="DeleteModuleButton_Click" />
-                                <Button Content="+" FontSize="14" FontWeight="Bold" Width="22"
+                                <Button Content="⊘" FontSize="14" FontWeight="Bold" Width="22"
                                     Height="22" Padding="0"
                                     HorizontalContentAlignment="Center"
                                     VerticalContentAlignment="Center"
-                                    Background="Transparent" Foreground="#10B981"
-                                    ToolTip.Tip="Duplicate Module"
-                                    Tag="{Binding}" Click="DuplicateModuleButton_Click" />
+                                    Background="Transparent" Foreground="#F59E0B"
+                                    ToolTip.Tip="Detach from layout"
+                                    Tag="{Binding}" Click="DetachModuleButton_Click" />
 
                             </StackPanel>
                         </Grid>

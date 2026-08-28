@@ -173,6 +173,25 @@ public class Document
     #endregion
 
     #region Reordering Operations
+    public void DetachModule(Module module)
+    {
+        ArgumentNullException.ThrowIfNull(module);
+
+        if (module.Parent is not null)
+        {
+            // 1. Remove from parent collection (auto-sets module.Parent = null)
+            module.Parent.SubModules.Remove(module);
+
+            // 2. Add to root document collection
+            Modules.Add(module);
+        }
+
+        // 3. Update state
+        module.Detach();
+
+        // 4. Trigger document change pipeline
+        NotifyChanged();
+    }
 
     /// <summary>
     /// Moves a module one position earlier within its current sibling list (root level or nested level).
