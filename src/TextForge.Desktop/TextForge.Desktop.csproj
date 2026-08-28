@@ -8,7 +8,8 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <AvaloniaResource Include="Assets\**" />
+    <!-- Link canonical root-level Assets into Avalonia embedded resources -->
+    <AvaloniaResource Include="..\..\Assets\**\*" Link="Assets\%(RecursiveDir)%(FileName)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

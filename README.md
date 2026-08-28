@@ -1,8 +1,8 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/branding/logo-dark.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/branding/logo-light.svg">
-    <img alt="TextForge logo" src="assets/branding/logo-light.svg" width="360">
+    <source media="(prefers-color-scheme: dark)" srcset="Assets/branding/logo-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="Assets/branding/logo-light.svg">
+    <img alt="TextForge logo" src="Assets/branding/logo-light.svg" width="360">
   </picture>
 </p>
 
@@ -93,7 +93,7 @@ TextForge enforces a one-directional dependency: client interfaces depend on the
 
 ```
 TextForge/
-├── assets/
+├── Assets/
 │   ├── branding/            # SVG logos (logo-dark.svg, logo-light.svg), icon.png
 │   └── icons/                # Multi-res app-icon.ico, .icns, favicon.ico
 ├── src/
