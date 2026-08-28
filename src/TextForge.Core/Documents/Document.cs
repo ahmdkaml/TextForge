@@ -106,6 +106,16 @@ public class Document
         NotifyChanged();
     }
 
+    public Module? DuplicateModule(Module module)
+    {
+        var clone = DocumentOperations.Duplicate(Modules, module);
+        if (clone is not null)
+        {
+            NotifyChanged(); // Same notification Move and Remove use internally
+        }
+        return clone;
+    }
+
     private static void SetSelectionRecursive(IEnumerable<Module> modules, bool isSelected)
     {
         foreach (var mod in modules)

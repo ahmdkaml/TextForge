@@ -1,7 +1,7 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mod="using:TextForge.Core.Modules"
-             x:Class="TextForge.Desktop.Views.Components.ModuleEditorView">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mod="using:TextForge.Core.Modules"
+    x:Class="TextForge.Desktop.Views.Components.ModuleEditorView">
 
     <UserControl.Styles>
         <Style Selector="ListBoxItem">
@@ -39,64 +39,80 @@
         <!-- Self-Referencing Recursive Template for Modules & Submodules at any depth -->
         <DataTemplate x:Key="RecursiveModuleTemplate" x:DataType="mod:Module">
             <Border Classes="module-card"
-                    Tag="{Binding}"
-                    Margin="0,1"
-                    Padding="2">
+                Tag="{Binding}"
+                Margin="0,1"
+                Padding="2">
                 <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay, FallbackValue=False}"
-                          HorizontalAlignment="Stretch"
-                          Background="Transparent">
+                    HorizontalAlignment="Stretch"
+                    Background="Transparent">
                     <Expander.Header>
                         <Grid ColumnDefinitions="Auto,*,Auto"
-                              VerticalAlignment="Center"
-                              Background="Transparent">
+                            VerticalAlignment="Center"
+                            Background="Transparent">
                             <!-- Archetype Tag -->
                             <Border Grid.Column="0"
-                                    Background="#E5E7EB"
-                                    CornerRadius="4"
-                                    Padding="6,2"
-                                    Margin="0,0,8,0">
+                                Background="#E5E7EB"
+                                CornerRadius="4"
+                                Padding="6,2"
+                                Margin="0,0,8,0">
                                 <TextBlock Text="{Binding Name}"
-                                           FontSize="11"
-                                           FontWeight="SemiBold"
-                                           Foreground="#374151" />
+                                    FontSize="11"
+                                    FontWeight="SemiBold"
+                                    Foreground="#374151" />
                             </Border>
 
                             <!-- Content Preview -->
                             <TextBlock Grid.Column="1"
-                                       Text="{Binding Content}"
-                                       TextTrimming="CharacterEllipsis"
-                                       VerticalAlignment="Center"
-                                       FontSize="12"
-                                       Foreground="#1F2937" />
+                                Text="{Binding Content}"
+                                TextTrimming="CharacterEllipsis"
+                                VerticalAlignment="Center"
+                                FontSize="12"
+                                Foreground="#1F2937" />
 
                             <!-- Action Buttons -->
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2" Margin="4,0,0,0">
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
+                                Margin="4,0,0,0">
                                 <Button Content="▲" FontSize="10" Width="22" Height="22" Padding="0"
-                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Up"
-                                        Tag="{Binding}" Click="MoveUpButton_Click" />
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent" Foreground="#6B7280"
+                                    ToolTip.Tip="Move Up"
+                                    Tag="{Binding}" Click="MoveUpButton_Click" />
                                 <Button Content="▼" FontSize="10" Width="22" Height="22" Padding="0"
-                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                        Background="Transparent" Foreground="#6B7280" ToolTip.Tip="Move Down"
-                                        Tag="{Binding}" Click="MoveDownButton_Click" />
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent" Foreground="#6B7280"
+                                    ToolTip.Tip="Move Down"
+                                    Tag="{Binding}" Click="MoveDownButton_Click" />
                                 <Button Content="✕" FontSize="11" Width="22" Height="22" Padding="0"
-                                        HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                                        Background="Transparent" Foreground="#EF4444" ToolTip.Tip="Delete Module"
-                                        Tag="{Binding}" Click="DeleteModuleButton_Click" />
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent" Foreground="#EF4444"
+                                    ToolTip.Tip="Delete Module"
+                                    Tag="{Binding}" Click="DeleteModuleButton_Click" />
+                                <Button Content="+" FontSize="14" FontWeight="Bold" Width="22"
+                                    Height="22" Padding="0"
+                                    HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Background="Transparent" Foreground="#10B981"
+                                    ToolTip.Tip="Duplicate Module"
+                                    Tag="{Binding}" Click="DuplicateModuleButton_Click" />
+
                             </StackPanel>
                         </Grid>
                     </Expander.Header>
 
                     <StackPanel Spacing="6" Margin="4,6,4,4">
                         <TextBox Text="{Binding Content, Mode=TwoWay}"
-                                 AcceptsReturn="True"
-                                 TextWrapping="Wrap"
-                                 MinHeight="45" />
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            MinHeight="45" />
 
-                        <!-- Recursive ItemsControl: uses the exact same template for child submodules -->
+                        <!-- Recursive ItemsControl: uses the exact same template for child
+                        submodules -->
                         <ItemsControl ItemsSource="{Binding SubModules}"
-                                      ItemTemplate="{StaticResource RecursiveModuleTemplate}"
-                                      Margin="14,2,0,0" />
+                            ItemTemplate="{StaticResource RecursiveModuleTemplate}"
+                            Margin="14,2,0,0" />
                     </StackPanel>
                 </Expander>
             </Border>
@@ -104,10 +120,10 @@
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
-                  HorizontalScrollBarVisibility="Disabled">
+        HorizontalScrollBarVisibility="Disabled">
         <ListBox Name="ModuleListBox"
-                 Background="Transparent"
-                 SelectionMode="Single"
-                 ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
+            Background="Transparent"
+            SelectionMode="Single"
+            ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
     </ScrollViewer>
 </UserControl>
