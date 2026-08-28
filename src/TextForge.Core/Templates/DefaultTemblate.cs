@@ -5,9 +5,11 @@ using TextForge.Core.Modules;
 
 namespace TextForge.Core.Templates;
 
-public class DefaultTemplate
+public class DefaultTemplate : IDocumentTemplate
 {
     public string Name { get; init; } = "Default";
+    public string DisplayName => "Default";
+    public string Description => "Standard document layout and styling.";
 
     /// <summary>
     /// Global template baseline defaults. Default text color is standard blue.

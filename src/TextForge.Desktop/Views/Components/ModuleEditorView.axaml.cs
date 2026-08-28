@@ -15,7 +15,7 @@ public partial class ModuleEditorView : UserControl
     public event EventHandler<Module>? ModuleDeleteRequested;
     public event EventHandler<Module>? ModuleDuplicateRequested;
     public event EventHandler<Module>? ModuleDetachRequested;
-    public event EventHandler<Module>? ModuleReconnectRequested;
+    // public event EventHandler<Module>? ModuleReconnectRequested;
 
     public ModuleEditorView()
     {
