@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using TextForge.Core;
 using TextForge.Core.Documents;
 using TextForge.Core.Modules;
 
@@ -12,6 +13,7 @@ public partial class ModuleEditorView : UserControl
     public event EventHandler<Module>? ModuleMoveUpRequested;
     public event EventHandler<Module>? ModuleMoveDownRequested;
     public event EventHandler<Module>? ModuleDeleteRequested;
+    public event EventHandler<Module>? ModuleDuplicateRequested;
 
     public ModuleEditorView()
     {
@@ -41,6 +43,15 @@ public partial class ModuleEditorView : UserControl
             ModuleDeleteRequested?.Invoke(this, module);
         }
     }
+
+    private void DuplicateModuleButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: Module module })
+        {
+            ModuleDuplicateRequested?.Invoke(this, module);
+        }
+    }
+
     /// <summary>
     /// Binds the editor to a document instance.
     /// Done once per document load.

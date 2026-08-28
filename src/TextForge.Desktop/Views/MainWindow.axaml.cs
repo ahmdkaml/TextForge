@@ -95,6 +95,8 @@ public partial class MainWindow : Window
         moduleEditor.ModuleMoveUpRequested += ModuleEditor_ModuleMoveUpRequested;
         moduleEditor.ModuleMoveDownRequested += ModuleEditor_ModuleMoveDownRequested;
         moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
+        moduleEditor.ModuleDuplicateRequested += ModuleEditor_ModuleDuplicateRequested;
+
 
         var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
         if (moduleListBox is not null)
@@ -194,6 +196,14 @@ public partial class MainWindow : Window
 
         // 2. Refresh the editor ListBox to update UI items
         RefreshModuleEditorList();
+    }
+
+    private void ModuleEditor_ModuleDuplicateRequested(object? sender, Module module)
+    {
+        if (_currentDocument?.DuplicateModule(module) is not null)
+        {
+            RefreshModuleEditorList();
+        }
     }
 
     #endregion

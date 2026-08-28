@@ -1,20 +1,17 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.Json.Serialization;
 
 namespace TextForge.Core.Modules;
 
-/// <summary>
-/// Represents an independent content element within a document.
-/// Modules can be nested hierarchically to form compound structures.
-/// </summary>
 public class Module : INotifyPropertyChanged
 {
     private string _content = string.Empty;
     private bool _isSelected;
     private bool _isExpanded;
+    private Module? _parent;
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -25,6 +22,24 @@ public class Module : INotifyPropertyChanged
     public string? StyleKey { get; init; }
 
     public ModuleType Type { get; init; } = ModuleType.Text;
+
+    /// <summary>
+    /// Reference to the containing parent module. Null if this is a root-level module.
+    /// Ignored during serialization to avoid cyclic object graphs.
+    /// </summary>
+    [JsonIgnore]
+    public Module? Parent
+    {
+        get => _parent;
+        internal set
+        {
+            if (_parent != value)
+            {
+                _parent = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public string Content
     {
@@ -41,7 +56,7 @@ public class Module : INotifyPropertyChanged
 
     public ModuleFeatures Features { get; set; } = ModuleFeatures.Default;
 
-    public ObservableCollection<Module> SubModules { get; set; } = [];
+    public ObservableCollection<Module> SubModules { get; } = [];
 
     public bool IsSelected
     {
@@ -69,7 +84,10 @@ public class Module : INotifyPropertyChanged
         }
     }
 
-    public Module() { }
+    public Module()
+    {
+        WireSubModulesCollection();
+    }
 
     public Module(
         string content,
@@ -83,6 +101,57 @@ public class Module : INotifyPropertyChanged
         StyleKey = styleKey;
         Features = features ?? ModuleFeatures.Default;
         Name = name;
+        WireSubModulesCollection();
+    }
+
+    private void WireSubModulesCollection()
+    {
+        SubModules.CollectionChanged += OnSubModulesChanged;
+    }
+
+    private void OnSubModulesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.NewItems != null)
+        {
+            foreach (Module child in e.NewItems)
+            {
+                child.Parent = this;
+            }
+        }
+
+        if (e.OldItems != null)
+        {
+            foreach (Module child in e.OldItems)
+            {
+                if (child.Parent == this)
+                {
+                    child.Parent = null;
+                }
+            }
+        }
+    }
+
+    public Module Clone()
+    {
+        var clone = new Module
+        {
+            Id = Guid.NewGuid(),
+            Name = Name,
+            Type = Type,
+            StyleKey = StyleKey,
+            Content = Content,
+            Features = Features with { },
+            IsExpanded = IsExpanded,
+            IsSelected = false
+        };
+
+        foreach (var subModule in SubModules)
+        {
+            // Adding automatically assigns clone as the Parent
+            clone.SubModules.Add(subModule.Clone());
+        }
+
+        return clone;
     }
 
     protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)

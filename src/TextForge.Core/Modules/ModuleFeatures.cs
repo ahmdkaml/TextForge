@@ -39,4 +39,5 @@ public record ModuleFeatures
             LineSpacing = LineSpacing ?? fallback.LineSpacing
         };
     }
+
 }
