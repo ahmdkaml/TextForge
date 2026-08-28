@@ -1,58 +1,44 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cp="using:Avalonia.Controls"
              x:Class="TextForge.Desktop.Views.Components.PropertiesToolbarView">
-    <!-- HORIZONTAL PROPERTIES BAR -->
     <Border Background="#F9FAFB"
             BorderBrush="#E5E7EB"
             BorderThickness="1"
             CornerRadius="6"
-            Padding="8"
+            Padding="8,6"
             Margin="0,0,0,10">
-        <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <!-- Type & Style -->
-            <StackPanel Orientation="Horizontal" Spacing="6"
-                        VerticalAlignment="Center" Margin="0,0,16,0">
-                <TextBlock Text="Style:" FontSize="12" Foreground="#4B5563"
-                           VerticalAlignment="Center" />
-                <ComboBox Name="StyleSelector" Width="100" SelectedIndex="0">
-                    <ComboBoxItem Content="Body" />
-                    <ComboBoxItem Content="Title" />
-                    <ComboBoxItem Content="Heading" />
-                    <ComboBoxItem Content="Callout" />
-                </ComboBox>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+            <TextBlock Text="Color:" FontSize="12" Foreground="#4B5563" VerticalAlignment="Center" Margin="0,0,4,0" />
 
-            <!-- Layout Spacing: Margin -->
-            <StackPanel Orientation="Horizontal" Spacing="6"
-                        VerticalAlignment="Center" Margin="0,0,16,0">
-                <TextBlock Text="Margin:" FontSize="12" Foreground="#4B5563"
-                           VerticalAlignment="Center" />
-                <TextBox Name="MarginInput" Width="55" Height="28"
-                         PlaceholderText="0" Padding="4,2" />
-            </StackPanel>
+            <!-- 5 Default Template Swatches -->
+            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#2563EB" BorderThickness="0" ToolTip.Tip="Primary Blue (#2563EB)" Tag="#2563EB" />
+            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#1E40AF" BorderThickness="0" ToolTip.Tip="Deep Navy (#1E40AF)" Tag="#1E40AF" />
+            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#0D9488" BorderThickness="0" ToolTip.Tip="Teal Accent (#0D9488)" Tag="#0D9488" />
+            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#4B5563" BorderThickness="0" ToolTip.Tip="Slate Gray (#4B5563)" Tag="#4B5563" />
+            <Button Width="22" Height="22" CornerRadius="4" Padding="0" Background="#DC2626" BorderThickness="0" ToolTip.Tip="Alert Red (#DC2626)" Tag="#DC2626" />
 
-            <!-- Layout Spacing: Padding -->
-            <StackPanel Orientation="Horizontal" Spacing="6"
-                        VerticalAlignment="Center" Margin="0,0,16,0">
-                <TextBlock Text="Padding:" FontSize="12" Foreground="#4B5563"
-                           VerticalAlignment="Center" />
-                <TextBox Name="PaddingInput" Width="55" Height="28"
-                         PlaceholderText="0" Padding="4,2" />
-            </StackPanel>
+            <!-- Divider -->
+            <Border Width="1" Height="16" Background="#E5E7EB" Margin="4,0" />
 
-            <!-- Alignment -->
-            <StackPanel Orientation="Horizontal" Spacing="4"
-                        VerticalAlignment="Center">
-                <Button Content="⬅" Width="28" Height="28" Padding="0"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center" ToolTip.Tip="Align Left" />
-                <Button Content="⬛" Width="28" Height="28" Padding="0"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center" ToolTip.Tip="Align Center" />
-                <Button Content="➡" Width="28" Height="28" Padding="0"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Center" ToolTip.Tip="Align Right" />
-            </StackPanel>
-        </WrapPanel>
+            <!-- Pop-up Color Picker Button -->
+            <Button Width="24"
+                    Height="24"
+                    CornerRadius="4"
+                    Padding="0"
+                    Background="#FFFFFF"
+                    BorderBrush="#D1D5DB"
+                    BorderThickness="1"
+                    ToolTip.Tip="Choose Custom Color">
+                <TextBlock Text="🎨" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedLeft">
+                        <cp:ColorPicker Name="CustomColorPicker"
+                                        Color="#2563EB"
+                                        IsAlphaEnabled="False" />
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
     </Border>
 </UserControl>
