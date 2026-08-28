@@ -10,7 +10,7 @@
             Margin="0,0,0,10">
         <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
 
-            <!-- Font Selection Dropdown (No Label, Placeholder as First Item) -->
+            <!-- Font Selection Dropdown -->
             <ComboBox Name="FontSelector"
                       Width="130"
                       Height="28"
@@ -28,21 +28,43 @@
             <!-- Section Divider -->
             <Border Width="1" Height="16" Background="#E5E7EB" Margin="2,0" />
 
-            <!-- Strikethrough Toggle -->
-            <ToggleButton Name="StrikethroughToggle"
-                          Width="28"
-                          Height="28"
-                          Padding="0"
-                          HorizontalContentAlignment="Center"
-                          VerticalContentAlignment="Center"
-                          ToolTip.Tip="Strikethrough">
-                <TextBlock Text="S"
-                           FontSize="12"
-                           FontWeight="SemiBold"
-                           TextDecorations="Strikethrough"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center" />
-            </ToggleButton>
+            <!-- Text Formatting Toggles (Italic & Strikethrough) -->
+            <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                <!-- Italic Toggle -->
+                <ToggleButton Name="ItalicToggle"
+                              Width="28"
+                              Height="28"
+                              Padding="0"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              ToolTip.Tip="Italic">
+                    <TextBlock Text="I"
+                               FontSize="12"
+                               FontStyle="Italic"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </ToggleButton>
+
+                <!-- Strikethrough Toggle -->
+                <ToggleButton Name="StrikethroughToggle"
+                              Width="28"
+                              Height="28"
+                              Padding="0"
+                              HorizontalContentAlignment="Center"
+                              VerticalContentAlignment="Center"
+                              ToolTip.Tip="Strikethrough">
+                    <TextBlock Text="S"
+                               FontSize="12"
+                               FontWeight="SemiBold"
+                               TextDecorations="Strikethrough"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center" />
+                </ToggleButton>
+            </StackPanel>
+
+            <!-- Section Divider -->
+            <Border Width="1" Height="16" Background="#E5E7EB" Margin="2,0" />
 
             <!-- Highlight Marker Flyout Button -->
             <Button Name="HighlightMarkerButton"
@@ -111,7 +133,7 @@
                             <WrapPanel MaxWidth="140">
                                 <Button Width="22" Height="22" Margin="2" Background="#2563EB" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Primary Blue" Tag="#2563EB" />
                                 <Button Width="22" Height="22" Margin="2" Background="#1E40AF" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Deep Navy" Tag="#1E40AF" />
-                                <Button Width="22" Height="22" Margin="2" Background="#0D9488" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Teal" Tag="#0D9488" />
+                                <Button Width="22" Height="22" Margin="2" Background="#0D9488" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Teal Accent" Tag="#0D9488" />
                                 <Button Width="22" Height="22" Margin="2" Background="#4B5563" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Slate Gray" Tag="#4B5563" />
                                 <Button Width="22" Height="22" Margin="2" Background="#DC2626" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Alert Red" Tag="#DC2626" />
                             </WrapPanel>
