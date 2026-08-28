@@ -10,20 +10,87 @@
             Margin="0,0,0,10">
         <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
 
-            <!-- Font Selection Dropdown -->
-            <ComboBox Name="FontSelector"
-                      Width="130"
-                      Height="28"
-                      SelectedIndex="0"
-                      FontSize="12">
-                <ComboBoxItem Content="Font" IsEnabled="False" />
-                <ComboBoxItem Content="Segoe UI" FontFamily="Segoe UI" />
-                <ComboBoxItem Content="Inter" FontFamily="Inter" />
-                <ComboBoxItem Content="Arial" FontFamily="Arial" />
-                <ComboBoxItem Content="Calibri" FontFamily="Calibri" />
-                <ComboBoxItem Content="Times New Roman" FontFamily="Times New Roman" />
-                <ComboBoxItem Content="Consolas" FontFamily="Consolas" />
-            </ComboBox>
+            <!-- Consolidated Typography / Text Settings Popover -->
+            <Button Name="TypographyButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Background="#FFFFFF"
+                    BorderBrush="#D1D5DB"
+                    BorderThickness="1"
+                    CornerRadius="4"
+                    ToolTip.Tip="Typography Settings">
+                <TextBlock Text="Tt" FontSize="12" FontWeight="Bold" Foreground="#374151" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedLeft">
+                        <StackPanel Spacing="10" Margin="4" Width="170">
+                            <TextBlock Text="Typography" FontSize="11" FontWeight="SemiBold" Foreground="#4B5563" />
+
+                            <!-- Font Family -->
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="Font Family" FontSize="10" Foreground="#6B7280" />
+                                <ComboBox Name="FontSelector"
+                                          HorizontalAlignment="Stretch"
+                                          Height="28"
+                                          SelectedIndex="0"
+                                          FontSize="12">
+                                    <ComboBoxItem Content="Default" />
+                                    <ComboBoxItem Content="Segoe UI" FontFamily="Segoe UI" />
+                                    <ComboBoxItem Content="Inter" FontFamily="Inter" />
+                                    <ComboBoxItem Content="Arial" FontFamily="Arial" />
+                                    <ComboBoxItem Content="Calibri" FontFamily="Calibri" />
+                                    <ComboBoxItem Content="Times New Roman" FontFamily="Times New Roman" />
+                                    <ComboBoxItem Content="Consolas" FontFamily="Consolas" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <!-- Font Weight -->
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="Weight" FontSize="10" Foreground="#6B7280" />
+                                <ComboBox Name="FontWeightSelector"
+                                          HorizontalAlignment="Stretch"
+                                          Height="28"
+                                          SelectedIndex="1"
+                                          FontSize="12">
+                                    <ComboBoxItem Content="Light" FontWeight="Light" />
+                                    <ComboBoxItem Content="Regular" FontWeight="Normal" />
+                                    <ComboBoxItem Content="Medium" FontWeight="Medium" />
+                                    <ComboBoxItem Content="SemiBold" FontWeight="SemiBold" />
+                                    <ComboBoxItem Content="Bold" FontWeight="Bold" />
+                                    <ComboBoxItem Content="ExtraBold" FontWeight="ExtraBold" />
+                                    <ComboBoxItem Content="Black" FontWeight="Black" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <!-- Font Size -->
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="Size" FontSize="10" Foreground="#6B7280" />
+                                <ComboBox Name="FontSizeSelector"
+                                          HorizontalAlignment="Stretch"
+                                          Height="28"
+                                          SelectedIndex="3"
+                                          FontSize="12">
+                                    <ComboBoxItem Content="9 pt" />
+                                    <ComboBoxItem Content="10 pt" />
+                                    <ComboBoxItem Content="11 pt" />
+                                    <ComboBoxItem Content="12 pt" />
+                                    <ComboBoxItem Content="14 pt" />
+                                    <ComboBoxItem Content="16 pt" />
+                                    <ComboBoxItem Content="18 pt" />
+                                    <ComboBoxItem Content="20 pt" />
+                                    <ComboBoxItem Content="24 pt" />
+                                    <ComboBoxItem Content="28 pt" />
+                                    <ComboBoxItem Content="32 pt" />
+                                    <ComboBoxItem Content="36 pt" />
+                                    <ComboBoxItem Content="48 pt" />
+                                </ComboBox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
 
             <!-- Section Divider -->
             <Border Width="1" Height="16" Background="#E5E7EB" Margin="2,0" />
