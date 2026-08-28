@@ -14,6 +14,8 @@ public partial class ModuleEditorView : UserControl
     public event EventHandler<Module>? ModuleMoveDownRequested;
     public event EventHandler<Module>? ModuleDeleteRequested;
     public event EventHandler<Module>? ModuleDuplicateRequested;
+    public event EventHandler<Module>? ModuleDetachRequested;
+    public event EventHandler<Module>? ModuleReconnectRequested;
 
     public ModuleEditorView()
     {
@@ -49,6 +51,13 @@ public partial class ModuleEditorView : UserControl
         if (sender is Button { Tag: Module module })
         {
             ModuleDuplicateRequested?.Invoke(this, module);
+        }
+    }
+    private void DetachModuleButton_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is Button { Tag: Module module })
+        {
+            ModuleDetachRequested?.Invoke(this, module);
         }
     }
 

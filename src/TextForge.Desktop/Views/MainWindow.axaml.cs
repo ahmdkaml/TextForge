@@ -96,7 +96,7 @@ public partial class MainWindow : Window
         moduleEditor.ModuleMoveDownRequested += ModuleEditor_ModuleMoveDownRequested;
         moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
         moduleEditor.ModuleDuplicateRequested += ModuleEditor_ModuleDuplicateRequested;
-
+        moduleEditor.ModuleDetachRequested += ModuleEditor_ModuleDetachRequested;
 
         var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
         if (moduleListBox is not null)
@@ -202,6 +202,15 @@ public partial class MainWindow : Window
     {
         if (_currentDocument?.DuplicateModule(module) is not null)
         {
+            RefreshModuleEditorList();
+        }
+    }
+
+    private void ModuleEditor_ModuleDetachRequested(object? sender, Module module)
+    {
+        if (_currentDocument is not null)
+        {
+            _currentDocument.DetachModule(module);
             RefreshModuleEditorList();
         }
     }

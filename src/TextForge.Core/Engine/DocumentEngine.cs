@@ -1,3 +1,4 @@
+using System.Linq;
 using TextForge.Core.Documents;
 using TextForge.Core.Modules;
 using TextForge.Core.Templates;
@@ -14,6 +15,7 @@ public class DocumentEngine : IDocumentEngine
         ArgumentNullException.ThrowIfNull(template);
 
         var rootNodes = document.Modules
+            .Where(module => module.ConnectionState == ModuleConnectionState.Connected) // Skip detached root modules
             .Select(module => EvaluateModule(module, template))
             .ToList();
 
@@ -34,6 +36,7 @@ public class DocumentEngine : IDocumentEngine
         var resolvedLayout = template.ResolveLayout(module);
 
         var children = module.SubModules
+            .Where(child => child.ConnectionState == ModuleConnectionState.Connected) // Skip detached child modules
             .Select(child => EvaluateModule(child, template))
             .ToList();
 

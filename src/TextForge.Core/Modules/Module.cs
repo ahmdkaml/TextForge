@@ -13,6 +13,7 @@ public class Module : INotifyPropertyChanged
     private bool _isExpanded;
     private Module? _parent;
 
+    private ModuleConnectionState _connectionState = ModuleConnectionState.Connected;
     public event PropertyChangedEventHandler? PropertyChanged;
 
     public Guid Id { get; init; } = Guid.NewGuid();
@@ -108,6 +109,31 @@ public class Module : INotifyPropertyChanged
     {
         SubModules.CollectionChanged += OnSubModulesChanged;
     }
+
+    /// <summary>
+    /// Dictates whether the module is actively part of the document flow or temporarily detached.
+    /// Detached modules retain all data and children but are skipped during PDF rendering.
+    /// </summary>
+    public ModuleConnectionState ConnectionState
+    {
+        get => _connectionState;
+        set
+        {
+            if (_connectionState != value)
+            {
+                _connectionState = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsDetached));
+            }
+        }
+    }
+
+    [JsonIgnore]
+    public bool IsDetached => ConnectionState == ModuleConnectionState.Detached;
+
+    // Helper toggle methods
+    public void Detach() => ConnectionState = ModuleConnectionState.Detached;
+    public void Connect() => ConnectionState = ModuleConnectionState.Connected;
 
     private void OnSubModulesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
