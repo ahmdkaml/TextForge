@@ -1,12 +1,14 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using TextForge.Core.Documents;
 using TextForge.Core.Modules;
 
 namespace TextForge.Desktop.Views.Components;
 
 public partial class ModuleEditorView : UserControl
 {
+    private Document? _document;
     public event EventHandler<Module>? ModuleMoveUpRequested;
     public event EventHandler<Module>? ModuleMoveDownRequested;
     public event EventHandler<Module>? ModuleDeleteRequested;
@@ -38,5 +40,19 @@ public partial class ModuleEditorView : UserControl
         {
             ModuleDeleteRequested?.Invoke(this, module);
         }
+    }
+    /// <summary>
+    /// Binds the editor to a document instance.
+    /// Done once per document load.
+    /// </summary>
+    public void SetDocument(Document document)
+    {
+        if (_document == document) return;
+
+        _document = document;
+
+        // Assign the collection directly ONCE.
+        // ObservableCollection will handle all subsequent Add/Remove operations automatically.
+        ModuleListBox.ItemsSource = _document.Modules;
     }
 }
