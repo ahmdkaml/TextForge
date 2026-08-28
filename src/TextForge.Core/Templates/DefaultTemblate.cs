@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TextForge.Core.Engine;
 using TextForge.Core.Modules;
@@ -8,10 +9,13 @@ public class DefaultTemplate
 {
     public string Name { get; init; } = "Default";
 
+    /// <summary>
+    /// Global template baseline defaults. Default text color is standard blue.
+    /// </summary>
     public ModuleFeatures DocumentDefaults { get; init; } = new()
     {
         Font = "Segoe UI",
-        Color = "#1F2937",
+        Color = "#2563EB", // Standard Template Blue
         FontWeight = ModuleFontWeight.Normal,
         LineSpacing = 1.2
     };
@@ -71,7 +75,7 @@ public class DefaultTemplate
         }
     };
 
-    public Dictionary<string, ModuleFeatures> NamedStyles { get; init; } = new()
+    public Dictionary<string, ModuleFeatures> NamedStyles { get; init; } = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Title"] = new ModuleFeatures
         {
@@ -95,7 +99,7 @@ public class DefaultTemplate
         }
     };
 
-    public Dictionary<string, LayoutProperties> NamedLayoutStyles { get; init; } = new()
+    public Dictionary<string, LayoutProperties> NamedLayoutStyles { get; init; } = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Title"] = new LayoutProperties
         {
@@ -120,6 +124,8 @@ public class DefaultTemplate
 
     public ModuleFeatures ResolveFeatures(Module module)
     {
+        ArgumentNullException.ThrowIfNull(module);
+
         var resolved = DocumentDefaults;
 
         if (TypeDefaults.TryGetValue(module.Type, out var typeStyle))
@@ -127,7 +133,8 @@ public class DefaultTemplate
             resolved = typeStyle.MergeWith(resolved);
         }
 
-        if (module.StyleKey is not null && NamedStyles.TryGetValue(module.StyleKey, out var namedStyle))
+        var key = module.StyleKey ?? module.Name;
+        if (!string.IsNullOrWhiteSpace(key) && NamedStyles.TryGetValue(key, out var namedStyle))
         {
             resolved = namedStyle.MergeWith(resolved);
         }
@@ -137,6 +144,8 @@ public class DefaultTemplate
 
     public LayoutProperties ResolveLayout(Module module)
     {
+        ArgumentNullException.ThrowIfNull(module);
+
         var resolved = DocumentLayoutDefaults;
 
         if (TypeLayoutDefaults.TryGetValue(module.Type, out var typeLayout))
@@ -144,7 +153,8 @@ public class DefaultTemplate
             resolved = typeLayout.MergeWith(resolved);
         }
 
-        if (module.StyleKey is not null && NamedLayoutStyles.TryGetValue(module.StyleKey, out var namedLayout))
+        var key = module.StyleKey ?? module.Name;
+        if (!string.IsNullOrWhiteSpace(key) && NamedLayoutStyles.TryGetValue(key, out var namedLayout))
         {
             resolved = namedLayout.MergeWith(resolved);
         }

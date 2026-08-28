@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using TextForge.Core.Documents;
 using TextForge.Core.Modules;
 using TextForge.Core.Templates;
@@ -9,6 +6,8 @@ namespace TextForge.Core.Engine;
 
 public class DocumentEngine : IDocumentEngine
 {
+    private readonly DefaultTemplate _defaultTemplate = new();
+
     public RenderTree Evaluate(Document document, DefaultTemplate template)
     {
         ArgumentNullException.ThrowIfNull(document);

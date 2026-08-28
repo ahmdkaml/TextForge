@@ -19,7 +19,7 @@ public class DefaultTemplateTests
 
         // Assert: gets baseline font and color from document defaults + type line spacing
         Assert.Equal("Segoe UI", features.Font);
-        Assert.Equal("#1F2937", features.Color);
+        Assert.Equal("#2563EB", features.Color);
         Assert.Equal(ModuleFontWeight.Normal, features.FontWeight);
         Assert.Equal(1.2, features.LineSpacing);
         Assert.False(features.Italic);
