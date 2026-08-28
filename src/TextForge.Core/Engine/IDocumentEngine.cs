@@ -16,7 +16,7 @@ public interface IRenderTarget<out TOutput>
 /// </summary>
 public interface IDocumentEngine
 {
-    RenderTree Evaluate(Document document, DefaultTemplate template);
+    RenderTree Evaluate(Document document, IDocumentTemplate? template = null);
 
-    TOutput Render<TOutput>(Document document, DefaultTemplate template, IRenderTarget<TOutput> target);
+    TOutput Render<TOutput>(Document document, IDocumentTemplate? template, IRenderTarget<TOutput> target);
 }

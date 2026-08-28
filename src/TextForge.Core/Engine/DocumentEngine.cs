@@ -1,4 +1,3 @@
-using System.Linq;
 using TextForge.Core.Documents;
 using TextForge.Core.Modules;
 using TextForge.Core.Templates;
@@ -7,22 +6,28 @@ namespace TextForge.Core.Engine;
 
 public class DocumentEngine : IDocumentEngine
 {
-    private readonly DefaultTemplate _defaultTemplate = new();
+    private readonly TemplateRegistry _registry;
 
-    public RenderTree Evaluate(Document document, DefaultTemplate template)
+    public DocumentEngine(TemplateRegistry? registry = null)
+    {
+        _registry = registry ?? TemplateRegistry.Default;
+    }
+
+    public RenderTree Evaluate(Document document, IDocumentTemplate? template = null)
     {
         ArgumentNullException.ThrowIfNull(document);
-        ArgumentNullException.ThrowIfNull(template);
+
+        var activeTemplate = template ?? _registry.Get(document.TemplateName);
 
         var rootNodes = document.Modules
-            .Where(module => module.ConnectionState == ModuleConnectionState.Connected) // Skip detached root modules
-            .Select(module => EvaluateModule(module, template))
+            .Where(module => module.ConnectionState == ModuleConnectionState.Connected)
+            .Select(module => EvaluateModule(module, activeTemplate))
             .ToList();
 
         return new RenderTree(document.Metadata, rootNodes);
     }
 
-    public TOutput Render<TOutput>(Document document, DefaultTemplate template, IRenderTarget<TOutput> target)
+    public TOutput Render<TOutput>(Document document, IDocumentTemplate? template, IRenderTarget<TOutput> target)
     {
         ArgumentNullException.ThrowIfNull(target);
 
@@ -30,13 +35,13 @@ public class DocumentEngine : IDocumentEngine
         return target.Render(tree);
     }
 
-    private RenderNode EvaluateModule(Module module, DefaultTemplate template)
+    private RenderNode EvaluateModule(Module module, IDocumentTemplate template)
     {
         var resolvedFeatures = template.ResolveFeatures(module);
         var resolvedLayout = template.ResolveLayout(module);
 
         var children = module.SubModules
-            .Where(child => child.ConnectionState == ModuleConnectionState.Connected) // Skip detached child modules
+            .Where(child => child.ConnectionState == ModuleConnectionState.Connected)
             .Select(child => EvaluateModule(child, template))
             .ToList();
 
