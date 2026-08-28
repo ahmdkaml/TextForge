@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace TextForge.Core.Modules;
 
@@ -8,40 +10,64 @@ namespace TextForge.Core.Modules;
 /// Represents an independent content element within a document.
 /// Modules can be nested hierarchically to form compound structures.
 /// </summary>
-public class Module
+public class Module : INotifyPropertyChanged
 {
+    private string _content = string.Empty;
+    private bool _isSelected;
+    private bool _isExpanded;
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
     public Guid Id { get; init; } = Guid.NewGuid();
 
-    /// <summary>
-    /// Archetype identifier used for preset styling and UI representation (e.g., "default-title").
-    /// </summary>
     public string Name { get; set; } = "default-text";
 
-    /// <summary>
-    /// Optional key corresponding to a template style rule (e.g., "Title", "Heading", "Body").
-    /// </summary>
     public string? StyleKey { get; init; }
 
     public ModuleType Type { get; init; } = ModuleType.Text;
 
-    public string Content { get; set; } = string.Empty;
+    public string Content
+    {
+        get => _content;
+        set
+        {
+            if (_content != value)
+            {
+                _content = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-
-    /// <summary>
-    /// Direct visual overrides that take precedence over the template style.
-    /// </summary>
     public ModuleFeatures Features { get; set; } = ModuleFeatures.Default;
 
-    /// <summary>
-    /// Nested child modules (e.g., list items under a section heading).
-    /// </summary>
     public ObservableCollection<Module> SubModules { get; set; } = [];
 
+    public bool IsSelected
+    {
+        get => _isSelected;
+        set
+        {
+            if (_isSelected != value)
+            {
+                _isSelected = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
-    /// <summary>
-    /// Ephemeral UI selection state. Retained in-memory during active sessions.
-    /// </summary>
-    public bool IsSelected { get; set; }
+    public bool IsExpanded
+    {
+        get => _isExpanded;
+        set
+        {
+            if (_isExpanded != value)
+            {
+                _isExpanded = value;
+                OnPropertyChanged();
+            }
+        }
+    }
 
     public Module() { }
 
@@ -59,41 +85,28 @@ public class Module
         Name = name;
     }
 
+    protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
     #region Archetype Presets
 
-    /// <summary>
-    /// Creates a top-level document title module.
-    /// </summary>
     public static Module CreateTitle(string text) =>
         new(text, ModuleType.Section, styleKey: "Title", name: "default-title");
 
-    /// <summary>
-    /// Creates a section header module.
-    /// </summary>
     public static Module CreateHeading(string text) =>
         new(text, ModuleType.Section, styleKey: "Heading", name: "default-heading");
 
-    /// <summary>
-    /// Creates a standard body paragraph module.
-    /// </summary>
     public static Module CreateParagraph(string text) =>
         new(text, ModuleType.Text, styleKey: "Body", name: "default-paragraph");
 
-    /// <summary>
-    /// Creates a bullet item module with prefixed bullet character.
-    /// </summary>
     public static Module CreateBulletItem(string text) =>
         new($"• {text.TrimStart('•', ' ')}", ModuleType.Text, styleKey: "Body", name: "default-bullet");
 
-    /// <summary>
-    /// Creates an accent callout banner module.
-    /// </summary>
     public static Module CreateCallout(string text) =>
         new(text, ModuleType.Text, styleKey: "Callout", name: "default-callout");
 
-    /// <summary>
-    /// Creates an alert module with explicit color and weight overrides.
-    /// </summary>
     public static Module CreateAlert(string text, string color = "#DC2626") =>
         new(text, ModuleType.Text, features: new ModuleFeatures
         {

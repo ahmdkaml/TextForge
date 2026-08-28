@@ -404,8 +404,6 @@ public partial class MainWindow : Window
             // 3. Refresh the ModuleEditor ListBox ItemsSource to show the new module
             RefreshModuleEditorList();
 
-            // 4. Select the newly added module
-            _currentDocument.SelectModule(newModule);
             SyncPropertiesToolbar(newModule);
         }
     }

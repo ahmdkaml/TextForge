@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using TextForge.Core.Modules;
 
 namespace TextForge.Core.Documents;
@@ -12,7 +13,7 @@ public class Document
     public Guid Id { get; init; } = Guid.NewGuid();
     public DocumentMetadata Metadata { get; set; } = new();
     public string TemplateName { get; set; } = "Default";
-    public List<Module> Modules { get; init; } = [];
+    public ObservableCollection<Module> Modules { get; init; } = [];
 
     /// <summary>
     /// Currently selected module in the active editing session, if any.
@@ -39,7 +40,10 @@ public class Document
         TemplateName = templateName;
         if (modules is not null)
         {
-            Modules.AddRange(modules);
+            foreach (var module in modules)
+            {
+                Modules.Add(module);
+            }
         }
     }
 
@@ -55,7 +59,8 @@ public class Document
 
     /// <summary>
     /// Adds a module to the document hierarchy.
-    /// If parent is provided, appends to parent.SubModules; otherwise appends to root Modules.
+    /// If parent is provided, appends to parent.SubModules, expands parent, and keeps parent selected.
+    /// If parent is null, appends to root Modules and selects the new module.
     /// </summary>
     /// <param name="newModule">The module to insert.</param>
     /// <param name="parent">The target parent module, or null to append to the document root.</param>
@@ -66,19 +71,23 @@ public class Document
 
         if (parent is not null)
         {
+            // Auto-expand the parent so the newly added child is visible
+            parent.IsExpanded = true;
             parent.SubModules.Add(newModule);
+
+            // Retain selection on the existing parent
+            SelectModule(parent);
         }
         else
         {
             Modules.Add(newModule);
+            // Root addition: select the newly created root module
+            SelectModule(newModule);
         }
 
-        // Keep the newly added module active for selection/toolbar
-        SelectModule(newModule);
         NotifyChanged();
         return this;
     }
-    
     /// <summary>
     /// Updates the active module selection, updating all node flags across the tree.
     /// </summary>

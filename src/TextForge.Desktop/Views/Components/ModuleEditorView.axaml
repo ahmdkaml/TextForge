@@ -42,7 +42,7 @@
                     Tag="{Binding}"
                     Margin="0,1"
                     Padding="2">
-                <Expander IsExpanded="False"
+                <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay, FallbackValue=False}"
                           HorizontalAlignment="Stretch"
                           Background="Transparent">
                     <Expander.Header>
