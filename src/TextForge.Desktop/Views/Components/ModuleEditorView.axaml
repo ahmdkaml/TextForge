@@ -33,6 +33,27 @@
             <Setter Property="BorderBrush" Value="#2563EB" />
             <Setter Property="BorderThickness" Value="1.5" />
         </Style>
+
+        <!-- Root Card Styling -->
+        <Style Selector="Border.root-card">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#E5E7EB" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.1" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.1" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <!-- Active Selected Root Card State -->
+        <Style Selector="Border.root-card.selected">
+            <Setter Property="Background" Value="#EFF6FF" />
+            <Setter Property="BorderBrush" Value="#2563EB" />
+            <Setter Property="BorderThickness" Value="1.5" />
+        </Style>
     </UserControl.Styles>
 
     <UserControl.Resources>
@@ -119,11 +140,47 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto"
-        HorizontalScrollBarVisibility="Disabled">
-        <ListBox Name="ModuleListBox"
-            Background="Transparent"
-            SelectionMode="Single"
-            ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
+    <ScrollViewer Name="EditorScrollViewer"
+        VerticalScrollBarVisibility="Auto"
+        HorizontalScrollBarVisibility="Disabled"
+        Background="Transparent">
+        <StackPanel Spacing="6" Margin="0,0,0,12" Background="Transparent">
+            <!-- Document Root Selection Card -->
+            <Border Name="DocumentRootCard"
+                Classes="root-card selected"
+                Margin="0,1,0,4"
+                Padding="8,6"
+                Cursor="Hand"
+                PointerPressed="DocumentRootCard_PointerPressed">
+                <Grid ColumnDefinitions="Auto,*,Auto" VerticalAlignment="Center">
+                    <Border Grid.Column="0"
+                        Background="#EEF2FF"
+                        CornerRadius="4"
+                        Padding="6,2"
+                        Margin="0,0,8,0">
+                        <TextBlock Text="📄 Document"
+                            FontSize="11"
+                            FontWeight="SemiBold"
+                            Foreground="#4338CA" />
+                    </Border>
+                    <TextBlock Grid.Column="1"
+                        Name="DocumentTitleText"
+                        Text="Root Level (Top Level Container)"
+                        FontSize="12"
+                        Foreground="#1F2937"
+                        VerticalAlignment="Center"
+                        TextTrimming="CharacterEllipsis" />
+                    <Border Grid.Column="2" Background="#E0E7FF" CornerRadius="4" Padding="6,2">
+                        <TextBlock Text="ROOT" FontSize="10" FontWeight="Bold" Foreground="#3730A3" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Modules List -->
+            <ListBox Name="ModuleListBox"
+                Background="Transparent"
+                SelectionMode="Single"
+                ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
+        </StackPanel>
     </ScrollViewer>
 </UserControl>

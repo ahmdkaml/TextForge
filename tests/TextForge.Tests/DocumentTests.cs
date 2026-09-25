@@ -70,4 +70,78 @@ public class DocumentTests
         Assert.Equal(2, document.Metadata.SchemaVersion);
         Assert.Equal(now, document.Metadata.CreatedAt);
     }
+
+    [Fact]
+    public void Document_SelectRoot_ClearsModuleSelectionAndSetsIsRootSelected()
+    {
+        var document = new Document("Test Doc");
+        var module = new Module("Paragraph", ModuleType.Text);
+        document.AddModule(module);
+
+        document.SelectModule(module);
+        Assert.Same(module, document.SelectedModule);
+        Assert.True(module.IsSelected);
+        Assert.False(document.IsRootSelected);
+
+        document.SelectRoot();
+        Assert.Null(document.SelectedModule);
+        Assert.False(module.IsSelected);
+        Assert.True(document.IsRootSelected);
+    }
+
+    [Fact]
+    public void Document_SelectModule_SetsModuleAndClearsIsRootSelected()
+    {
+        var document = new Document("Test Doc");
+        var module = new Module("Header", ModuleType.Section);
+        document.AddModule(module);
+
+        Assert.True(document.IsRootSelected == false || document.SelectedModule == module);
+
+        document.SelectRoot();
+        Assert.True(document.IsRootSelected);
+        Assert.Null(document.SelectedModule);
+
+        document.SelectModule(module);
+        Assert.False(document.IsRootSelected);
+        Assert.Same(module, document.SelectedModule);
+        Assert.True(module.IsSelected);
+    }
+
+    [Fact]
+    public void Document_AddModule_WhenParentIsNull_AppendsToRootCollection()
+    {
+        var document = new Document("Test Doc");
+        var parentSection = new Module("Section", ModuleType.Section);
+        document.AddModule(parentSection);
+
+        // Explicitly select root
+        document.SelectRoot();
+
+        // Adding with parent = null (root active) appends to root collection
+        var rootModule = new Module("Root Level Block", ModuleType.Text);
+        document.AddModule(rootModule, parent: null);
+
+        Assert.Equal(2, document.Modules.Count);
+        Assert.Contains(rootModule, document.Modules);
+        Assert.Empty(parentSection.SubModules);
+    }
+
+    [Fact]
+    public void Document_RemoveModule_WhenSelected_FallsBackToRootSelection()
+    {
+        var document = new Document("Test Doc");
+        var module = new Module("Removable", ModuleType.Text);
+        document.AddModule(module);
+
+        document.SelectModule(module);
+        Assert.Same(module, document.SelectedModule);
+        Assert.False(document.IsRootSelected);
+
+        var removed = document.RemoveModule(module);
+
+        Assert.True(removed);
+        Assert.Null(document.SelectedModule);
+        Assert.True(document.IsRootSelected);
+    }
 }

@@ -40,5 +40,11 @@ public class ShowcaseDocumentFactoryTests
         var calloutBlock = Assert.Single(preview.Blocks, b => b.Content.StartsWith("Tip:"));
         Assert.Equal("#FEF08A", calloutBlock.Features.HighlightMarker);
         Assert.True(calloutBlock.Features.Italic);
+
+        // Verify code block resolved
+        var codeBlock = Assert.Single(preview.Blocks, b => b.Type == ModuleType.Code);
+        Assert.Equal("Consolas", codeBlock.Features.Font);
+        Assert.Equal("#0F172A", codeBlock.Features.Color);
+        Assert.Equal("#F8FAFC", codeBlock.Features.HighlightMarker);
     }
 }

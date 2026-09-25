@@ -68,6 +68,11 @@ public partial class MainWindow : Window
 
         BindModuleList();
         BindAvailableModules();
+
+        var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
+        moduleEditor?.SetDocument(_currentDocument);
+        moduleEditor?.SetRootSelectionHighlight(_currentDocument.IsRootSelected);
+
         RenderCurrentPreview();
     }
 
@@ -97,6 +102,7 @@ public partial class MainWindow : Window
         moduleEditor.ModuleDeleteRequested += ModuleEditor_ModuleDeleteRequested;
         moduleEditor.ModuleDuplicateRequested += ModuleEditor_ModuleDuplicateRequested;
         moduleEditor.ModuleDetachRequested += ModuleEditor_ModuleDetachRequested;
+        moduleEditor.RootSelected += ModuleEditor_RootSelected;
 
         var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
         if (moduleListBox is not null)
@@ -111,6 +117,14 @@ public partial class MainWindow : Window
                 RoutingStrategies.Bubble,
                 handledEventsToo: true);
         }
+    }
+
+    private void ModuleEditor_RootSelected(object? sender, EventArgs e)
+    {
+        _currentDocument.SelectRoot();
+        var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
+        moduleEditor?.SetRootSelectionHighlight(true);
+        ApplyModuleSelectionHighlight(null);
     }
 
     private void OnModuleListBoxPointerPressed(object? sender, PointerPressedEventArgs e)
@@ -153,6 +167,8 @@ public partial class MainWindow : Window
     {
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
         if (moduleEditor is null) return;
+
+        moduleEditor.SetRootSelectionHighlight(selectedModule is null && _currentDocument.IsRootSelected);
 
         var allCardBorders = moduleEditor.GetVisualDescendants()
                                          .OfType<Border>()
@@ -417,8 +433,9 @@ public partial class MainWindow : Window
             // 1. Create a fresh instance using Core's ModuleRegistry definition
             var newModule = definition.Create();
 
-            // 2. Append to domain model (latches to SelectedModule if active, otherwise appends to root)
-            _currentDocument.AddModule(newModule, parent: _currentDocument.SelectedModule);
+            // 2. Append to domain model: if root is selected, append to root; otherwise latch to SelectedModule
+            var targetParent = _currentDocument.IsRootSelected ? null : _currentDocument.SelectedModule;
+            _currentDocument.AddModule(newModule, parent: targetParent);
 
             // 3. Refresh the ModuleEditor ListBox ItemsSource to show the new module
             RefreshModuleEditorList();
@@ -433,6 +450,8 @@ public partial class MainWindow : Window
     private void RefreshModuleEditorList()
     {
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
+        moduleEditor?.SetRootSelectionHighlight(_currentDocument.IsRootSelected);
+
         var moduleListBox = moduleEditor?.FindControl<ListBox>("ModuleListBox");
         if (moduleListBox is not null)
         {

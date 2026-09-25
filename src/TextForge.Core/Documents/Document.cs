@@ -21,6 +21,12 @@ public class Document
     public Module? SelectedModule { get; private set; }
 
     /// <summary>
+    /// Indicates whether the document root itself is currently selected.
+    /// When true, operations targeting the selection append directly to the root Modules collection.
+    /// </summary>
+    public bool IsRootSelected { get; private set; } = true;
+
+    /// <summary>
     /// Raised whenever content, features, hierarchy, or selection within the document changes.
     /// Used by preview adapters and editors to trigger live re-renders.
     /// </summary>
@@ -88,20 +94,38 @@ public class Document
         NotifyChanged();
         return this;
     }
+
+    /// <summary>
+    /// Selects the document root itself, clearing selection on all child modules.
+    /// When the root is selected, subsequent module additions from the palette are placed
+    /// at the top level of the document rather than nested within another module.
+    /// </summary>
+    public void SelectRoot()
+    {
+        SetSelectionRecursive(Modules, false);
+        SelectedModule = null;
+        IsRootSelected = true;
+        NotifyChanged();
+    }
+
     /// <summary>
     /// Updates the active module selection, updating all node flags across the tree.
+    /// If null is provided, selects the document root.
     /// </summary>
     public void SelectModule(Module? module)
     {
-        if (SelectedModule == module) return;
+        if (module is null)
+        {
+            SelectRoot();
+            return;
+        }
+
+        if (SelectedModule == module && !IsRootSelected) return;
 
         SetSelectionRecursive(Modules, false);
+        IsRootSelected = false;
         SelectedModule = module;
-
-        if (SelectedModule is not null)
-        {
-            SelectedModule.IsSelected = true;
-        }
+        SelectedModule.IsSelected = true;
 
         NotifyChanged();
     }
@@ -143,10 +167,12 @@ public class Document
         {
             if (SelectedModule == module)
             {
-                SelectedModule = null;
+                SelectRoot();
             }
-
-            NotifyChanged();
+            else
+            {
+                NotifyChanged();
+            }
         }
 
         return removed;

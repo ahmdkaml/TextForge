@@ -46,8 +46,20 @@ public class QuestPdfAdapter : IRenderTarget<byte[]>
                 .PaddingTop((float)node.Layout.MarginTop)
                 .PaddingBottom((float)node.Layout.MarginBottom);
 
+            // Code Block container
+            if (node.Type == ModuleType.Code)
+            {
+                item.Border(1)
+                    .BorderColor("#CBD5E1")
+                    .Background(node.Features.HighlightMarker ?? "#F1F5F9")
+                    .PaddingLeft((float)(node.Layout.PaddingLeft > 0 ? node.Layout.PaddingLeft : 10))
+                    .PaddingRight((float)(node.Layout.PaddingRight > 0 ? node.Layout.PaddingRight : 10))
+                    .PaddingTop((float)(node.Layout.PaddingTop > 0 ? node.Layout.PaddingTop : 6))
+                    .PaddingBottom((float)(node.Layout.PaddingBottom > 0 ? node.Layout.PaddingBottom : 6))
+                    .Text(text => ApplyTextStyles(text, node, indentLevel));
+            }
             // Highlighted Callout container
-            if (!string.IsNullOrWhiteSpace(node.Features.HighlightMarker))
+            else if (!string.IsNullOrWhiteSpace(node.Features.HighlightMarker))
             {
                 item.BorderLeft(4)
                     .BorderColor(Colors.Amber.Medium)
@@ -72,8 +84,13 @@ public class QuestPdfAdapter : IRenderTarget<byte[]>
 
     private static void ApplyTextStyles(TextDescriptor text, RenderNode node, int indentLevel)
     {
-        var fontSize = node.Type == ModuleType.Section && indentLevel == 0 ? 18 : (node.Features.FontWeight == ModuleFontWeight.Bold ? 14 : 11);
+        var fontSize = node.Type == ModuleType.Section && indentLevel == 0 ? 18 : (node.Type == ModuleType.Code ? 10 : (node.Features.FontWeight == ModuleFontWeight.Bold ? 14 : 11));
         var span = text.Span(node.Content).FontSize(fontSize);
+
+        if (!string.IsNullOrWhiteSpace(node.Features.Font))
+        {
+            span.FontFamily(node.Features.Font);
+        }
 
         if (node.Features.FontWeight == ModuleFontWeight.Bold)
         {
