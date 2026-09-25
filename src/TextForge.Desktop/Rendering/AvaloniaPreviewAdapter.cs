@@ -50,8 +50,31 @@ public class AvaloniaPreviewAdapter : IRenderTarget<Control>
                     : Brush.Parse("#1F2937")
             };
 
+            if (!string.IsNullOrEmpty(node.Features.Font))
+            {
+                textBlock.FontFamily = new FontFamily(node.Features.Font);
+            }
+
+            // Code Block container
+            if (node.Type == ModuleType.Code)
+            {
+                var border = new Border
+                {
+                    Background = Brush.Parse(node.Features.HighlightMarker ?? "#F8FAFC"),
+                    BorderBrush = Brush.Parse("#E2E8F0"),
+                    BorderThickness = new Thickness(1),
+                    CornerRadius = new CornerRadius(4),
+                    Padding = new Thickness(
+                        node.Layout.PaddingLeft > 0 ? node.Layout.PaddingLeft : 12,
+                        node.Layout.PaddingTop > 0 ? node.Layout.PaddingTop : 8,
+                        node.Layout.PaddingRight > 0 ? node.Layout.PaddingRight : 12,
+                        node.Layout.PaddingBottom > 0 ? node.Layout.PaddingBottom : 8),
+                    Child = textBlock
+                };
+                container.Children.Add(border);
+            }
             // Callout / Highlight marker box
-            if (!string.IsNullOrEmpty(node.Features.HighlightMarker))
+            else if (!string.IsNullOrEmpty(node.Features.HighlightMarker))
             {
                 var border = new Border
                 {
@@ -87,6 +110,11 @@ public class AvaloniaPreviewAdapter : IRenderTarget<Control>
         if (node.Type == ModuleType.Section && indentLevel == 0)
         {
             return 20;
+        }
+
+        if (node.Type == ModuleType.Code)
+        {
+            return 12;
         }
 
         return node.Features.FontWeight == ModuleFontWeight.Bold ? 16 : 14;

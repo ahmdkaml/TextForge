@@ -210,5 +210,14 @@ public class Module : INotifyPropertyChanged
             LineSpacing = 1.3
         }, name: "default-alert");
 
+    public static Module CreateCodeBlock(string text) =>
+        new(text, ModuleType.Code, styleKey: "Code", features: new ModuleFeatures
+        {
+            Font = "Consolas",
+            Color = "#0F172A",
+            HighlightMarker = "#F8FAFC",
+            LineSpacing = 1.15
+        }, name: "default-code");
+
     #endregion
 }

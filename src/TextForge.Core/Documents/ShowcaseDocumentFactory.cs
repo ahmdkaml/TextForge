@@ -54,6 +54,12 @@ public static class ShowcaseDocumentFactory
             "Custom styled alert: Bold red text with custom line spacing."
         ));
 
+        // 6. Monospace Formatted Code Block
+        document.AddModule(ModuleRegistry.CreateModule(
+            "code",
+            "// Generate and export document\nvar engine = new DocumentEngine();\nvar pdfBytes = PdfService.CreatePdf(document, template, \"output.pdf\");"
+        ));
+
         return document;
     }
 }

@@ -15,3 +15,8 @@ output.pdf
 
 # Logs
 *.log
+
+# Agent guide & workflow documentation
+agent-guide.md
+.agent-guide.md
+agent-guide*

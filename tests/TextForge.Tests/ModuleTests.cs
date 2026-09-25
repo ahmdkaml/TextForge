@@ -92,4 +92,19 @@ public class ModuleTests
         Assert.Equal("Paragraph 1.2", root.SubModules[0].SubModules[1].Content);
         Assert.Empty(root.SubModules[1].SubModules);
     }
+
+    [Fact]
+    public void Module_CreateCodeBlock_SetsExpectedPropertiesAndDefaults()
+    {
+        var codeBlock = Module.CreateCodeBlock("Console.WriteLine(\"Hello\");");
+
+        Assert.Equal("Console.WriteLine(\"Hello\");", codeBlock.Content);
+        Assert.Equal(ModuleType.Code, codeBlock.Type);
+        Assert.Equal("Code", codeBlock.StyleKey);
+        Assert.Equal("default-code", codeBlock.Name);
+        Assert.Equal("Consolas", codeBlock.Features.Font);
+        Assert.Equal("#0F172A", codeBlock.Features.Color);
+        Assert.Equal("#F8FAFC", codeBlock.Features.HighlightMarker);
+        Assert.Equal(1.15, codeBlock.Features.LineSpacing);
+    }
 }

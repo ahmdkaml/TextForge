@@ -51,6 +51,13 @@ public class DefaultTemplate : IDocumentTemplate
         [ModuleType.Custom] = new ModuleFeatures
         {
             LineSpacing = 1.0
+        },
+        [ModuleType.Code] = new ModuleFeatures
+        {
+            Font = "Consolas",
+            Color = "#0F172A",
+            HighlightMarker = "#F8FAFC",
+            LineSpacing = 1.15
         }
     };
 
@@ -74,6 +81,15 @@ public class DefaultTemplate : IDocumentTemplate
         {
             MarginLeft = 16,
             MarginBottom = 4
+        },
+        [ModuleType.Code] = new LayoutProperties
+        {
+            PaddingLeft = 12,
+            PaddingRight = 12,
+            PaddingTop = 8,
+            PaddingBottom = 8,
+            MarginTop = 8,
+            MarginBottom = 8
         }
     };
 
@@ -98,6 +114,13 @@ public class DefaultTemplate : IDocumentTemplate
             HighlightMarker = "#FEF08A",
             Italic = true,
             LineSpacing = 1.2
+        },
+        ["Code"] = new ModuleFeatures
+        {
+            Font = "Consolas",
+            Color = "#0F172A",
+            HighlightMarker = "#F8FAFC",
+            LineSpacing = 1.15
         }
     };
 
@@ -114,6 +137,15 @@ public class DefaultTemplate : IDocumentTemplate
             MarginBottom = 8
         },
         ["Callout"] = new LayoutProperties
+        {
+            PaddingLeft = 12,
+            PaddingRight = 12,
+            PaddingTop = 8,
+            PaddingBottom = 8,
+            MarginTop = 8,
+            MarginBottom = 8
+        },
+        ["Code"] = new LayoutProperties
         {
             PaddingLeft = 12,
             PaddingRight = 12,

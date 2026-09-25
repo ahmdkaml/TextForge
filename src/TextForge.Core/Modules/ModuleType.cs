@@ -6,5 +6,6 @@ public enum ModuleType
     Section,
     Container,
     List,
-    Custom
+    Custom,
+    Code
 }

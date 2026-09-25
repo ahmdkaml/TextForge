@@ -84,6 +84,7 @@ public class DefaultTemplateTests
     [InlineData(ModuleType.Container)]
     [InlineData(ModuleType.List)]
     [InlineData(ModuleType.Custom)]
+    [InlineData(ModuleType.Code)]
     public void ResolveFeatures_AllSupportedModuleTypes_HaveDefinedRepresentations(ModuleType type)
     {
         // Arrange

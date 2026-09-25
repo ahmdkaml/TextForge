@@ -53,6 +53,13 @@ public static class ModuleRegistry
             "Highlighted alert banner with emphasis",
             "⚠️",
             (content) => Module.CreateAlert(content ?? "Warning or critical notice.")
+        ),
+        ["code"] = new(
+            "code",
+            "Code Block",
+            "Monospace formatted code block",
+            "💻",
+            (content) => Module.CreateCodeBlock(content ?? "// Enter code here...")
         )
     };
 
