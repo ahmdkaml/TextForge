@@ -143,10 +143,11 @@
     </UserControl.Resources>
 
     <ScrollViewer Name="EditorScrollViewer"
+        BringIntoViewOnFocusChange="False"
         VerticalScrollBarVisibility="Auto"
         HorizontalScrollBarVisibility="Disabled"
         Background="Transparent">
-        <StackPanel Spacing="6" Margin="0,0,0,12" Background="Transparent">
+        <StackPanel Name="EditorStackPanel" Spacing="6" Margin="0,0,0,12" Background="Transparent">
             <!-- Document Root Selection Card -->
             <Border Name="DocumentRootCard"
                 Classes="root-card selected"
@@ -178,10 +179,9 @@
                 </Grid>
             </Border>
 
-            <!-- Modules List -->
-            <ListBox Name="ModuleListBox"
+            <!-- Modules List (Using ItemsControl to prevent VirtualizingStackPanel focus scroll jumps) -->
+            <ItemsControl Name="ModuleListBox"
                 Background="Transparent"
-                SelectionMode="Single"
                 ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
         </StackPanel>
     </ScrollViewer>
