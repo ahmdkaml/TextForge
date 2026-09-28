@@ -107,4 +107,73 @@ public class ModuleTests
         Assert.Equal("#F8FAFC", codeBlock.Features.HighlightMarker);
         Assert.Equal(1.15, codeBlock.Features.LineSpacing);
     }
+
+    [Fact]
+    public void Module_TruncatedPreviewContent_LargeCodeBlock_ClampsToThreeLinesAndAppendsEllipsis()
+    {
+        var multilineCode = @"line 1: var x = 1;
+line 2: var y = 2;
+line 3: var z = 3;
+line 4: var a = 4;
+line 5: var b = 5;";
+
+        var module = Module.CreateCodeBlock(multilineCode);
+
+        var preview = module.TruncatedPreviewContent;
+        var lines = preview.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+
+        Assert.True(lines.Length <= 3);
+        Assert.EndsWith("...", preview);
+        Assert.Contains("line 1", preview);
+        Assert.Contains("line 3", preview);
+        Assert.DoesNotContain("line 4", preview);
+    }
+
+    [Fact]
+    public void Module_TruncatedPreviewContent_LargeParagraph_ClampsToWordLimitAndAppendsEllipsis()
+    {
+        var longParagraph = "Word1 Word2 Word3 Word4 Word5 Word6 Word7 Word8 Word9 Word10 " +
+                            "Word11 Word12 Word13 Word14 Word15 Word16 Word17 Word18 Word19 Word20 " +
+                            "Word21 Word22 Word23 Word24 Word25 Word26 Word27 Word28 Word29 Word30";
+
+        var module = Module.CreateParagraph(longParagraph);
+
+        var preview = module.TruncatedPreviewContent;
+        var words = preview.TrimEnd('.').Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        Assert.Equal(25, words.Length);
+        Assert.EndsWith("...", preview);
+        Assert.Contains("Word1", preview);
+        Assert.Contains("Word25", preview);
+        Assert.DoesNotContain("Word26", preview);
+    }
+
+    [Fact]
+    public void Module_TruncatedPreviewContent_ShortContent_RemainsUnchanged()
+    {
+        var shortText = "Short single line text.";
+        var module = Module.CreateParagraph(shortText);
+
+        Assert.Equal(shortText, module.TruncatedPreviewContent);
+    }
+
+    [Fact]
+    public void Module_ContentChanged_RaisesPropertyChangedForTruncatedPreviewContent()
+    {
+        var module = Module.CreateParagraph("Initial");
+        var propertyChangedFired = false;
+
+        module.PropertyChanged += (sender, args) =>
+        {
+            if (args.PropertyName == nameof(Module.TruncatedPreviewContent))
+            {
+                propertyChangedFired = true;
+            }
+        };
+
+        module.Content = "Updated content text with new value";
+
+        Assert.True(propertyChangedFired);
+        Assert.Equal("Updated content text with new value", module.TruncatedPreviewContent);
+    }
 }

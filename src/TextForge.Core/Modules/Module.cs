@@ -51,8 +51,47 @@ public class Module : INotifyPropertyChanged
             {
                 _content = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(TruncatedPreviewContent));
             }
         }
+    }
+
+    /// <summary>
+    /// Compact representation of the content limited to a maximum of 3 lines and 25 words.
+    /// Used by editor card previews to keep unexpanded cards tidy and prevent workspace cramping.
+    /// </summary>
+    [JsonIgnore]
+    public string TruncatedPreviewContent => GetTruncatedPreview(_content);
+
+    /// <summary>
+    /// Returns a compact preview of content capped to at most <paramref name="maxLines"/> lines
+    /// and <paramref name="maxWords"/> words, appending an ellipsis if truncated.
+    /// </summary>
+    public static string GetTruncatedPreview(string? content, int maxLines = 3, int maxWords = 25)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+        {
+            return string.Empty;
+        }
+
+        var lines = content.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+        var lineTruncated = lines.Length > maxLines;
+        var clampedLines = lines.Take(maxLines).ToList();
+
+        var joined = string.Join(Environment.NewLine, clampedLines);
+        var words = joined.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries);
+
+        if (words.Length > maxWords)
+        {
+            return string.Join(" ", words.Take(maxWords)).TrimEnd('.', ',', ';', ':', '!', '?') + "...";
+        }
+
+        if (lineTruncated)
+        {
+            return joined.TrimEnd() + "...";
+        }
+
+        return joined;
     }
 
     public ModuleFeatures Features { get; set; } = ModuleFeatures.Default;
