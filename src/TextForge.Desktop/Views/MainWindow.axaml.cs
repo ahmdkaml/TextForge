@@ -408,6 +408,15 @@ public partial class MainWindow : Window
         }
     }
 
+    /// <summary>
+    /// Removes all modules from the active document, resetting the editor and preview to an empty state.
+    /// </summary>
+    private void ClearButton_Click(object? sender, RoutedEventArgs e)
+    {
+        _currentDocument.ClearModules();
+        RefreshModuleEditorList();
+    }
+
     #endregion
 
     #region Editor & Selection Interactions

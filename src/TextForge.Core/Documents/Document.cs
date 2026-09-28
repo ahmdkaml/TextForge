@@ -109,6 +109,18 @@ public class Document
     }
 
     /// <summary>
+    /// Removes all modules from the document, resets active selection to the document root,
+    /// and broadcasts a change notification to update the preview and observer views.
+    /// </summary>
+    public void ClearModules()
+    {
+        Modules.Clear();
+        SelectedModule = null;
+        IsRootSelected = true;
+        NotifyChanged();
+    }
+
+    /// <summary>
     /// Updates the active module selection, updating all node flags across the tree.
     /// If null is provided, selects the document root.
     /// </summary>

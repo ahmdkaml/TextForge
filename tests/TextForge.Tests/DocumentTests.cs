@@ -144,4 +144,39 @@ public class DocumentTests
         Assert.Null(document.SelectedModule);
         Assert.True(document.IsRootSelected);
     }
+
+    [Fact]
+    public void Document_ClearModules_EmptiesModulesCollectionAndResetsSelectionToRoot()
+    {
+        var document = new Document("Test Doc");
+        var module1 = new Module("M1", ModuleType.Text);
+        var module2 = new Module("M2", ModuleType.Code);
+        document.AddModule(module1);
+        document.AddModule(module2);
+
+        document.SelectModule(module2);
+        Assert.Equal(2, document.Modules.Count);
+        Assert.Same(module2, document.SelectedModule);
+        Assert.False(document.IsRootSelected);
+
+        document.ClearModules();
+
+        Assert.Empty(document.Modules);
+        Assert.Null(document.SelectedModule);
+        Assert.True(document.IsRootSelected);
+    }
+
+    [Fact]
+    public void Document_ClearModules_DispatchesChangedEvent()
+    {
+        var document = new Document("Test Doc");
+        document.AddModule(new Module("M1", ModuleType.Text));
+
+        var changedFired = false;
+        document.Changed += () => changedFired = true;
+
+        document.ClearModules();
+
+        Assert.True(changedFired);
+    }
 }
