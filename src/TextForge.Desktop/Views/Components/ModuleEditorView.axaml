@@ -82,10 +82,12 @@
                                     Foreground="#374151" />
                             </Border>
 
-                            <!-- Content Preview -->
+                            <!-- Content Preview (Truncated to max 3 lines & small amount of words unless expanded) -->
                             <TextBlock Grid.Column="1"
-                                Text="{Binding Content}"
+                                Text="{Binding TruncatedPreviewContent}"
                                 TextTrimming="CharacterEllipsis"
+                                MaxLines="3"
+                                TextWrapping="Wrap"
                                 VerticalAlignment="Center"
                                 FontSize="12"
                                 Foreground="#1F2937" />
