@@ -11,6 +11,7 @@ obj/
 *.suo
 
 # Generated files
+*.pdf
 output.pdf
 
 # Logs
@@ -20,3 +21,7 @@ output.pdf
 agent-guide.md
 .agent-guide.md
 agent-guide*
+
+# Distribution & Packaging outputs
+dist/
+publish/
