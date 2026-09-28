@@ -104,11 +104,10 @@ public partial class MainWindow : Window
         moduleEditor.ModuleDetachRequested += ModuleEditor_ModuleDetachRequested;
         moduleEditor.RootSelected += ModuleEditor_RootSelected;
 
-        var moduleListBox = moduleEditor.FindControl<ListBox>("ModuleListBox");
+        var moduleListBox = moduleEditor.FindControl<ItemsControl>("ModuleListBox");
         if (moduleListBox is not null)
         {
             moduleListBox.ItemsSource = _currentDocument.Modules;
-            moduleListBox.SelectionChanged += ModuleListBox_SelectionChanged;
 
             // Use Bubble ONLY with handledEventsToo: true
             moduleListBox.AddHandler(
@@ -129,7 +128,7 @@ public partial class MainWindow : Window
 
     private void OnModuleListBoxPointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is not ListBox listBox || e.Source is not Visual sourceVisual) return;
+        if (e.Source is not Visual sourceVisual) return;
 
         // Ignore action buttons (Move Up, Move Down, Delete)
         var button = sourceVisual.FindAncestorOfType<Button>();
@@ -150,16 +149,6 @@ public partial class MainWindow : Window
             _currentDocument.SelectModule(clickedModule);
             SyncPropertiesToolbar(clickedModule);
             ApplyModuleSelectionHighlight(clickedModule);
-        }
-    }
-
-    private void ModuleListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        if (sender is ListBox listBox && listBox.SelectedItem is Module selectedModule)
-        {
-            _currentDocument.SelectModule(selectedModule);
-            SyncPropertiesToolbar(selectedModule);
-            ApplyModuleSelectionHighlight(selectedModule);
         }
     }
 
@@ -452,13 +441,14 @@ public partial class MainWindow : Window
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
         moduleEditor?.SetRootSelectionHighlight(_currentDocument.IsRootSelected);
 
-        var moduleListBox = moduleEditor?.FindControl<ListBox>("ModuleListBox");
+        var moduleListBox = moduleEditor?.FindControl<ItemsControl>("ModuleListBox");
         if (moduleListBox is not null)
         {
             moduleListBox.ItemsSource = null;
             moduleListBox.ItemsSource = _currentDocument.Modules;
-            moduleListBox.SelectedItem = _currentDocument.SelectedModule;
         }
+
+        ApplyModuleSelectionHighlight(_currentDocument.SelectedModule);
     }
 
     #endregion

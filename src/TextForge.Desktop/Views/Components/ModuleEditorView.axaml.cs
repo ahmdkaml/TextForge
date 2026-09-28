@@ -22,6 +22,18 @@ public partial class ModuleEditorView : UserControl
     public ModuleEditorView()
     {
         InitializeComponent();
+
+        var editorPanel = this.FindControl<StackPanel>("EditorStackPanel");
+        editorPanel?.AddHandler(
+            Control.RequestBringIntoViewEvent,
+            (sender, e) =>
+            {
+                // Suppress unintended automatic scroll jumps caused by module clicks,
+                // focus changes, or expander open/close transitions.
+                e.Handled = true;
+            },
+            RoutingStrategies.Bubble,
+            handledEventsToo: true);
     }
 
     private void DocumentRootCard_PointerPressed(object? sender, PointerPressedEventArgs e)
