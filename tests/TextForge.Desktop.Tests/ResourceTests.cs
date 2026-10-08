@@ -18,6 +18,7 @@ public class ResourceTests
     public void AppResources_ContainRequiredSpacingTokens(string resourceKey)
     {
         var app = new App();
+        app.Initialize();
 
         Assert.True(app.Resources.ContainsKey(resourceKey), $"Resource '{resourceKey}' should be defined in App.axaml.");
         Assert.NotNull(app.Resources[resourceKey]);
