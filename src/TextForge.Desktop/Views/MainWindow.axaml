@@ -36,7 +36,7 @@
 
                 <!-- Status Bar Zone - Height: Auto -->
                 <Border Grid.Row="2" Background="#007ACC" Padding="5">
-                        <TextBlock Text="[StatusBar Zone - Height: Auto]" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="White" HorizontalAlignment="Center"/>
                 </Border>
 
         </Grid>
