@@ -7,4 +7,37 @@
         Width="1024" Height="768"
         Focusable="True"
         >
+        <Grid RowDefinitions="Auto, *, Auto">
+                <!-- Toolbar Zone - Height: Auto -->
+                <Border Grid.Row="0" Background="#2D2D2D" Padding="10">
+                        <TextBlock Text="[Toolbar Zone - Height: Auto]" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- Main Content Zone - Height: * -->
+                 <Border Grid.Row="1" Background="#1E1E1E" Padding="10">
+                        <Grid ColumnDefinitions="Auto, Auto, Auto, 4*, Auto, 6*">
+                                <Border Grid.Column="0" Background="#333333" Width="48">
+                                        <TextBlock Text="Act" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <Border Grid.Column="1" Background="#252526" Width="200">
+                                        <TextBlock Text="[Sidebar / Drawer]" Foreground="Gray" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <GridSplitter Grid.Column="2" Width="4" Background="#3E3E42" ResizeDirection="Columns"/>
+                                <Border Grid.Column="3" Background="#1E1E1E" MinWidth="200">
+                                        <TextBlock Text="[Editor Panel - 4* Space]" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <GridSplitter Grid.Column="4" Width="4" Background="#3E3E42" ResizeDirection="Columns"/>
+                                <Border Grid.Column="5" Background="#252526" MinWidth="200">
+                                        <TextBlock Text="[Preview Panel - 6* Space]" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+
+                        </Grid>
+                 </Border>
+
+                <!-- Status Bar Zone - Height: Auto -->
+                <Border Grid.Row="2" Background="#007ACC" Padding="5">
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="White" HorizontalAlignment="Center"/>
+                </Border>
+
+        </Grid>
 </Window>
