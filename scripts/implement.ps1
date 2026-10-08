@@ -93,7 +93,7 @@ Write-Host "Creating pull request..."
 Run-Gh @(
     "pr",
     "create",
-    "--base", "ui-rewrite",
+    "--base", "main",
     "--head", $BranchName,
     "--title", "implementing $BranchName [$IssueNumber]",
     "--body", "closes #$IssueNumber"
@@ -114,18 +114,18 @@ Run-Gh @(
 )
 
 # --------------------------------------------------
-# 8. Switch back to ui-rewrite
+# 8. Switch back to main
 # --------------------------------------------------
 
-Write-Host "Switching to ui-rewrite..."
-Run-Git @("switch", "ui-rewrite")
+Write-Host "Switching to main..."
+Run-Git @("switch", "main")
 
 # --------------------------------------------------
 # 9. Get latest changes
 # --------------------------------------------------
 
-Write-Host "Pulling latest ui-rewrite..."
-Run-Git @("pull", "origin", "ui-rewrite")
+Write-Host "Pulling latest main..."
+Run-Git @("pull", "origin", "main")
 
 # --------------------------------------------------
 # 10. Delete local feature branch
@@ -134,4 +134,4 @@ Run-Git @("pull", "origin", "ui-rewrite")
 Write-Host ""
 Write-Host "Successfully implemented issue #$IssueNumber." -ForegroundColor Green
 Write-Host "Branch: $BranchName"
-Write-Host "PR merged into: ui-rewrite"
+Write-Host "PR merged into: main"
