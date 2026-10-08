@@ -131,9 +131,6 @@ Run-Git @("pull", "origin", "ui-rewrite")
 # 10. Delete local feature branch
 # --------------------------------------------------
 
-Write-Host "Deleting local branch '$BranchName'..."
-Run-Git @("branch", "-d", $BranchName)
-
 Write-Host ""
 Write-Host "Successfully implemented issue #$IssueNumber." -ForegroundColor Green
 Write-Host "Branch: $BranchName"
