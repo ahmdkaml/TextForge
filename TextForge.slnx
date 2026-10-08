@@ -4,6 +4,7 @@
     <Project Path="src/TextForge.Desktop/TextForge.Desktop.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/TextForge.Tests/TextForge.Tests.csproj" />
+    <Project Path="tests/TextForge.Core.Tests/TextForge.Core.Tests.csproj" />
+    <Project Path="tests/TextForge.Desktop.Tests/TextForge.Desktop.Tests.csproj" />
   </Folder>
 </Solution>
