@@ -10,8 +10,10 @@
         <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingXsValue}">
             <Button Classes="primary" Content="New" Command="{Binding NewDocumentCommand}"
                 ToolTip.Tip="New Document (Ctrl+N)" />
-            <Button Classes="secondary" Content="Open" Command="{Binding OpenDocumentCommand}" />
-            <Button Classes="secondary" Content="Save" Command="{Binding SaveDocumentCommand}" />
+            <Button Classes="secondary" Content="Open" Command="{Binding OpenDocumentCommand}"
+                ToolTip.Tip="Open Document (Ctrl+O)" />
+            <Button Classes="secondary" Content="Save" Command="{Binding SaveDocumentCommand}"
+                ToolTip.Tip="Save Document (Ctrl+S)" />
         </StackPanel>
     </Border>
 </UserControl>

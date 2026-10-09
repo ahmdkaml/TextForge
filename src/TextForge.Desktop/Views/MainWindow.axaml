@@ -15,6 +15,10 @@
         <Window.KeyBindings>
                 <KeyBinding Gesture="Ctrl+N"
                         Command="{Binding CommandBarViewModel.NewDocumentCommand}" />
+                <KeyBinding Gesture="Ctrl+O"
+                        Command="{Binding CommandBarViewModel.OpenDocumentCommand}" />
+                <KeyBinding Gesture="Ctrl+S"
+                        Command="{Binding CommandBarViewModel.SaveDocumentCommand}" />
         </Window.KeyBindings>
 
         <Grid RowDefinitions="Auto, *, Auto">
