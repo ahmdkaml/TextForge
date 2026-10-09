@@ -35,6 +35,7 @@ public partial class App : Application
         collection.AddSingleton<IModulePaletteProvider, ModulePaletteService>();
         collection.AddTransient<MainWindowViewModel>();
         collection.AddTransient<MainWindow>();
+        collection.AddTransient<TopCommandBarViewModel>();
 
         Services = collection.BuildServiceProvider();
 

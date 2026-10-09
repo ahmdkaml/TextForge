@@ -8,10 +8,12 @@ public class MainWindowViewModel : ViewModelBase
     private string _currentDocumentTitle = "Untitled.txt";
     private bool _isModified;
     private readonly IModulePaletteProvider _modulePaletteProvider;
+    public TopCommandBarViewModel CommandBarViewModel { get; }
 
     public MainWindowViewModel(IModulePaletteProvider modulePaletteProvider)
     {
         _modulePaletteProvider = modulePaletteProvider;
+        CommandBarViewModel = new TopCommandBarViewModel(this);
     }
 
     public void CreateNewDocument(string title = "Untitled.txt")

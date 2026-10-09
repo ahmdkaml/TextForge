@@ -31,6 +31,7 @@ sealed class Program
             LogFatalException("TaskScheduler.UnobservedTaskException", e.Exception);
             e.SetObserved();
         };
+        AppDomain.CurrentDomain.ProcessExit += (sender, e) => Console.WriteLine("[TextForge] Application exiting cleanly.");
     }
     private static void LogFatalException(string source, Exception? ex)
     {
