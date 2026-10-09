@@ -8,10 +8,6 @@
         <local:ViewLocator />
     </Application.DataTemplates>
 
-    <Application.Styles>
-        <FluentTheme />
-        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
-    </Application.Styles>
     <Application.Resources>
         <!-- Color Primitives -->
         <Color x:Key="SurfaceDarkColor">#1E1E1E</Color>
@@ -52,4 +48,12 @@
         <Thickness x:Key="PaddingContainer">8</Thickness>
         <Thickness x:Key="PaddingStatusBar">8,4</Thickness>
     </Application.Resources>
+
+    <!-- Application Styles -->
+    <Application.Styles>
+        <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
+        <StyleInclude Source="avares://TextForge.Desktop/Styles/ButtonStyles.axaml" />
+    </Application.Styles>
+
 </Application>

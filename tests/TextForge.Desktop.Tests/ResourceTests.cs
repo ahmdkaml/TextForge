@@ -23,4 +23,13 @@ public class ResourceTests
         Assert.True(app.Resources.ContainsKey(resourceKey), $"Resource '{resourceKey}' should be defined in App.axaml.");
         Assert.NotNull(app.Resources[resourceKey]);
     }
+    [Fact]
+    public void App_LoadsButtonStyles()
+    {
+        var app = new App();
+        app.Initialize();
+
+        // There should be 3 top-level styles: FluentTheme, ColorPicker, and ButtonStyles
+        Assert.True(app.Styles.Count >= 3, $"Expected at least 3 styles, got {app.Styles.Count}");
+    }
 }

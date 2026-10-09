@@ -1,0 +1,37 @@
+<Styles xmlns="https://github.com/avaloniaui">
+    <!-- Base Button defaults: standard padding, corner radius -->
+    <Style Selector="Button">
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="12,6" />
+    </Style>
+
+    <!-- Primary Button -->
+    <Style Selector="Button.primary">
+        <Setter Property="Background" Value="{DynamicResource ShellAccentBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <!-- Pointer-over state targeting the template ContentPresenter -->
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#005A9E" />
+    </Style>
+
+    <!-- Secondary Button -->
+    <Style Selector="Button.secondary">
+        <Setter Property="Background" Value="{DynamicResource SurfaceLightBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ShellBorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+    </Style>
+    <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="{DynamicResource SurfaceMediumBrush}" />
+    </Style>
+
+    <!-- Destructive Button -->
+    <Style Selector="Button.destructive">
+        <Setter Property="Background" Value="#D83B01" /> <!-- Or define a DestructiveBrush token -->
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+    </Style>
+    <Style Selector="Button.destructive:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#A80000" />
+    </Style>
+</Styles>

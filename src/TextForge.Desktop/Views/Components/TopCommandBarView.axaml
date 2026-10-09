@@ -1,16 +1,17 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:vm="using:TextForge.Desktop.ViewModels"
-             x:Class="TextForge.Desktop.Views.Components.TopCommandBarView"
-             x:DataType="vm:TopCommandBarViewModel"
-             x:CompileBindings="True">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:TextForge.Desktop.ViewModels"
+    x:Class="TextForge.Desktop.Views.Components.TopCommandBarView"
+    x:DataType="vm:TopCommandBarViewModel"
+    x:CompileBindings="True">
 
     <Border Background="{DynamicResource SurfaceLightBrush}"
-            Padding="{StaticResource PaddingContainer}">
+        Padding="{StaticResource PaddingContainer}">
         <StackPanel Orientation="Horizontal" Spacing="{StaticResource SpacingXsValue}">
-            <Button Background="{DynamicResource BackgroundLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" Content="New" Command="{Binding NewDocumentCommand}" />
-            <Button Background="{DynamicResource BackgroundLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" Content="Open" Command="{Binding OpenDocumentCommand}" />
-            <Button Background="{DynamicResource BackgroundLightBrush}" Foreground="{DynamicResource TextPrimaryBrush}" Content="Save" Command="{Binding SaveDocumentCommand}" />
+            <Button Classes="primary" Content="New" Command="{Binding NewDocumentCommand}"
+                ToolTip.Tip="New Document (Ctrl+N)" />
+            <Button Classes="secondary" Content="Open" Command="{Binding OpenDocumentCommand}" />
+            <Button Classes="secondary" Content="Save" Command="{Binding SaveDocumentCommand}" />
         </StackPanel>
     </Border>
 </UserControl>
