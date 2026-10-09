@@ -1,21 +1,19 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:vm="using:TextForge.Desktop.ViewModels"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:components="using:TextForge.Desktop.Views.Components"
         x:Class="TextForge.Desktop.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         x:CompileBindings="True"
         Title="TextForge"
         Width="1024" Height="768"
-        Focusable="True">
+        Focusable="True"
+        FontFamily="{DynamicResource AppFontFamily}"
+        FontSize="{DynamicResource FontSizeNormal}">
 
         <Grid RowDefinitions="Auto, *, Auto">
                 <!-- Toolbar Zone - Height: Auto -->
-                <Border Grid.Row="0" Background="{DynamicResource SurfaceLightBrush}"
-                        Padding="{StaticResource PaddingContainer}">
-                        <TextBlock Text="[Toolbar Zone - Height: Auto]"
-                                Foreground="{DynamicResource TextPrimaryBrush}"
-                                HorizontalAlignment="Center" />
-                </Border>
+                <components:TopCommandBarView Grid.Row="0" DataContext="{Binding CommandBarViewModel}" />
 
                 <!-- Main Content Zone - Height: * -->
                 <Border Grid.Row="1" Background="{DynamicResource SurfaceDarkBrush}"
@@ -31,7 +29,7 @@
 
                                 <Border Grid.Column="1"
                                         Background="{DynamicResource SurfaceMediumBrush}"
-                                        Width="200">
+                                        MaxWidth="300"><!-- Todo replace with a resource instead of hard coding and constrian the slider -->
                                         <TextBlock Text="[Sidebar / Drawer]"
                                                 Foreground="{DynamicResource TextMutedBrush}"
                                                 HorizontalAlignment="Center"

@@ -21,6 +21,7 @@
         <Color x:Key="TextMutedColor">#808080</Color>
         <Color x:Key="AccentColor">#007ACC</Color>
         <Color x:Key="BorderColor">#3E3E42</Color>
+        <Color x:Key="BackgroundLightColor">#767676</Color>
 
         <!-- Dynamic Brushes -->
         <SolidColorBrush x:Key="SurfaceDarkBrush" Color="{StaticResource SurfaceDarkColor}" />
@@ -30,6 +31,7 @@
         <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource TextMutedColor}" />
         <SolidColorBrush x:Key="ShellAccentBrush" Color="{StaticResource AccentColor}" />
         <SolidColorBrush x:Key="ShellBorderBrush" Color="{StaticResource BorderColor}" />
+        <SolidColorBrush x:Key="BackgroundLightBrush" Color="{StaticResource BackgroundLightColor}" />
 
         <!-- Typography Tokens -->
         <x:Double x:Key="FontSizeSmall">12</x:Double>
