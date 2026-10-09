@@ -13,11 +13,19 @@
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
     </Application.Styles>
     <Application.Resources>
-        <x:Double x:Key="SpacingXs">4</x:Double>
-        <x:Double x:Key="SpacingSm">8</x:Double>
-        <x:Double x:Key="SpacingMd">10</x:Double>
-        <x:Double x:Key="SpacingLg">12</x:Double>
-        <x:Double x:Key="SpacingXl">16</x:Double>
+        <!-- Primitive Double Tokens (Width, Height, Dimensions) -->
+        <x:Double x:Key="SpacingXsValue">4</x:Double>
+        <x:Double x:Key="SpacingSmValue">8</x:Double>
+        <x:Double x:Key="SpacingMdValue">10</x:Double>
+        <x:Double x:Key="SpacingLgValue">12</x:Double>
+        <x:Double x:Key="SpacingXlValue">16</x:Double>
+
+        <!-- Thickness Tokens (Padding, Margin) -->
+        <Thickness x:Key="SpacingXs">4</Thickness>
+        <Thickness x:Key="SpacingSm">8</Thickness>
+        <Thickness x:Key="SpacingMd">10</Thickness>
+        <Thickness x:Key="SpacingLg">12</Thickness>
+        <Thickness x:Key="SpacingXl">16</Thickness>
 
         <Thickness x:Key="PaddingContainer">8</Thickness>
         <Thickness x:Key="PaddingStatusBar">8,4</Thickness>
