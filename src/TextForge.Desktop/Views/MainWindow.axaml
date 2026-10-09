@@ -11,9 +11,16 @@
         FontFamily="{DynamicResource AppFontFamily}"
         FontSize="{DynamicResource FontSizeNormal}">
 
+        <!-- Key Bindings -->
+        <Window.KeyBindings>
+                <KeyBinding Gesture="Ctrl+N"
+                        Command="{Binding CommandBarViewModel.NewDocumentCommand}" />
+        </Window.KeyBindings>
+
         <Grid RowDefinitions="Auto, *, Auto">
                 <!-- Toolbar Zone - Height: Auto -->
-                <components:TopCommandBarView Grid.Row="0" DataContext="{Binding CommandBarViewModel}" />
+                <components:TopCommandBarView Grid.Row="0"
+                        DataContext="{Binding CommandBarViewModel}" />
 
                 <!-- Main Content Zone - Height: * -->
                 <Border Grid.Row="1" Background="{DynamicResource SurfaceDarkBrush}"
@@ -29,7 +36,8 @@
 
                                 <Border Grid.Column="1"
                                         Background="{DynamicResource SurfaceMediumBrush}"
-                                        MaxWidth="300"><!-- Todo replace with a resource instead of hard coding and constrian the slider -->
+                                        MaxWidth="300"><!-- Todo replace with a resource instead of
+                                        hard coding and constrian the slider -->
                                         <TextBlock Text="[Sidebar / Drawer]"
                                                 Foreground="{DynamicResource TextMutedBrush}"
                                                 HorizontalAlignment="Center"
