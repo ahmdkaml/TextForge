@@ -13,7 +13,6 @@
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
     </Application.Styles>
     <Application.Resources>
-        
         <!-- Color Primitives -->
         <Color x:Key="SurfaceDarkColor">#1E1E1E</Color>
         <Color x:Key="SurfaceMediumColor">#252526</Color>
@@ -32,14 +31,16 @@
         <SolidColorBrush x:Key="ShellAccentBrush" Color="{StaticResource AccentColor}" />
         <SolidColorBrush x:Key="ShellBorderBrush" Color="{StaticResource BorderColor}" />
 
-        <!-- Primitive Double Tokens (Width, Height, Dimensions) -->
-        <x:Double x:Key="SpacingXsValue">4</x:Double>
-        <x:Double x:Key="SpacingSmValue">8</x:Double>
-        <x:Double x:Key="SpacingMdValue">10</x:Double>
-        <x:Double x:Key="SpacingLgValue">12</x:Double>
-        <x:Double x:Key="SpacingXlValue">16</x:Double>
+        <!-- Typography Tokens -->
+        <x:Double x:Key="FontSizeSmall">12</x:Double>
+        <x:Double x:Key="FontSizeNormal">14</x:Double>
+        <x:Double x:Key="FontSizeLarge">16</x:Double>
+        <FontFamily x:Key="AppFontFamily">System-ui, Segoe UI, sans-serif</FontFamily>
 
-        <!-- Thickness Tokens (Padding, Margin) -->
+        <!-- Primitive Double Token for GridSplitter Dimensions -->
+        <x:Double x:Key="SpacingXsValue">4</x:Double>
+
+        <!-- Thickness Tokens for Padding / Margins -->
         <Thickness x:Key="SpacingXs">4</Thickness>
         <Thickness x:Key="SpacingSm">8</Thickness>
         <Thickness x:Key="SpacingMd">10</Thickness>
