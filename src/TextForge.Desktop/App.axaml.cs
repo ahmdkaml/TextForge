@@ -16,16 +16,26 @@ public partial class App : Application
 
     public override void Initialize()
     {
-        AvaloniaXamlLoader.Load(this);
+        try
+        {
+            AvaloniaXamlLoader.Load(this);
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[App.Initialize] Failed to load App.axaml:\n{ex}");
+            throw;
+        }
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
-        var collection = new ServiceCollection();
+        try
+        {
+            var collection = new ServiceCollection();
         collection.AddSingleton<IModulePaletteProvider, ModulePaletteService>();
         collection.AddTransient<MainWindowViewModel>();
         collection.AddTransient<MainWindow>();
-        
+
         Services = collection.BuildServiceProvider();
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -36,5 +46,11 @@ public partial class App : Application
         }
 
         base.OnFrameworkInitializationCompleted();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"[App.OnFrameworkInitializationCompleted] Failed to initialize application:\n{ex}");
+            throw;
+        }
     }
 }
