@@ -1,7 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cp="using:Avalonia.Controls"
-             x:Class="TextForge.Desktop.Views.Components.PropertiesToolbarView">
+             xmlns:vm="using:TextForge.Desktop.ViewModels"
+             x:Class="TextForge.Desktop.Views.Components.PropertiesToolbarView"
+             x:DataType="vm:MainViewModel">
     <Border Background="#F9FAFB"
             BorderBrush="#E5E7EB"
             BorderThickness="1"
@@ -219,7 +221,7 @@
             </Button>
 
         </StackPanel>
-            <Button Content="Clear Page" Grid.Column="1"/>
+            <Button Content="Clear Page" Grid.Column="1" Command="{Binding ClearAllModulesCommand}"/>
         </Grid>
     </Border>
 </UserControl>
