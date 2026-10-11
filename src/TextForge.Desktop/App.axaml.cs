@@ -1,10 +1,6 @@
-using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using TextForge.Core.Presentation;
-using Microsoft.Extensions.DependencyInjection;
-using TextForge.Desktop.Services;
 using TextForge.Desktop.ViewModels;
 using TextForge.Desktop.Views;
 
@@ -12,45 +8,21 @@ namespace TextForge.Desktop;
 
 public partial class App : Application
 {
-    public IServiceProvider? Services { get; private set; }
-
     public override void Initialize()
     {
-        try
-        {
-            AvaloniaXamlLoader.Load(this);
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"[App.Initialize] Failed to load App.axaml:\n{ex}");
-            throw;
-        }
+        AvaloniaXamlLoader.Load(this);
     }
 
     public override void OnFrameworkInitializationCompleted()
     {
-        try
-        {
-            var collection = new ServiceCollection();
-        collection.AddSingleton<IModulePaletteProvider, ModulePaletteService>();
-        collection.AddTransient<MainWindowViewModel>();
-        collection.AddTransient<MainWindow>();
-
-        Services = collection.BuildServiceProvider();
-
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var mainWindow = Services.GetRequiredService<MainWindow>();
-            mainWindow.DataContext = Services.GetRequiredService<MainWindowViewModel>();
-            desktop.MainWindow = mainWindow;
+            desktop.MainWindow = new MainWindow
+            {
+                DataContext = new MainViewModel(),
+            };
         }
 
         base.OnFrameworkInitializationCompleted();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine($"[App.OnFrameworkInitializationCompleted] Failed to initialize application:\n{ex}");
-            throw;
-        }
     }
 }
