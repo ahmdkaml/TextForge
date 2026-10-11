@@ -5,80 +5,53 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
 using TextForge.Core;
-using TextForge.Core.Documents;
-using TextForge.Core.Engine;
 using TextForge.Core.Modules;
 using TextForge.Core.Templates;
 using TextForge.Desktop.Rendering;
 using TextForge.Desktop.Views.Components;
 using Avalonia.Controls.Primitives;
 using System.Linq;
+using TextForge.Desktop.ViewModels;
 
 namespace TextForge.Desktop.Views;
 
-/// <summary>
-/// Main application shell and primary presentation coordinator for TextForge.
-/// <para>
-/// <b>Purpose:</b> Acts as the presentation layer connecting the in-memory domain model (<see cref="Document"/>),
-/// the layout rendering engine (<see cref="IDocumentEngine"/>), and user-facing child view components.
-/// It observes document changes, updates the visual preview canvas, and routes user edits back to Core.
-/// </para>
-/// </summary>
 public partial class MainWindow : Window
 {
-    /// <summary>
-    /// The template-driven layout engine used to resolve module hierarchy and compile visual trees.
-    /// </summary>
-    private readonly IDocumentEngine _engine = new DocumentEngine();
-
-    /// <summary>
-    /// The active visual stylesheet applying layout rules, typography, and color tokens.
-    /// </summary>
-    private readonly DefaultTemplate _template = new();
-
-    /// <summary>
-    /// Platform adapter translating engine instructions into native Avalonia visual controls.
-    /// </summary>
     private readonly AvaloniaPreviewAdapter _previewAdapter = new();
-
-    /// <summary>
-    /// The root domain document currently being edited and displayed in the workspace.
-    /// </summary>
-    private Document _currentDocument;
-
-    /// <summary>
-    /// Tracks the identifier of the currently opened drawer tab ("Outline" or "Palette") to support toggle behavior.
-    /// </summary>
+    
     private string _activeTab = string.Empty;
-
+    
+    // Safely casts DataContext to MainViewModel
+    private MainViewModel? ViewModel => DataContext as MainViewModel;
+    
     #region Lifecycle & Initialization
 
-    /// <summary>
-    /// Initializes UI components, loads the default showcase document into memory,
-    /// subscribes to domain mutation events, binds child component controls, and triggers the initial preview render.
-    /// </summary>
     public MainWindow()
     {
         InitializeComponent();
 
-        _currentDocument = ShowcaseDocumentFactory.Create();
+        // ONLY listen for DataContext assignment. Do not call Bind/Render here!
+        DataContextChanged += OnDataContextChanged;
+    }
+    
+    private void OnDataContextChanged(object? sender, EventArgs e)
+    {
+        // Guard against null ViewModel or Document
+        if (ViewModel?.CurrentDocument is null) return;
 
-        // Subscribe preview re-rendering to document changes so any domain mutation refreshes the UI
-        _currentDocument.Changed += RenderCurrentPreview;
+        // Subscribe preview re-rendering to document changes
+        ViewModel.CurrentDocument.Changed += RenderCurrentPreview;
 
         BindModuleList();
         BindAvailableModules();
 
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
-        moduleEditor?.SetDocument(_currentDocument);
-        moduleEditor?.SetRootSelectionHighlight(_currentDocument.IsRootSelected);
+        moduleEditor?.SetDocument(ViewModel.CurrentDocument);
+        moduleEditor?.SetRootSelectionHighlight(ViewModel.CurrentDocument.IsRootSelected);
 
         RenderCurrentPreview();
     }
 
-    /// <summary>
-    /// Populates the module palette drawer with all available module archetypes registered in Core.
-    /// </summary>
     private void BindAvailableModules()
     {
         var availableModulesList = this.FindControl<ItemsControl>("AvailableModulesList");
@@ -88,12 +61,10 @@ public partial class MainWindow : Window
         }
     }
 
-    /// <summary>
-    /// Locates the <see cref="ListBox"/> control inside the child <see cref="ModuleEditorView"/>
-    /// and binds it to the current document's module collection while hooking selection changes.
-    /// </summary>
     private void BindModuleList()
     {
+        if (ViewModel?.CurrentDocument is null) return;
+
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
         if (moduleEditor is null) return;
 
@@ -107,9 +78,8 @@ public partial class MainWindow : Window
         var moduleListBox = moduleEditor.FindControl<ItemsControl>("ModuleListBox");
         if (moduleListBox is not null)
         {
-            moduleListBox.ItemsSource = _currentDocument.Modules;
+            moduleListBox.ItemsSource = ViewModel.CurrentDocument.Modules;
 
-            // Use Bubble ONLY with handledEventsToo: true
             moduleListBox.AddHandler(
                 InputElement.PointerPressedEvent,
                 OnModuleListBoxPointerPressed,
@@ -120,7 +90,9 @@ public partial class MainWindow : Window
 
     private void ModuleEditor_RootSelected(object? sender, EventArgs e)
     {
-        _currentDocument.SelectRoot();
+        if (ViewModel?.CurrentDocument is null) return;
+
+        ViewModel.CurrentDocument.SelectRoot();
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
         moduleEditor?.SetRootSelectionHighlight(true);
         ApplyModuleSelectionHighlight(null);
@@ -128,16 +100,15 @@ public partial class MainWindow : Window
 
     private void OnModuleListBoxPointerPressed(object? sender, PointerPressedEventArgs e)
     {
+        if (ViewModel?.CurrentDocument is null) return;
         if (e.Source is not Visual sourceVisual) return;
 
-        // Ignore action buttons (Move Up, Move Down, Delete)
         var button = sourceVisual.FindAncestorOfType<Button>();
         if (button is not null && button is not ToggleButton)
         {
             return;
         }
 
-        // Find the immediate innermost module card border
         var cardBorder = (sourceVisual as Border)?.Classes.Contains("module-card") == true
             ? (Border)sourceVisual
             : sourceVisual.GetVisualAncestors()
@@ -146,7 +117,7 @@ public partial class MainWindow : Window
 
         if (cardBorder?.DataContext is Module clickedModule)
         {
-            _currentDocument.SelectModule(clickedModule);
+            ViewModel.CurrentDocument.SelectModule(clickedModule);
             SyncPropertiesToolbar(clickedModule);
             ApplyModuleSelectionHighlight(clickedModule);
         }
@@ -154,10 +125,12 @@ public partial class MainWindow : Window
 
     private void ApplyModuleSelectionHighlight(Module? selectedModule)
     {
+        if (ViewModel?.CurrentDocument is null) return;
+
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
         if (moduleEditor is null) return;
 
-        moduleEditor.SetRootSelectionHighlight(selectedModule is null && _currentDocument.IsRootSelected);
+        moduleEditor.SetRootSelectionHighlight(selectedModule is null && ViewModel.CurrentDocument.IsRootSelected);
 
         var allCardBorders = moduleEditor.GetVisualDescendants()
                                          .OfType<Border>()
@@ -178,9 +151,10 @@ public partial class MainWindow : Window
             }
         }
     }
+
     private void ModuleEditor_ModuleMoveUpRequested(object? sender, Module module)
     {
-        if (_currentDocument.MoveModuleUp(module))
+        if (ViewModel?.CurrentDocument?.MoveModuleUp(module) == true)
         {
             RefreshModuleEditorList();
         }
@@ -188,7 +162,7 @@ public partial class MainWindow : Window
 
     private void ModuleEditor_ModuleMoveDownRequested(object? sender, Module module)
     {
-        if (_currentDocument.MoveModuleDown(module))
+        if (ViewModel?.CurrentDocument?.MoveModuleDown(module) == true)
         {
             RefreshModuleEditorList();
         }
@@ -196,16 +170,13 @@ public partial class MainWindow : Window
 
     private void ModuleEditor_ModuleDeleteRequested(object? sender, Module module)
     {
-        // 1. Remove from domain model (triggers Changed -> updates preview)
-        _currentDocument.RemoveModule(module);
-
-        // 2. Refresh the editor ListBox to update UI items
+        ViewModel?.CurrentDocument?.RemoveModule(module);
         RefreshModuleEditorList();
     }
 
     private void ModuleEditor_ModuleDuplicateRequested(object? sender, Module module)
     {
-        if (_currentDocument?.DuplicateModule(module) is not null)
+        if (ViewModel?.CurrentDocument?.DuplicateModule(module) is not null)
         {
             RefreshModuleEditorList();
         }
@@ -213,9 +184,9 @@ public partial class MainWindow : Window
 
     private void ModuleEditor_ModuleDetachRequested(object? sender, Module module)
     {
-        if (_currentDocument is not null)
+        if (ViewModel?.CurrentDocument is not null)
         {
-            _currentDocument.DetachModule(module);
+            ViewModel.CurrentDocument.DetachModule(module);
             RefreshModuleEditorList();
         }
     }
@@ -224,54 +195,27 @@ public partial class MainWindow : Window
 
     #region Document & Preview Synchronization
 
-    /// <summary>
-    /// Compiles the current <see cref="_currentDocument"/> into an Avalonia visual tree via <see cref="_engine"/>
-    /// and mounts it into the preview viewport container hosted within <see cref="PreviewHostView"/>.
-    /// </summary>
     private void RenderCurrentPreview()
     {
+        if (ViewModel?.CurrentDocument is null) return;
+
         var previewView = this.FindControl<PreviewHostView>("PreviewView");
         var host = previewView?.FindControl<ContentControl>("PreviewHost");
         if (host is null) return;
 
-        host.Content = _engine.Render(_currentDocument, _template, _previewAdapter);
+        // Use Engine directly from ViewModel
+        host.Content = ViewModel.Engine.Render(ViewModel.CurrentDocument, ViewModel.Template, _previewAdapter);
     }
 
-    /// <summary>
-    /// Routed event listener attached to the editor container that intercepts bubbling <see cref="TextBox.TextChanged"/>
-    /// events from module text inputs, triggering a domain change notification to re-render the preview.
-    /// </summary>
-    /// <param name="sender">The control where the text event originated.</param>
-    /// <param name="e">Event args associated with the text alteration.</param>
     private void ModuleContent_TextChanged(object? sender, TextChangedEventArgs e)
     {
-        _currentDocument.NotifyChanged();
+        ViewModel?.CurrentDocument?.NotifyChanged();
     }
 
     #endregion
 
     #region Module Selection & Properties Toolbar
-
-    /// <summary>
-    /// Synchronizes selection changes made in the module list with the active <see cref="_currentDocument"/>
-    /// and updates the horizontal properties toolbar controls accordingly.
-    /// </summary>
-    /// <param name="sender">The <see cref="ListBox"/> control raising the selection event.</param>
-    /// <param name="e">Selection event data containing newly selected items.</param>
-    // private void ModuleListBox_SelectionChanged(object? sender, SelectionChangedEventArgs e)
-    // {
-    //     if (sender is ListBox listBox && listBox.SelectedItem is Module selectedModule)
-    //     {
-    //         _currentDocument.SelectModule(selectedModule);
-    //         SyncPropertiesToolbar(selectedModule);
-    //     }
-    // }
-
-    /// <summary>
-    /// Synchronizes the style selection dropdown in <see cref="PropertiesToolbarView"/> with the
-    /// <see cref="Module.StyleKey"/> of the currently selected module.
-    /// </summary>
-    /// <param name="module">The selected module whose properties are being reflected.</param>
+    
     private void SyncPropertiesToolbar(Module module)
     {
         var toolbar = this.FindControl<PropertiesToolbarView>("PropertiesToolbar");
@@ -290,101 +234,13 @@ public partial class MainWindow : Window
     }
 
     #endregion
-
-    #region Navigation & Drawer Shell
-
-    /// <summary>
-    /// Handles left-rail navigation button clicks to open, switch, or collapse sidebar drawer panels.
-    /// </summary>
-    /// <param name="sender">The navigation button clicked by the user.</param>
-    /// <param name="e">Routed event arguments.</param>
-    private void NavButton_Click(object? sender, RoutedEventArgs e)
-    {
-        if (sender is not Button btn) return;
-
-        var selectedTab = btn.Name switch
-        {
-            "NavOutlineBtn" => "Outline",
-            "NavPaletteBtn" => "Palette",
-            _ => string.Empty
-        };
-
-        // If the clicked tab is already open, clicking it again collapses the drawer
-        if (_activeTab == selectedTab)
-        {
-            CloseDrawer();
-        }
-        else
-        {
-            OpenDrawer(selectedTab);
-        }
-    }
-
-    /// <summary>
-    /// Opens the left sidebar drawer and displays the requested sub-panel (e.g., Outline or Palette).
-    /// </summary>
-    /// <param name="tab">The name of the tab view to display.</param>
-    private void OpenDrawer(string tab)
-    {
-        _activeTab = tab;
-
-        SetDrawerVisibility(
-            isOpen: true,
-            showOutline: tab == "Outline",
-            showPalette: tab == "Palette"
-        );
-    }
-
-    /// <summary>
-    /// Event handler for the close button located inside drawer headers.
-    /// </summary>
-    /// <param name="sender">The button control triggering the closure.</param>
-    /// <param name="e">Routed event arguments.</param>
-    private void CloseDrawer_Click(object? sender, RoutedEventArgs e)
-    {
-        CloseDrawer();
-    }
-
-    /// <summary>
-    /// Collapses the left sidebar drawer and resets the active tab state tracker.
-    /// </summary>
-    private void CloseDrawer()
-    {
-        _activeTab = string.Empty;
-        SetDrawerVisibility(isOpen: false, showOutline: false, showPalette: false);
-    }
-
-    /// <summary>
-    /// Centralized visibility helper controlling drawer panel layout elements and splitters.
-    /// </summary>
-    /// <param name="isOpen">True to expand the drawer container and splitter; false to collapse.</param>
-    /// <param name="showOutline">True to render the document outline view inside the drawer.</param>
-    /// <param name="showPalette">True to render the module/style palette view inside the drawer.</param>
-    private void SetDrawerVisibility(bool isOpen, bool showOutline, bool showPalette)
-    {
-        var drawer = this.FindControl<Border>("LeftDrawer");
-        var splitter = this.FindControl<GridSplitter>("DrawerSplitter");
-        var outlineView = this.FindControl<DockPanel>("OutlineView");
-        var paletteView = this.FindControl<DockPanel>("PaletteView");
-
-        if (drawer is not null) drawer.IsVisible = isOpen;
-        if (splitter is not null) splitter.IsVisible = isOpen;
-        if (outlineView is not null) outlineView.IsVisible = showOutline;
-        if (paletteView is not null) paletteView.IsVisible = showPalette;
-    }
-
-    #endregion
-
+    
     #region Export & Background Operations
 
-    /// <summary>
-    /// Initiates background PDF compilation via <see cref="PdfService"/> using the active document and template,
-    /// providing visual feedback and disabling export controls while processing.
-    /// </summary>
-    /// <param name="sender">The export button triggering the operation.</param>
-    /// <param name="e">Routed event arguments.</param>
     private async void ConvertButton_Click(object? sender, RoutedEventArgs e)
     {
+        if (ViewModel?.CurrentDocument is null) return;
+
         var convertButton = sender as Button;
         var statusText = this.FindControl<TextBlock>("StatusText");
 
@@ -393,8 +249,7 @@ public partial class MainWindow : Window
             if (convertButton is not null) convertButton.IsEnabled = false;
             if (statusText is not null) statusText.Text = "Status: Exporting PDF...";
 
-            // Run export asynchronously off the UI thread to keep the application responsive
-            await PdfService.CreatePdfAsync(_currentDocument, _template, "output.pdf");
+            await PdfService.CreatePdfAsync(ViewModel.CurrentDocument, ViewModel.Template, "output.pdf");
 
             if (statusText is not null) statusText.Text = "Status: PDF Exported successfully!";
         }
@@ -408,12 +263,9 @@ public partial class MainWindow : Window
         }
     }
 
-    /// <summary>
-    /// Removes all modules from the active document, resetting the editor and preview to an empty state.
-    /// </summary>
     private void ClearButton_Click(object? sender, RoutedEventArgs e)
     {
-        _currentDocument.ClearModules();
+        ViewModel?.CurrentDocument?.ClearModules();
         RefreshModuleEditorList();
     }
 
@@ -421,43 +273,36 @@ public partial class MainWindow : Window
 
     #region Editor & Selection Interactions
 
-    /// <summary>
-    /// Appends a new module instance to the document when its archetype card is clicked in the palette.
-    /// </summary>
     private void PaletteItem_Click(object? sender, RoutedEventArgs e)
     {
+        if (ViewModel?.CurrentDocument is null) return;
+
         if (sender is Button button && button.Tag is ModuleDefinition definition)
         {
-            // 1. Create a fresh instance using Core's ModuleRegistry definition
             var newModule = definition.Create();
+            var targetParent = ViewModel.CurrentDocument.IsRootSelected ? null : ViewModel.CurrentDocument.SelectedModule;
+            ViewModel.CurrentDocument.AddModule(newModule, parent: targetParent);
 
-            // 2. Append to domain model: if root is selected, append to root; otherwise latch to SelectedModule
-            var targetParent = _currentDocument.IsRootSelected ? null : _currentDocument.SelectedModule;
-            _currentDocument.AddModule(newModule, parent: targetParent);
-
-            // 3. Refresh the ModuleEditor ListBox ItemsSource to show the new module
             RefreshModuleEditorList();
-
             SyncPropertiesToolbar(newModule);
         }
     }
 
-    /// <summary>
-    /// Re-syncs the module editor ListBox items source when items are appended or modified.
-    /// </summary>
     private void RefreshModuleEditorList()
     {
+        if (ViewModel?.CurrentDocument is null) return;
+
         var moduleEditor = this.FindControl<ModuleEditorView>("ModuleEditor");
-        moduleEditor?.SetRootSelectionHighlight(_currentDocument.IsRootSelected);
+        moduleEditor?.SetRootSelectionHighlight(ViewModel.CurrentDocument.IsRootSelected);
 
         var moduleListBox = moduleEditor?.FindControl<ItemsControl>("ModuleListBox");
         if (moduleListBox is not null)
         {
             moduleListBox.ItemsSource = null;
-            moduleListBox.ItemsSource = _currentDocument.Modules;
+            moduleListBox.ItemsSource = ViewModel.CurrentDocument.Modules;
         }
 
-        ApplyModuleSelectionHighlight(_currentDocument.SelectedModule);
+        ApplyModuleSelectionHighlight(ViewModel.CurrentDocument.SelectedModule);
     }
 
     #endregion

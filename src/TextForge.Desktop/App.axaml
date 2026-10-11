@@ -12,4 +12,7 @@
         <FluentTheme />
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
     </Application.Styles>
+    <Application.Resources>
+        <SolidColorBrush x:Key="FaintGrayBrush">#6B7280</SolidColorBrush>
+    </Application.Resources>
 </Application>

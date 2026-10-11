@@ -8,7 +8,8 @@
             CornerRadius="6"
             Padding="8,6"
             Margin="0,0,0,10">
-        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+        <Grid ColumnDefinitions="* Auto" ColumnSpacing="30">
+            <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
 
             <!-- Consolidated Typography / Text Settings Popover -->
             <Button Name="TypographyButton"
@@ -218,5 +219,7 @@
             </Button>
 
         </StackPanel>
+            <Button Content="Clear Page" Grid.Column="1"/>
+        </Grid>
     </Border>
 </UserControl>
