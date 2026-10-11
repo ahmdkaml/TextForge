@@ -1,7 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mod="using:TextForge.Core.Modules"
-    x:Class="TextForge.Desktop.Views.Components.ModuleEditorView">
+    xmlns:vm="using:TextForge.Desktop.ViewModels"
+    x:Class="TextForge.Desktop.Views.Components.ModuleEditorView"
+    x:DataType="vm:MainViewModel">
 
     <UserControl.Styles>
         <Style Selector="ListBoxItem">
@@ -60,7 +62,9 @@
         <!-- Self-Referencing Recursive Template for Modules & Submodules at any depth -->
         <DataTemplate x:Key="RecursiveModuleTemplate" x:DataType="mod:Module">
             <Border Classes="module-card"
+                    Classes.selected="{Binding IsSelected}"
                 Tag="{Binding}"
+                    PointerPressed="ModuleCard_PointerPressed"
                 Margin="0,1"
                 Padding="2">
                 <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay, FallbackValue=False}"
@@ -148,10 +152,13 @@
         VerticalScrollBarVisibility="Auto"
         HorizontalScrollBarVisibility="Disabled"
         Background="Transparent">
-        <StackPanel PointerPressed="DocumentRootCard_PointerPressed" Cursor="Hand" Classes="root-card selected" Name="EditorStackPanel" Spacing="6" Margin="0,0,0,12" Background="Transparent">
+        <StackPanel PointerPressed="DocumentRootCard_PointerPressed" Cursor="Hand" Classes="root-card"
+                    Classes.selected="{Binding CurrentDocument.IsRootSelected}"
+                    Name="EditorStackPanel" Spacing="6" Margin="0,0,0,12" Background="Transparent">
             <!-- Modules List (Using ItemsControl to prevent VirtualizingStackPanel focus scroll jumps) -->
             <ItemsControl Name="ModuleListBox"
                 Background="Transparent"
+                ItemsSource="{Binding CurrentDocument.Modules}"
                 ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
         </StackPanel>
     </ScrollViewer>

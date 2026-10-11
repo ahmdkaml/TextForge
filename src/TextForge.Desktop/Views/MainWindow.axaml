@@ -42,7 +42,7 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
                     VerticalAlignment="Center">
                     <Button Name="AddModuleButton" Content="Add Module" />
-                    <Button Name="ConvertButton" Content="Export PDF" Click="ConvertButton_Click" />
+                    <Button Name="ConvertButton" Content="Export PDF" Command="{Binding ExportPdfCommand}" />
                 </StackPanel>
             </Grid>
         </Border>
@@ -114,7 +114,8 @@
                                     FontSize="11" Foreground="{DynamicResource FaintGrayBrush}" TextWrapping="Wrap" />
 
                                 <!-- Dynamically populated module definitions -->
-                                <ItemsControl Name="AvailableModulesList">
+                                <ItemsControl Name="AvailableModulesList" 
+                                              ItemsSource="{Binding AvailableModules}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="mod:ModuleDefinition">
                                             <Button HorizontalAlignment="Stretch"
@@ -126,7 +127,9 @@
                                                 Padding="8"
                                                 Margin="0,0,0,6"
                                                 Tag="{Binding}"
-                                                Click="PaletteItem_Click">
+                                                Command="{Binding $parent[Window].((vm:MainViewModel)DataContext).AddModuleCommand}"
+                                                CommandParameter="{Binding}"
+                                                ToolTip.Tip="{Binding Description}">
                                                 <StackPanel Orientation="Horizontal" Spacing="8">
                                                     <TextBlock Text="{Binding Icon}" FontSize="16"
                                                         VerticalAlignment="Center" />
@@ -164,7 +167,13 @@
                     <components:PropertiesToolbarView Grid.Row="1" Name="PropertiesToolbar" />
 
                     <!-- Module Editor Component -->
-                    <components:ModuleEditorView Grid.Row="2" Name="ModuleEditor" />
+                    <components:ModuleEditorView Grid.Row="2" 
+                                                 Name="ModuleEditor"
+                                                 ModuleMoveUpRequested="ModuleEditor_ModuleMoveUpRequested"
+                                                 ModuleMoveDownRequested="ModuleEditor_ModuleMoveDownRequested"
+                                                 ModuleDeleteRequested="ModuleEditor_ModuleDeleteRequested"
+                                                 ModuleDetachRequested="ModuleEditor_ModuleDetachRequested"
+                                                 RootSelected="ModuleEditor_RootSelected" />
                 </Grid>
             </Border>
 
@@ -182,8 +191,10 @@
         <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0" BorderBrush="#E5E7EB"
             Background="#FAFAFA">
             <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
-                <TextBlock Grid.Column="0" Name="StatusText" Text="Status: Synced" FontSize="11"
-                    Foreground="{DynamicResource FaintGrayBrush}" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="0" Name="StatusText" Text="{Binding ExportStatusMessage}" FontSize="11"
+                    Foreground="{DynamicResource FaintGrayBrush}" VerticalAlignment="Center"
+                    
+                    />
                 <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" FontSize="11"
                     Foreground="{DynamicResource FaintGrayBrush}" VerticalAlignment="Center" />
             </Grid>

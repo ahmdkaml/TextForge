@@ -1,10 +1,13 @@
 using System;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.VisualTree;
 using TextForge.Core;
 using TextForge.Core.Documents;
 using TextForge.Core.Modules;
+using TextForge.Desktop.ViewModels;
 
 namespace TextForge.Desktop.Views.Components;
 
@@ -38,24 +41,31 @@ public partial class ModuleEditorView : UserControl
 
     private void DocumentRootCard_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        RootSelected?.Invoke(this, EventArgs.Empty);
-    }
-
-    public void SetRootSelectionHighlight(bool isRootSelected)
-    {
-        var rootCard = this.FindControl<Border>("DocumentRootCard");
-        if (rootCard is null) return;
-
-        if (isRootSelected)
+        // If the click happened on a nested module card or button, DON'T select root!
+        if (e.Source is Visual visual && visual.FindAncestorOfType<Border>()?.Classes.Contains("module-card") == true)
         {
-            if (!rootCard.Classes.Contains("selected"))
-            {
-                rootCard.Classes.Add("selected");
-            }
+            return; // Let the module card handle its own selection
         }
-        else
+
+        var vm = DataContext as MainViewModel ?? this.FindAncestorOfType<Window>()?.DataContext as MainViewModel;
+        vm?.CurrentDocument.SelectRoot();
+    }
+    private void ModuleCard_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is Border border && border.DataContext is Module clickedModule)
         {
-            rootCard.Classes.Remove("selected");
+            // 1. Grab MainViewModel from ModuleEditorView (this), NOT the border's DataContext
+            if (DataContext is MainViewModel vm)
+            {
+                vm.CurrentDocument.SelectModule(clickedModule);
+            }
+            else if (this.FindAncestorOfType<Window>()?.DataContext is MainViewModel windowVm)
+            {
+                windowVm.CurrentDocument.SelectModule(clickedModule);
+            }
+
+            // 2. Stop event from bubbling up to DocumentRootCard_PointerPressed
+            e.Handled = true;
         }
     }
 
