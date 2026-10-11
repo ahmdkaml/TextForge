@@ -1,9 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mod="using:TextForge.Core.Modules"
-    xmlns:vm="using:TextForge.Desktop.ViewModels"
-    x:Class="TextForge.Desktop.Views.Components.ModuleEditorView"
-    x:DataType="vm:MainViewModel">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:TextForge.Desktop.ViewModels"
+             x:Class="TextForge.Desktop.Views.Components.ModuleEditorView"
+             x:DataType="vm:MainViewModel">
 
     <UserControl.Styles>
         <Style Selector="ListBoxItem">
@@ -60,7 +59,7 @@
 
     <UserControl.Resources>
         <!-- Self-Referencing Recursive Template for Modules & Submodules at any depth -->
-        <DataTemplate x:Key="RecursiveModuleTemplate" x:DataType="mod:Module">
+        <DataTemplate x:Key="RecursiveModuleTemplate" x:DataType="vm:ModuleViewModel">
             <Border Classes="module-card"
                     Classes.selected="{Binding IsSelected}"
                 Tag="{Binding}"
@@ -100,31 +99,29 @@
                             <!-- Action Buttons -->
                             <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
                                 Margin="4,0,0,0">
-                                <Button Content="▲" FontSize="10" Width="22" Height="22" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Background="Transparent" Foreground="#6B7280"
-                                    ToolTip.Tip="Move Up"
-                                    Tag="{Binding}" Click="MoveUpButton_Click" />
-                                <Button Content="▼" FontSize="10" Width="22" Height="22" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Background="Transparent" Foreground="#6B7280"
-                                    ToolTip.Tip="Move Down"
-                                    Tag="{Binding}" Click="MoveDownButton_Click" />
                                 <Button Content="✕" FontSize="11" Width="22" Height="22" Padding="0"
                                     HorizontalContentAlignment="Center"
                                     VerticalContentAlignment="Center"
+                                    Command="{Binding DeleteCommand}"
                                     Background="Transparent" Foreground="#EF4444"
                                     ToolTip.Tip="Delete Module"
-                                    Tag="{Binding}" Click="DeleteModuleButton_Click" />
+                                    Tag="{Binding}" />
                                 <Button Content="⊘" FontSize="14" FontWeight="Bold" Width="22"
-                                    Height="22" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Background="Transparent" Foreground="#F59E0B"
-                                    ToolTip.Tip="Detach from layout"
-                                    Tag="{Binding}" Click="DetachModuleButton_Click" />
+                                        Height="22" Padding="0"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Command="{Binding DetachCommand}"
+                                        Background="Transparent" Foreground="#F59E0B"
+                                        ToolTip.Tip="Detach from layout"
+                                        Tag="{Binding}" />
+                                <Button Content="+" FontSize="14" FontWeight="Bold" Width="22"
+                                        Height="22" Padding="0"
+                                        HorizontalContentAlignment="Center"
+                                        VerticalContentAlignment="Center"
+                                        Command="{Binding CloneCommand}"
+                                        Background="Transparent" Foreground="#2563EB"
+                                        ToolTip.Tip="Clone Module"
+                                        Tag="{Binding}" />
 
                             </StackPanel>
                         </Grid>
@@ -138,7 +135,7 @@
 
                         <!-- Recursive ItemsControl: uses the exact same template for child
                         submodules -->
-                        <ItemsControl ItemsSource="{Binding SubModules}"
+                        <ItemsControl ItemsSource="{Binding Children}"
                             ItemTemplate="{StaticResource RecursiveModuleTemplate}"
                             Margin="14,2,0,0" />
                     </StackPanel>
@@ -158,7 +155,7 @@
             <!-- Modules List (Using ItemsControl to prevent VirtualizingStackPanel focus scroll jumps) -->
             <ItemsControl Name="ModuleListBox"
                 Background="Transparent"
-                ItemsSource="{Binding CurrentDocument.Modules}"
+                ItemsSource="{Binding ModuleItems}"
                 ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
         </StackPanel>
     </ScrollViewer>
