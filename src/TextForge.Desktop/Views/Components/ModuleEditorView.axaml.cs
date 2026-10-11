@@ -4,7 +4,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.VisualTree;
-using TextForge.Core;
 using TextForge.Core.Documents;
 using TextForge.Core.Modules;
 using TextForge.Desktop.ViewModels;
@@ -52,19 +51,17 @@ public partial class ModuleEditorView : UserControl
     }
     private void ModuleCard_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
-        if (sender is Border border && border.DataContext is Module clickedModule)
+        if (sender is Border border && border.DataContext is ModuleViewModel clickedModule)
         {
-            // 1. Grab MainViewModel from ModuleEditorView (this), NOT the border's DataContext
             if (DataContext is MainViewModel vm)
             {
-                vm.CurrentDocument.SelectModule(clickedModule);
+                vm.CurrentDocument.SelectModule(clickedModule.Model);
             }
             else if (this.FindAncestorOfType<Window>()?.DataContext is MainViewModel windowVm)
             {
-                windowVm.CurrentDocument.SelectModule(clickedModule);
+                windowVm.CurrentDocument.SelectModule(clickedModule.Model);
             }
 
-            // 2. Stop event from bubbling up to DocumentRootCard_PointerPressed
             e.Handled = true;
         }
     }
@@ -124,8 +121,5 @@ public partial class ModuleEditorView : UserControl
             titleBlock.Text = $"{_document.Metadata.Title} (Root)";
         }
 
-        // Assign the collection directly ONCE.
-        // ObservableCollection will handle all subsequent Add/Remove operations automatically.
-        ModuleListBox.ItemsSource = _document.Modules;
     }
 }
