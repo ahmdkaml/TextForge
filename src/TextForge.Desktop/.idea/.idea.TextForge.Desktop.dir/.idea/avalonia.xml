@@ -4,6 +4,8 @@
     <option name="projectPerEditor">
       <map>
         <entry key="App.axaml" value="TextForge.Desktop.csproj" />
+        <entry key="Styles/ModuleCardStyles.axaml" value="TextForge.Desktop.csproj" />
+        <entry key="Styles/Styles.axaml" value="TextForge.Desktop.csproj" />
         <entry key="Views/Components/ModuleEditorView.axaml" value="TextForge.Desktop.csproj" />
         <entry key="Views/Components/PreviewHostView.axaml" value="TextForge.Desktop.csproj" />
         <entry key="Views/Components/PropertiesToolbarView.axaml" value="TextForge.Desktop.csproj" />

@@ -2,170 +2,90 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:TextForge.Desktop.ViewModels"
              x:Class="TextForge.Desktop.Views.Components.ModuleEditorView"
-             x:DataType="vm:MainViewModel">
-
-    <UserControl.Styles>
-        <Style Selector="ListBoxItem">
-            <Setter Property="Padding" Value="0" />
-            <Setter Property="Margin" Value="0,0,0,4" />
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
-            <Setter Property="Background" Value="Transparent" />
-        </Style>
-
-        <!-- Base Module Card Styling -->
-        <Style Selector="Border.module-card">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#E5E7EB" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Transitions">
-                <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.1" />
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.1" />
-                </Transitions>
-            </Setter>
-        </Style>
-
-        <!-- Active Selected Card State (Unified across all depths) -->
-        <Style Selector="Border.module-card.selected">
-            <Setter Property="Background" Value="#EFF6FF" />
-            <Setter Property="BorderBrush" Value="#2563EB" />
-            <Setter Property="BorderThickness" Value="1.5" />
-        </Style>
-
-        <!-- Root Card Styling -->
-        <Style Selector="Border.root-card">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#E5E7EB" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="6" />
-            <Setter Property="Transitions">
-                <Transitions>
-                    <BrushTransition Property="Background" Duration="0:0:0.1" />
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.1" />
-                </Transitions>
-            </Setter>
-        </Style>
-
-        <!-- Active Selected Root Card State -->
-        <Style Selector="Border.root-card.selected">
-            <Setter Property="Background" Value="#EFF6FF" />
-            <Setter Property="BorderBrush" Value="#2563EB" />
-            <Setter Property="BorderThickness" Value="1.5" />
-        </Style>
-    </UserControl.Styles>
+             x:DataType="vm:MainViewModel"
+             x:CompileBindings="True">
 
     <UserControl.Resources>
         <!-- Self-Referencing Recursive Template for Modules & Submodules at any depth -->
         <DataTemplate x:Key="RecursiveModuleTemplate" x:DataType="vm:ModuleViewModel">
             <Border Classes="module-card"
                     Classes.selected="{Binding IsSelected}"
-                Tag="{Binding}"
-                Margin="0,1"
-                    PointerPressed="StopPropagation_PointerPressed"
-                Padding="2">
+                    Tag="{Binding}"
+                    PointerPressed="StopPropagation_PointerPressed">
                 <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay, FallbackValue=False}"
-                    HorizontalAlignment="Stretch"
-                    Background="Transparent">
+                          HorizontalAlignment="Stretch"
+                          Background="Transparent">
                     <Expander.Header>
                         <Grid ColumnDefinitions="Auto,*,Auto"
-                            VerticalAlignment="Center"
-                            Background="Transparent"
-                            Cursor="Hand"
-                            PointerPressed="ModuleCard_PointerPressed">
+                              VerticalAlignment="Center"
+                              Background="Transparent"
+                              Cursor="Hand"
+                              PointerPressed="ModuleCard_PointerPressed">
                             <!-- Archetype Tag -->
-                            <Border Grid.Column="0"
-                                Background="#E5E7EB"
-                                CornerRadius="4"
-                                VerticalAlignment="Center"
-                                Padding="6,2"
-                                Margin="0,0,8,0">
-                                <TextBlock Text="{Binding Name}"
-                                    FontSize="11"
-                                    FontWeight="SemiBold"
-                                    Foreground="#374151" />
+                            <Border Grid.Column="0" Classes="archetype-tag">
+                                <TextBlock Text="{Binding Name}" Classes="archetype-text" />
                             </Border>
 
-                            <!-- Content Preview (Truncated to max 3 lines & small amount of words unless expanded) -->
+                            <!-- Content Preview -->
                             <TextBlock Grid.Column="1"
-                                Text="{Binding TruncatedPreviewContent}"
-                                TextTrimming="CharacterEllipsis"
-                                MaxLines="3"
-                                TextWrapping="Wrap"
-                                VerticalAlignment="Center"
-                                FontSize="12"
-                                Foreground="#1F2937" />
+                                       Text="{Binding TruncatedPreviewContent}"
+                                       Classes="preview-text" />
 
                             <!-- Action Buttons -->
-                            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="2"
-                                Margin="4,0,0,0">
-                                <Button Content="✕" FontSize="11" Width="22" Height="22" Padding="0"
-                                    HorizontalContentAlignment="Center"
-                                    VerticalContentAlignment="Center"
-                                    Command="{Binding DeleteCommand}"
-                                    Background="Transparent" Foreground="#EF4444"
-                                    ToolTip.Tip="Delete Module"
-                                    Tag="{Binding}" />
-                                <Button Content="⊘" FontSize="14" FontWeight="Bold" Width="22"
-                                        Height="22" Padding="0"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Center"
+                            <StackPanel Grid.Column="2"
+                                        Orientation="Horizontal"
+                                        Spacing="2"
+                                        Margin="4,0,0,0">
+                                <Button Content="✕"
+                                        Classes="action-btn delete"
+                                        Command="{Binding DeleteCommand}"
+                                        ToolTip.Tip="Delete Module"
+                                        Tag="{Binding}" />
+                                <Button Content="⊘"
+                                        Classes="action-btn detach"
                                         Command="{Binding DetachCommand}"
-                                        Background="Transparent" Foreground="#F59E0B"
                                         ToolTip.Tip="Detach from layout"
                                         Tag="{Binding}" />
-                                <Button Content="+" FontSize="14" FontWeight="Bold" Width="22"
-                                        Height="22" Padding="0"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Center"
+                                <Button Content="+"
+                                        Classes="action-btn clone"
                                         Command="{Binding CloneCommand}"
-                                        Background="Transparent" Foreground="#2563EB"
                                         ToolTip.Tip="Clone Module"
                                         Tag="{Binding}" />
-
                             </StackPanel>
                         </Grid>
                     </Expander.Header>
 
                     <StackPanel Spacing="6" Margin="4,6,4,4">
                         <TextBox Text="{Binding Content, Mode=TwoWay}"
-                            AcceptsReturn="True"
-                            TextWrapping="Wrap"
-                            MinHeight="45" />
+                                 Classes="module-textbox" />
 
-                        <!-- Recursive ItemsControl: uses the exact same template for child
-                        submodules -->
+                        <!-- Recursive ItemsControl: uses the exact same template for child submodules -->
                         <ItemsControl ItemsSource="{Binding Children}"
-                            ItemTemplate="{StaticResource RecursiveModuleTemplate}"
-                            Margin="14,2,0,0" />
+                                      ItemTemplate="{StaticResource RecursiveModuleTemplate}"
+                                      Classes="submodule-list" />
                     </StackPanel>
                 </Expander>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
 
-<ScrollViewer Name="EditorScrollViewer"
-              BringIntoViewOnFocusChange="False"
-              VerticalScrollBarVisibility="Auto"
-              HorizontalScrollBarVisibility="Disabled"
-              Background="Transparent">
+    <ScrollViewer Name="EditorScrollViewer"
+                  BringIntoViewOnFocusChange="False"
+                  VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled"
+                  Background="Transparent">
 
-    <StackPanel Name="EditorStackPanel"
-                x:DataType="vm:MainViewModel"
-                PointerPressed="DocumentRootCard_PointerPressed"
-                Classes="root-card"
-                Classes.selected="{Binding CurrentDocument.IsRootSelected}"
-                Spacing="6"
-                Margin="0,0,0,12"
-                Background="Transparent">
+        <StackPanel Name="EditorStackPanel"
+                    x:DataType="vm:MainViewModel"
+                    PointerPressed="DocumentRootCard_PointerPressed"
+                    Classes="root-card"
+                    Classes.selected="{Binding CurrentDocument.IsRootSelected}">
 
-        <!-- Modules List -->
-        <ItemsControl Name="ModuleListBox"
-                      Background="Transparent"
-                      ItemsSource="{Binding ModuleItems}"
-                      ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
-    </StackPanel>
-</ScrollViewer>
+            <!-- Modules List -->
+            <ItemsControl Name="ModuleListBox"
+                          Background="Transparent"
+                          ItemsSource="{Binding ModuleItems}"
+                          ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
+        </StackPanel>
+    </ScrollViewer>
 </UserControl>

@@ -3,7 +3,7 @@
              xmlns:templates="using:TextForge.Core.Templates"
              x:Class="TextForge.Desktop.Views.Components.PreviewHostView">
     <!-- Live Preview Viewport (Uniform A4 Canvas) -->
-    <Border Padding="20" Background="#E5E7EB">
+    <Border Classes="preview-viewport">
         <DockPanel>
             <!-- Header Toolbar: Title & Template Dropdown -->
             <Grid DockPanel.Dock="Top" Margin="0,0,0,8">
@@ -13,8 +13,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Text="Document Preview"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center" />
+                           Classes="section-header" />
 
                 <!-- Template Selector Dropdown -->
                 <StackPanel Grid.Column="1"
@@ -22,15 +21,10 @@
                             Spacing="6"
                             VerticalAlignment="Center">
                     <TextBlock Text="Template:"
-                               FontSize="12"
-                               Foreground="#6B7280"
-                               VerticalAlignment="Center" />
+                               Classes="status-caption" />
 
                     <ComboBox Name="TemplateSelector"
-                              Width="140"
-                              Height="28"
-                              Padding="8,2"
-                              FontSize="12"
+                              Classes="preview-template-selector"
                               ToolTip.Tip="Select Document Template">
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="templates:IDocumentTemplate">
@@ -48,15 +42,7 @@
                          HorizontalAlignment="Center"
                          VerticalAlignment="Center">
                     <!-- Fixed A4 Document Page Canvas (595 x 842 pt) with drop shadow -->
-                    <Border Width="595"
-                            MinHeight="842"
-                            Background="White"
-                            BorderBrush="#D1D5DB"
-                            BorderThickness="1"
-                            CornerRadius="2"
-                            Padding="36"
-                            Margin="16"
-                            BoxShadow="0 4 12 0 #20000000">
+                    <Border Classes="a4-page-sheet">
                         <ContentControl Name="PreviewHost"
                                         HorizontalContentAlignment="Stretch"
                                         VerticalContentAlignment="Top" />

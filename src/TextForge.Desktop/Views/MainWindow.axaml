@@ -1,18 +1,18 @@
 <Window xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:vm="using:TextForge.Desktop.ViewModels"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mod="using:TextForge.Core.Modules"
-    xmlns:components="using:TextForge.Desktop.Views.Components"
-    mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
-    x:Class="TextForge.Desktop.Views.MainWindow"
-    x:DataType="vm:MainViewModel"
-    Icon="/Assets/branding/icon.png"
-    Title="TextForge"
-    Width="1280" Height="800"
-    MinWidth="960" MinHeight="600"
-    >
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TextForge.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mod="using:TextForge.Core.Modules"
+        xmlns:components="using:TextForge.Desktop.Views.Components"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
+        x:Class="TextForge.Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        x:CompileBindings="True"
+        Icon="/Assets/branding/icon.png"
+        Title="TextForge"
+        Width="1280" Height="800"
+        MinWidth="960" MinHeight="600">
 
     <Design.DataContext>
         <vm:MainViewModel />
@@ -23,25 +23,20 @@
         <!-- ========================================== -->
         <!-- 1. TOP COMMAND BAR                         -->
         <!-- ========================================== -->
-        <Border Grid.Row="0" Height="44" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB"
-            Background="White">
-            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
+        <Border Grid.Row="0" Classes="top-command-bar">
+            <Grid ColumnDefinitions="Auto,*,Auto">
                 <!-- Branding & Document Title -->
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
-                    Spacing="8">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
                     <Image Source="/Assets/branding/icon.png" Width="20" Height="20" />
                     <TextBlock Text="TextForge" FontWeight="Bold" VerticalAlignment="Center" />
-                    <TextBlock Name="DocumentTitleText" Text="/ Untitled Document"
-                        VerticalAlignment="Center" Foreground="{DynamicResource FaintGrayBrush}" />
+                    <TextBlock Name="DocumentTitleText" Text="/ Untitled Document" Classes="status-caption" />
                 </StackPanel>
 
                 <!-- Center Status -->
-                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center"
-                    VerticalAlignment="Center" Foreground="{DynamicResource FaintGrayBrush}" />
+                <TextBlock Grid.Column="1" Text="Ready" HorizontalAlignment="Center" Classes="status-caption" />
 
                 <!-- Actions -->
-                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
-                    VerticalAlignment="Center">
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
                     <Button Name="AddModuleButton" Content="Add Module" />
                     <Button Name="ConvertButton" Content="Export PDF" Command="{Binding ExportPdfCommand}" />
                 </StackPanel>
@@ -50,97 +45,71 @@
 
         <!-- ========================================== -->
         <!-- 2. MAIN WORKSPACE                          -->
-        <!-- Columns: Activity Bar | Left Drawer | Splitter | Editor & Properties (4*) | Splitter |
-        Live Preview (6*) -->
         <!-- ========================================== -->
         <Grid Grid.Row="1" ColumnDefinitions="Auto,Auto,Auto,4*,4,6*">
 
             <!-- 1. Activity Bar (Global Nav) -->
-            <Border Grid.Column="0" Width="44" BorderThickness="0,0,1,0" BorderBrush="#E5E7EB"
-                Background="#FAFAFA">
-                <StackPanel Spacing="8" Margin="4,8" HorizontalAlignment="Center">
-                    <Button Name="NavOutlineBtn" Width="32" Height="32" Content="📄"
-                        ToolTip.Tip="Document Outline"
-                        HorizontalContentAlignment="Center"
-                        Command="{Binding ToggleTabCommand}" 
-                        CommandParameter="Outline" />
-                    <Button Name="NavPaletteBtn" Width="32" Height="32" Content="🧩"
-                        ToolTip.Tip="Module Library"
-                        HorizontalContentAlignment="Center" 
-                        Command="{Binding ToggleTabCommand}" 
-                        CommandParameter="Palette" />
-                    <Button Name="NavSettingsBtn" Width="32" Height="32" Content="⚙️"
-                        ToolTip.Tip="Settings"
-                        HorizontalContentAlignment="Center" />
+            <Border Grid.Column="0" Classes="activity-bar">
+                <StackPanel Spacing="8" HorizontalAlignment="Center">
+                    <Button Name="NavOutlineBtn" Classes="nav-icon-btn" Content="📄"
+                            ToolTip.Tip="Document Outline"
+                            Command="{Binding ToggleTabCommand}"
+                            CommandParameter="Outline" />
+                    <Button Name="NavPaletteBtn" Classes="nav-icon-btn" Content="🧩"
+                            ToolTip.Tip="Module Library"
+                            Command="{Binding ToggleTabCommand}" 
+                            CommandParameter="Palette" />
+                    <Button Name="NavSettingsBtn" Classes="nav-icon-btn" Content="⚙️"
+                            ToolTip.Tip="Settings" />
                 </StackPanel>
             </Border>
 
             <!-- 2. Expandable Left Drawer -->
             <Border Name="LeftDrawer" Grid.Column="1"
-                Width="240"
-                IsVisible="{Binding IsDrawerOpen}"
-                BorderThickness="0,0,1,0"
-                BorderBrush="#E5E7EB"
-                Padding="10">
+                    Classes="left-drawer"
+                    IsVisible="{Binding IsDrawerOpen}">
                 <Grid>
                     <!-- Outline View -->
                     <DockPanel Name="OutlineView" IsVisible="{Binding ShowOutline}">
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                            <TextBlock Grid.Column="0" Text="Document Outline" FontWeight="SemiBold"
-                                VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Document Outline" Classes="section-header" />
                             <Button Grid.Column="1" Content="✕" Width="24" Height="24"
-                                Padding="0" HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding CloseDrawerCommand}" />
+                                    Padding="0" HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding CloseDrawerCommand}" />
                         </Grid>
-                        <ListBox Name="ModuleOutlineList" Background="Transparent"
-                            BorderThickness="0" />
+                        <ListBox Name="ModuleOutlineList" Background="Transparent" BorderThickness="0" />
                     </DockPanel>
 
                     <!-- Module Library / Palette View -->
                     <DockPanel Name="PaletteView" IsVisible="{Binding ShowPalette}">
                         <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
-                            <TextBlock Grid.Column="0" Text="Module Library" FontWeight="SemiBold"
-                                VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Text="Module Library" Classes="section-header" />
                             <Button Grid.Column="1" Content="✕" Width="24" Height="24"
-                                Padding="0" HorizontalContentAlignment="Center"
-                                VerticalContentAlignment="Center"
-                                Command="{Binding CloseDrawerCommand}" />
+                                    Padding="0" HorizontalContentAlignment="Center"
+                                    VerticalContentAlignment="Center"
+                                    Command="{Binding CloseDrawerCommand}" />
                         </Grid>
 
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Spacing="8">
-                                <TextBlock
-                                    Text="Click a module archetype to append it to the document:"
-                                    FontSize="11" Foreground="{DynamicResource FaintGrayBrush}" TextWrapping="Wrap" />
+                                <TextBlock Text="Click a module archetype to append it to the document:"
+                                           Classes="status-caption" TextWrapping="Wrap" />
 
                                 <!-- Dynamically populated module definitions -->
-                                <ItemsControl Name="AvailableModulesList" 
-                                              ItemsSource="{Binding AvailableModules}">
+                                <ItemsControl Name="AvailableModulesList" ItemsSource="{Binding AvailableModules}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate x:DataType="mod:ModuleDefinition">
-                                            <Button HorizontalAlignment="Stretch"
-                                                HorizontalContentAlignment="Stretch"
-                                                Background="#F3F4F6"
-                                                BorderBrush="#E5E7EB"
-                                                BorderThickness="1"
-                                                CornerRadius="6"
-                                                Padding="8"
-                                                Margin="0,0,0,6"
-                                                Tag="{Binding}"
-                                                Command="{Binding $parent[Window].((vm:MainViewModel)DataContext).AddModuleCommand}"
-                                                CommandParameter="{Binding}"
-                                                ToolTip.Tip="{Binding Description}">
+                                            <Button Classes="palette-module-item"
+                                                    Tag="{Binding}"
+                                                    Command="{Binding $parent[Window].((vm:MainViewModel)DataContext).AddModuleCommand}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip.Tip="{Binding Description}">
                                                 <StackPanel Orientation="Horizontal" Spacing="8">
-                                                    <TextBlock Text="{Binding Icon}" FontSize="16"
-                                                        VerticalAlignment="Center" />
+                                                    <TextBlock Text="{Binding Icon}" FontSize="16" VerticalAlignment="Center" />
                                                     <StackPanel VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding DisplayName}"
-                                                            FontWeight="SemiBold" FontSize="12"
-                                                            Foreground="#1F2937" />
-                                                        <TextBlock Text="{Binding Description}"
-                                                            FontSize="10" Foreground="{DynamicResource FaintGrayBrush}"
-                                                            TextTrimming="CharacterEllipsis" />
+                                                        <TextBlock Text="{Binding DisplayName}" Classes="palette-title" />
+                                                        <TextBlock Text="{Binding Description}" Classes="palette-description" />
                                                     </StackPanel>
                                                 </StackPanel>
                                             </Button>
@@ -154,27 +123,19 @@
             </Border>
 
             <!-- Splitter 1 -->
-            <GridSplitter Name="DrawerSplitter" Grid.Column="2" Width="4" ResizeDirection="Columns"
-                          IsVisible="{Binding IsDrawerOpen}" />
+            <GridSplitter Name="DrawerSplitter" Grid.Column="2" IsVisible="{Binding IsDrawerOpen}" />
 
             <!-- 3. Module Editor & Horizontal Properties Toolbar (4*) -->
-            <Border Grid.Column="3" Padding="12" TextBox.TextChanged="ModuleContent_TextChanged">
+            <Border Grid.Column="3" Classes="workspace-container" TextBox.TextChanged="ModuleContent_TextChanged">
                 <Grid RowDefinitions="Auto,Auto,*">
-                    <!-- Section Title -->
-                    <TextBlock Grid.Row="0" Text="Module Editor" FontWeight="SemiBold"
-                        Margin="0,0,0,8" />
-
-                    <!-- Properties Toolbar Component -->
+                    <TextBlock Grid.Row="0" Text="Module Editor" Classes="section-header" Margin="0,0,0,8" />
                     <components:PropertiesToolbarView Grid.Row="1" Name="PropertiesToolbar" />
-
-                    <!-- Module Editor Component -->
-                    <components:ModuleEditorView Grid.Row="2" 
-                                                 Name="ModuleEditor" />
+                    <components:ModuleEditorView Grid.Row="2" Name="ModuleEditor" />
                 </Grid>
             </Border>
 
             <!-- Splitter 2 -->
-            <GridSplitter Grid.Column="4" Width="4" ResizeDirection="Columns" />
+            <GridSplitter Grid.Column="4" />
 
             <!-- 4. Expanded Live Preview Area (6*) -->
             <components:PreviewHostView Grid.Column="5" Name="PreviewView" />
@@ -184,15 +145,10 @@
         <!-- ========================================== -->
         <!-- 3. STATUS BAR                              -->
         <!-- ========================================== -->
-        <Border Grid.Row="2" Height="24" BorderThickness="0,1,0,0" BorderBrush="#E5E7EB"
-            Background="#FAFAFA">
-            <Grid ColumnDefinitions="Auto,*,Auto" Margin="12,0">
-                <TextBlock Grid.Column="0" Name="StatusText" Text="{Binding ExportStatusMessage}" FontSize="11"
-                    Foreground="{DynamicResource FaintGrayBrush}" VerticalAlignment="Center"
-                    
-                    />
-                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" FontSize="11"
-                    Foreground="{DynamicResource FaintGrayBrush}" VerticalAlignment="Center" />
+        <Border Grid.Row="2" Classes="status-bar">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <TextBlock Grid.Column="0" Name="StatusText" Text="{Binding ExportStatusMessage}" Classes="status-caption" />
+                <TextBlock Grid.Column="2" Text="Page 1 of 1 • 100%" Classes="status-caption" />
             </Grid>
         </Border>
 

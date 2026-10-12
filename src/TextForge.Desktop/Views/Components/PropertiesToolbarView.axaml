@@ -4,36 +4,23 @@
              xmlns:vm="using:TextForge.Desktop.ViewModels"
              x:Class="TextForge.Desktop.Views.Components.PropertiesToolbarView"
              x:DataType="vm:MainViewModel">
-    <Border Background="#F9FAFB"
-            BorderBrush="#E5E7EB"
-            BorderThickness="1"
-            CornerRadius="6"
-            Padding="8,6"
-            Margin="0,0,0,10">
+    <Border Classes="properties-toolbar">
         <Grid ColumnDefinitions="* Auto" ColumnSpacing="30">
             <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
 
             <!-- Consolidated Typography / Text Settings Popover -->
             <Button Name="TypographyButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Background="#FFFFFF"
-                    BorderBrush="#D1D5DB"
-                    BorderThickness="1"
-                    CornerRadius="4"
+                    Classes="toolbar-square-btn"
                     ToolTip.Tip="Typography Settings">
                 <TextBlock Text="Tt" FontSize="12" FontWeight="Bold" Foreground="#374151" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Button.Flyout>
                     <Flyout Placement="BottomEdgeAlignedLeft">
                         <StackPanel Spacing="10" Margin="4" Width="170">
-                            <TextBlock Text="Typography" FontSize="11" FontWeight="SemiBold" Foreground="#4B5563" />
+                            <TextBlock Text="Typography" Classes="flyout-header" />
 
                             <!-- Font Family -->
                             <StackPanel Spacing="3">
-                                <TextBlock Text="Font Family" FontSize="10" Foreground="#6B7280" />
+                                <TextBlock Text="Font Family" Classes="flyout-label" />
                                 <ComboBox Name="FontSelector"
                                           HorizontalAlignment="Stretch"
                                           Height="28"
@@ -51,7 +38,7 @@
 
                             <!-- Font Weight -->
                             <StackPanel Spacing="3">
-                                <TextBlock Text="Weight" FontSize="10" Foreground="#6B7280" />
+                                <TextBlock Text="Weight" Classes="flyout-label" />
                                 <ComboBox Name="FontWeightSelector"
                                           HorizontalAlignment="Stretch"
                                           Height="28"
@@ -69,7 +56,7 @@
 
                             <!-- Font Size -->
                             <StackPanel Spacing="3">
-                                <TextBlock Text="Size" FontSize="10" Foreground="#6B7280" />
+                                <TextBlock Text="Size" Classes="flyout-label" />
                                 <ComboBox Name="FontSizeSelector"
                                           HorizontalAlignment="Stretch"
                                           Height="28"
@@ -96,17 +83,13 @@
             </Button>
 
             <!-- Section Divider -->
-            <Border Width="1" Height="16" Background="#E5E7EB" Margin="2,0" />
+            <Border Classes="toolbar-divider" />
 
             <!-- Text Formatting Toggles (Italic & Strikethrough) -->
             <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
                 <!-- Italic Toggle -->
                 <ToggleButton Name="ItalicToggle"
-                              Width="28"
-                              Height="28"
-                              Padding="0"
-                              HorizontalContentAlignment="Center"
-                              VerticalContentAlignment="Center"
+                              Classes="toolbar-toggle-btn"
                               ToolTip.Tip="Italic">
                     <TextBlock Text="I"
                                FontSize="12"
@@ -118,11 +101,7 @@
 
                 <!-- Strikethrough Toggle -->
                 <ToggleButton Name="StrikethroughToggle"
-                              Width="28"
-                              Height="28"
-                              Padding="0"
-                              HorizontalContentAlignment="Center"
-                              VerticalContentAlignment="Center"
+                              Classes="toolbar-toggle-btn"
                               ToolTip.Tip="Strikethrough">
                     <TextBlock Text="S"
                                FontSize="12"
@@ -134,33 +113,25 @@
             </StackPanel>
 
             <!-- Section Divider -->
-            <Border Width="1" Height="16" Background="#E5E7EB" Margin="2,0" />
+            <Border Classes="toolbar-divider" />
 
             <!-- Highlight Marker Flyout Button -->
             <Button Name="HighlightMarkerButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Background="#FFFFFF"
-                    BorderBrush="#D1D5DB"
-                    BorderThickness="1"
-                    CornerRadius="4"
+                    Classes="toolbar-square-btn"
                     ToolTip.Tip="Highlight Marker">
                 <TextBlock Text="🖍️" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
                 <Button.Flyout>
                     <Flyout Placement="BottomEdgeAlignedLeft">
                         <StackPanel Spacing="6" Margin="4">
-                            <TextBlock Text="Highlight Color" FontSize="11" FontWeight="SemiBold" Foreground="#4B5563" />
+                            <TextBlock Text="Highlight Color" Classes="flyout-header" />
 
                             <WrapPanel MaxWidth="140">
-                                <Button Width="22" Height="22" Margin="2" Background="#FEF08A" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Yellow" Tag="#FEF08A" />
-                                <Button Width="22" Height="22" Margin="2" Background="#BBF7D0" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Green" Tag="#BBF7D0" />
-                                <Button Width="22" Height="22" Margin="2" Background="#FBCFE8" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Pink" Tag="#FBCFE8" />
-                                <Button Width="22" Height="22" Margin="2" Background="#BAE6FD" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Blue" Tag="#BAE6FD" />
-                                <Button Width="22" Height="22" Margin="2" Background="#FED7AA" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Orange" Tag="#FED7AA" />
-                                <Button Width="22" Height="22" Margin="2" Background="#E5E7EB" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Gray" Tag="#E5E7EB" />
+                                <Button Classes="swatch-btn" Background="#FEF08A" ToolTip.Tip="Yellow" Tag="#FEF08A" />
+                                <Button Classes="swatch-btn" Background="#BBF7D0" ToolTip.Tip="Green" Tag="#BBF7D0" />
+                                <Button Classes="swatch-btn" Background="#FBCFE8" ToolTip.Tip="Pink" Tag="#FBCFE8" />
+                                <Button Classes="swatch-btn" Background="#BAE6FD" ToolTip.Tip="Blue" Tag="#BAE6FD" />
+                                <Button Classes="swatch-btn" Background="#FED7AA" ToolTip.Tip="Orange" Tag="#FED7AA" />
+                                <Button Classes="swatch-btn" Background="#E5E7EB" ToolTip.Tip="Gray" Tag="#E5E7EB" />
                             </WrapPanel>
 
                             <Border Height="1" Background="#E5E7EB" Margin="0,2" />
@@ -180,15 +151,7 @@
 
             <!-- Text Color Flyout Popover -->
             <Button Name="TextColorButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    HorizontalContentAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    Background="#FFFFFF"
-                    BorderBrush="#D1D5DB"
-                    BorderThickness="1"
-                    CornerRadius="4"
+                    Classes="toolbar-square-btn"
                     ToolTip.Tip="Text Color">
                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="1">
                     <TextBlock Text="A" FontSize="12" FontWeight="Bold" Foreground="#111827" HorizontalAlignment="Center" />
@@ -197,21 +160,21 @@
                 <Button.Flyout>
                     <Flyout Placement="BottomEdgeAlignedLeft">
                         <StackPanel Spacing="6" Margin="4">
-                            <TextBlock Text="Template Colors" FontSize="11" FontWeight="SemiBold" Foreground="#4B5563" />
+                            <TextBlock Text="Template Colors" Classes="flyout-header" />
 
                             <!-- Template Palette Swatches -->
                             <WrapPanel MaxWidth="140">
-                                <Button Width="22" Height="22" Margin="2" Background="#2563EB" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Primary Blue" Tag="#2563EB" />
-                                <Button Width="22" Height="22" Margin="2" Background="#1E40AF" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Deep Navy" Tag="#1E40AF" />
-                                <Button Width="22" Height="22" Margin="2" Background="#0D9488" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Teal Accent" Tag="#0D9488" />
-                                <Button Width="22" Height="22" Margin="2" Background="#4B5563" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Slate Gray" Tag="#4B5563" />
-                                <Button Width="22" Height="22" Margin="2" Background="#DC2626" CornerRadius="3" BorderThickness="0" ToolTip.Tip="Alert Red" Tag="#DC2626" />
+                                <Button Classes="swatch-btn" Background="#2563EB" ToolTip.Tip="Primary Blue" Tag="#2563EB" />
+                                <Button Classes="swatch-btn" Background="#1E40AF" ToolTip.Tip="Deep Navy" Tag="#1E40AF" />
+                                <Button Classes="swatch-btn" Background="#0D9488" ToolTip.Tip="Teal Accent" Tag="#0D9488" />
+                                <Button Classes="swatch-btn" Background="#4B5563" ToolTip.Tip="Slate Gray" Tag="#4B5563" />
+                                <Button Classes="swatch-btn" Background="#DC2626" ToolTip.Tip="Alert Red" Tag="#DC2626" />
                             </WrapPanel>
 
                             <Border Height="1" Background="#E5E7EB" Margin="0,2" />
 
                             <!-- Custom Color Picker Control -->
-                            <TextBlock Text="Custom Color" FontSize="11" FontWeight="SemiBold" Foreground="#4B5563" />
+                            <TextBlock Text="Custom Color" Classes="flyout-header" />
                             <cp:ColorPicker Name="CustomColorPicker"
                                             Color="#2563EB"
                                             IsAlphaEnabled="False" />
