@@ -28,6 +28,7 @@ public partial class ModuleViewModel : ObservableObject
         {
             Children.Add(new ModuleViewModel(child, document));
         }
+
     }
 
     public string Name => Model.Name;
@@ -53,18 +54,6 @@ public partial class ModuleViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void MoveUp()
-    {
-        _document.MoveModuleUp(Model);
-    }
-
-    [RelayCommand]
-    private void MoveDown()
-    {
-        _document.MoveModuleDown(Model);
-    }
-
-    [RelayCommand]
     private void Detach()
     {
         _document.DetachModule(Model);
@@ -74,6 +63,12 @@ public partial class ModuleViewModel : ObservableObject
     private void Clone()
     {
         _document.DuplicateModule(Model);
+    }
+    [RelayCommand]
+    private void Select()
+    {
+        // Operates directly on its own encapsulated Model instance
+        _document.SelectModule(Model);
     }
 
     private void OnModelPropertyChanged(object? sender, PropertyChangedEventArgs e)

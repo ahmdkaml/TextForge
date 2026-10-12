@@ -162,4 +162,9 @@ public partial class MainViewModel : ObservableObject
     {
         CurrentDocument.SelectRoot();
     }
+    [RelayCommand]
+    private void Select(Module module)
+    {
+        CurrentDocument.SelectModule(module);
+    }
 }

@@ -11,7 +11,8 @@
     Icon="/Assets/branding/icon.png"
     Title="TextForge"
     Width="1280" Height="800"
-    MinWidth="960" MinHeight="600">
+    MinWidth="960" MinHeight="600"
+    >
 
     <Design.DataContext>
         <vm:MainViewModel />
@@ -168,12 +169,7 @@
 
                     <!-- Module Editor Component -->
                     <components:ModuleEditorView Grid.Row="2" 
-                                                 Name="ModuleEditor"
-                                                 ModuleMoveUpRequested="ModuleEditor_ModuleMoveUpRequested"
-                                                 ModuleMoveDownRequested="ModuleEditor_ModuleMoveDownRequested"
-                                                 ModuleDeleteRequested="ModuleEditor_ModuleDeleteRequested"
-                                                 ModuleDetachRequested="ModuleEditor_ModuleDetachRequested"
-                                                 RootSelected="ModuleEditor_RootSelected" />
+                                                 Name="ModuleEditor" />
                 </Grid>
             </Border>
 

@@ -1,15 +1,6 @@
 using System;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Interactivity;
-using Avalonia.VisualTree;
-using TextForge.Core;
-using TextForge.Core.Modules;
 using TextForge.Desktop.Rendering;
-using TextForge.Desktop.Views.Components;
-using Avalonia.Controls.Primitives;
-using System.Linq;
 using TextForge.Desktop.ViewModels;
 
 namespace TextForge.Desktop.Views;
@@ -41,40 +32,6 @@ public partial class MainWindow : Window
         RenderCurrentPreview();
     }
     
-    private void ModuleEditor_RootSelected(object? sender, EventArgs e)
-    {
-        if (ViewModel?.CurrentDocument is null) return;
-
-        ViewModel.CurrentDocument.SelectRoot();
-    }
-    
-    private void ModuleEditor_ModuleMoveUpRequested(object? sender, Module module)
-    {
-        ViewModel?.CurrentDocument?.MoveModuleUp(module);
-    }
-
-    private void ModuleEditor_ModuleMoveDownRequested(object? sender, Module module)
-    {
-        ViewModel?.CurrentDocument?.MoveModuleDown(module);
-    }
-
-    private void ModuleEditor_ModuleDeleteRequested(object? sender, Module module)
-    {
-        ViewModel?.CurrentDocument?.RemoveModule(module);
-    }
-
-    // private void ModuleEditor_ModuleDuplicateRequested(Module module)
-    // {
-    //     ViewModel.CurrentDocument.DuplicateModule(module)
-    // }
-
-    private void ModuleEditor_ModuleDetachRequested(object? sender, Module module)
-    {
-        if (ViewModel?.CurrentDocument is not null)
-        {
-            ViewModel.CurrentDocument.DetachModule(module);
-        }
-    }
 
     #endregion
 

@@ -103,6 +103,10 @@ public class Document
     public void SelectRoot()
     {
         SetSelectionRecursive(Modules, false);
+        if (SelectedModule is not null)
+        {
+            SelectedModule.IsSelected = false;
+        }
         SelectedModule = null;
         IsRootSelected = true;
         NotifyChanged();

@@ -63,8 +63,8 @@
             <Border Classes="module-card"
                     Classes.selected="{Binding IsSelected}"
                 Tag="{Binding}"
-                    PointerPressed="ModuleCard_PointerPressed"
                 Margin="0,1"
+                    PointerPressed="StopPropagation_PointerPressed"
                 Padding="2">
                 <Expander IsExpanded="{Binding IsExpanded, Mode=TwoWay, FallbackValue=False}"
                     HorizontalAlignment="Stretch"
@@ -72,7 +72,9 @@
                     <Expander.Header>
                         <Grid ColumnDefinitions="Auto,*,Auto"
                             VerticalAlignment="Center"
-                            Background="Transparent">
+                            Background="Transparent"
+                            Cursor="Hand"
+                            PointerPressed="ModuleCard_PointerPressed">
                             <!-- Archetype Tag -->
                             <Border Grid.Column="0"
                                 Background="#E5E7EB"
@@ -144,19 +146,26 @@
         </DataTemplate>
     </UserControl.Resources>
 
-    <ScrollViewer Name="EditorScrollViewer"
-        BringIntoViewOnFocusChange="False"
-        VerticalScrollBarVisibility="Auto"
-        HorizontalScrollBarVisibility="Disabled"
-        Background="Transparent">
-        <StackPanel PointerPressed="DocumentRootCard_PointerPressed" Cursor="Hand" Classes="root-card"
-                    Classes.selected="{Binding CurrentDocument.IsRootSelected}"
-                    Name="EditorStackPanel" Spacing="6" Margin="0,0,0,12" Background="Transparent">
-            <!-- Modules List (Using ItemsControl to prevent VirtualizingStackPanel focus scroll jumps) -->
-            <ItemsControl Name="ModuleListBox"
-                Background="Transparent"
-                ItemsSource="{Binding ModuleItems}"
-                ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
-        </StackPanel>
-    </ScrollViewer>
+<ScrollViewer Name="EditorScrollViewer"
+              BringIntoViewOnFocusChange="False"
+              VerticalScrollBarVisibility="Auto"
+              HorizontalScrollBarVisibility="Disabled"
+              Background="Transparent">
+
+    <StackPanel Name="EditorStackPanel"
+                x:DataType="vm:MainViewModel"
+                PointerPressed="DocumentRootCard_PointerPressed"
+                Classes="root-card"
+                Classes.selected="{Binding CurrentDocument.IsRootSelected}"
+                Spacing="6"
+                Margin="0,0,0,12"
+                Background="Transparent">
+
+        <!-- Modules List -->
+        <ItemsControl Name="ModuleListBox"
+                      Background="Transparent"
+                      ItemsSource="{Binding ModuleItems}"
+                      ItemTemplate="{StaticResource RecursiveModuleTemplate}" />
+    </StackPanel>
+</ScrollViewer>
 </UserControl>
